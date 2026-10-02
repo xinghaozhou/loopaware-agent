@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environments
+.venv/
+venv/
+
+# Hugging Face / model cache
+.cache/
+huggingface/
+models/
+checkpoints/
+
+# Logs / experiment outputs
+logs/
+results/raw/
+
+# Nsight
+*.nsys-rep
+*.qdrep
+*.sqlite
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
