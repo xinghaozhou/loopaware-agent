@@ -1,27 +1,29 @@
-# Python
-__pycache__/
-*.pyc
-
-# Virtual environments
+# Python virtual environment
 .venv/
-venv/
 
-# Hugging Face / model cache
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Hugging Face / model caches
 .cache/
 huggingface/
-models/
-checkpoints/
-
-# Logs / experiment outputs
-logs/
-results/raw/
-
-# Nsight
-*.nsys-rep
-*.qdrep
-*.sqlite
 
 # IDE / OS
 .vscode/
 .idea/
 .DS_Store
+
+# Logs
+*.log
+
+# Experiment outputs
+outputs/
+results/
+checkpoints/
+
+# Model weights
+*.bin
+*.safetensors
+*.pt
+*.pth
