@@ -4,7 +4,8 @@ llm = LLM(
     model="ByteDance/Ouro-2.6B-Thinking",
     dtype="bfloat16",
     max_model_len=8192, #context length
-    trust_remote_code=True
+    trust_remote_code=True,
+    enforce_eager=True
 )
 
 outputs = llm.generate(

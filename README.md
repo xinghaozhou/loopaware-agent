@@ -82,3 +82,6 @@ vendor/vllm/vllm/model_executor/models/ouro.py
 8. Line 379:
   - vendor/vllm/vllm/model_executor/models/ouro.py
   - Add trace collector in model_init
+  - Shown that it hits the same recurrences
+
+9. 
