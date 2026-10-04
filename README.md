@@ -35,6 +35,14 @@ cd /root/loopaware-agent
 git status
 git add vendor/vllm
 
+6. Any modification to ouro_hf
+cd vendor/ouro_hf
+git add modeling_ouro.py
+git commit -m <message>
+cd /root/loopaware-agent
+git status
+git add vendor/ouro_hf
+
 # Bugs
 
 1. When doing try.py

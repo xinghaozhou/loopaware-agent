@@ -27,3 +27,7 @@ checkpoints/
 *.safetensors
 *.pt
 *.pth
+
+# Model weight
+vendor/ouro_hf/*.safetensors
+vendor/ouro_hf/**/*.safetensors
