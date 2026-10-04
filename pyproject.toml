@@ -10,7 +10,6 @@ dependencies = [
     "torchaudio==2.9.0",
     "transformers==4.57.6",
     "vllm==0.11.2",
-
     "accelerate>=1.15.0",
     "hf-transfer>=0.1.9",
     "safetensors>=0.8.0",
@@ -19,6 +18,9 @@ dependencies = [
 
 [project.scripts]
 loopaware-agent = "loopaware_agent:main"
+
+[tool.uv.sources]
+vllm = { path = "vendor/vllm", editable = true }
 
 [build-system]
 requires = ["uv_build>=0.12.22,<0.13.0"]

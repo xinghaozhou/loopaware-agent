@@ -39,3 +39,46 @@ sed -i \
 2. When doing vllm+ouro, vllm=0.11.2 works, if the version goes up, it does not support ouro
 
 
+# working notes
+1. To see the output structure: 
+print(out.outputs[0].__dict__.keys())
+
+It looks like: 
+dict_keys(['index', 'text', 'token_ids', 'cumulative_logprob', 'logprobs', 'finish_reason', 'stop_reason', 'lora_request'])
+
+'test': the genereated text
+
+2. git clone branch v0.11.2 and git switch to this branch for our implementation (scratch)
+git clone --branch v0.11.2   https://github.com/vllm-project/vllm.git   vendor/vllm
+git switch -c loopaware-vllm
+
+Sanity check: /root/loopaware-agent/vendor/vllm/vllm/model_executor/models/ouro.py
+
+uv run python - <<'PY'
+import inspect
+from vllm.model_executor.models.ouro import OuroModel
+
+print(inspect.getfile(OuroModel))
+PY
+
+3. vllm 0.11.2 in vendor, and ouro's exeuction code, now add the recurrence tracer
+vendor/vllm/vllm/model_executor/models/ouro.py
+
+4. ouro structure:
+  - OuroMLP: MLP after attention
+  - OuroAttention: Attention block reside in recurrent block
+  - OuroDecoderLayer: Recurrent Block (important)
+  - OuroModel: Ouro Structure
+  - OuroForCausalLM: quick start use abtract wrapper
+
+5. There is no early stop applied in vllm 0.11.2!!!
+
+6. But there is one in ouro-2.6B-reasoning, called early_exit_threshold
+
+7. Do a trajectory characterization:
+  - Count the actual recurrence (expect it to hit the same recurrence config)
+  - Count the predicted recurrence (If we apply a threshold to it, does it hit the same recurrence?)
+
+8. Line 379:
+  - vendor/vllm/vllm/model_executor/models/ouro.py
+  - Add trace collector in model_init
