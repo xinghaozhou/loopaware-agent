@@ -5,7 +5,10 @@ llm = LLM(
     dtype="bfloat16",
     max_model_len=8192, #context length
     trust_remote_code=True,
-    enforce_eager=True
+    enforce_eager=True,
+    hf_overrides={
+        "total_ut_steps": 8,
+    },
 )
 
 outputs = llm.generate(

@@ -27,6 +27,13 @@ curl http://localhost:8000/v1/completions   -H "Content-Type: application/json" 
     "temperature": 0
   }'
 
+5. Any modification to vllm 
+cd vendor/vllm
+git add vllm/model_executor/models/ouro.py
+git commit -m <message>
+cd /root/loopaware-agent
+git status
+git add vendor/vllm
 
 # Bugs
 
@@ -78,10 +85,12 @@ vendor/vllm/vllm/model_executor/models/ouro.py
 7. Do a trajectory characterization:
   - Count the actual recurrence (expect it to hit the same recurrence config)
   - Count the predicted recurrence (If we apply a threshold to it, does it hit the same recurrence?)
-
-8. Line 379:
   - vendor/vllm/vllm/model_executor/models/ouro.py
-  - Add trace collector in model_init
-  - Shown that it hits the same recurrences
 
-9. 
+  - 7.1
+    - Add trace collector in model_init
+    - Shown that it hits the same recurrences
+
+  - 7.2
+    - Adding early exit gate to in model forward()
+    - Identify the gap between actual & expected recurrence
