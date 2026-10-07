@@ -137,6 +137,17 @@ def main() -> None:
         token_count = sum(histogram.values())
         selected_total = sum(step * count for step, count in histogram.items())
         executed_total = sum(value["executed_ut_total"] for value in values)
+        max_turn_by_task: dict[str, int] = defaultdict(int)
+        for value in values:
+            max_turn_by_task[value["task_id"]] = max(
+                max_turn_by_task[value["task_id"]], value["turn_idx"]
+            )
+        normalized_progress = [
+            value["turn_idx"] / max_turn_by_task[value["task_id"]]
+            if max_turn_by_task[value["task_id"]]
+            else 0.0
+            for value in values
+        ]
         aggregate = {
             "condition": condition,
             "total_ut_steps": condition_config["total_ut_steps"],
@@ -159,12 +170,17 @@ def main() -> None:
                 [value["turn_idx"] for value in values],
                 [value["mean_selected_ut"] for value in values],
             ),
+            "correlation_normalized_progress_mean_selected_ut": pearson(
+                normalized_progress,
+                [value["mean_selected_ut"] for value in values],
+            ),
         }
         aggregates.append(aggregate)
         by_task: dict[str, list[dict[str, Any]]] = defaultdict(list)
         for value in values:
             by_task[value["task_id"]].append(value)
         for task_id, rows in sorted(by_task.items()):
+            rows.sort(key=lambda row: row["turn_idx"])
             tokens = sum(row["output_token_count"] for row in rows)
             selected = sum(row["selected_ut_total"] for row in rows)
             executed = sum(row["executed_ut_total"] for row in rows)
@@ -175,6 +191,18 @@ def main() -> None:
                 "tokens": tokens,
                 "mean_selected_ut": selected / tokens if tokens else None,
                 "theoretical_recurrence_saving": 1 - selected / executed if executed else None,
+                "input_tokens_first": rows[0]["input_token_count"],
+                "input_tokens_last": rows[-1]["input_token_count"],
+                "mean_selected_ut_first": rows[0]["mean_selected_ut"],
+                "mean_selected_ut_last": rows[-1]["mean_selected_ut"],
+                "correlation_input_tokens_mean_selected_ut": pearson(
+                    [row["input_token_count"] for row in rows],
+                    [row["mean_selected_ut"] for row in rows],
+                ),
+                "correlation_turn_index_mean_selected_ut": pearson(
+                    [row["turn_idx"] for row in rows],
+                    [row["mean_selected_ut"] for row in rows],
+                ),
             })
         if condition == "ut6_primary":
             batch_rows = simulate_batches(run_dir, values, condition_config["trajectory_ids"])
@@ -222,12 +250,33 @@ def main() -> None:
             lines.append(f"| {step} | {count} | {row['selected_ut_percent'][str(step)]:.2f}% |")
         lines.extend([
             "",
-            f"Pearson correlation of request mean selected UT with input length: `{fmt(row['correlation_input_tokens_mean_selected_ut'])}`; with turn index: `{fmt(row['correlation_turn_index_mean_selected_ut'])}`.",
+            f"Pearson correlation of request mean selected UT with input length: `{fmt(row['correlation_input_tokens_mean_selected_ut'])}`; with raw turn index: `{fmt(row['correlation_turn_index_mean_selected_ut'])}`; with normalized trajectory progress: `{fmt(row['correlation_normalized_progress_mean_selected_ut'])}`.",
         ])
 
-    lines.extend(["", "## Per-trajectory results", "", "| Condition | Task | Requests | Tokens | Mean selected UT | Theoretical saving |", "|---|---|---:|---:|---:|---:|"])
+    lines.extend(["", "## Per-trajectory context-growth results", "", "Each row covers one complete recorded trajectory. The two correlations test whether selected UT changes as its own context and turn index grow.", "", "| Condition | Task | Turns | Input first→last | Mean UT first→last | Mean UT | Corr(input, UT) | Corr(turn, UT) |", "|---|---|---:|---:|---:|---:|---:|---:|"])
     for row in task_rows:
-        lines.append(f"| {row['condition']} | {row['task_id']} | {row['requests']} | {row['tokens']} | {fmt(row['mean_selected_ut'])} | {fmt(row['theoretical_recurrence_saving'] * 100 if row['theoretical_recurrence_saving'] is not None else None, 1)}% |")
+        lines.append(f"| {row['condition']} | {row['task_id']} | {row['requests']} | {row['input_tokens_first']}→{row['input_tokens_last']} | {fmt(row['mean_selected_ut_first'])}→{fmt(row['mean_selected_ut_last'])} | {fmt(row['mean_selected_ut'])} | {fmt(row['correlation_input_tokens_mean_selected_ut'])} | {fmt(row['correlation_turn_index_mean_selected_ut'])} |")
+
+    lines.extend(["", "## Full turn-by-turn distributions", "", "This is the direct view of selected-UT variation as each trajectory's recorded context grows.", "", "| Condition | Task | Turn | Progress | Input tokens | Output tokens | Mean UT | P50 | P90 | Selected-UT histogram |", "|---|---|---:|---:|---:|---:|---:|---:|---:|---|"])
+    for condition_config in config["conditions"]:
+        condition = condition_config["name"]
+        by_task: dict[str, list[dict[str, Any]]] = defaultdict(list)
+        for request in grouped.get(condition, []):
+            by_task[request["task_id"]].append(request)
+        for task_id in condition_config["trajectory_ids"]:
+            rows = sorted(by_task.get(task_id, []), key=lambda row: row["turn_idx"])
+            final_turn = rows[-1]["turn_idx"] if rows else 0
+            for row in rows:
+                progress = row["turn_idx"] / final_turn if final_turn else 0.0
+                histogram_text = ", ".join(
+                    f"UT{step}:{count}"
+                    for step, count in sorted(
+                        ((int(step), count) for step, count in row["selected_ut_histogram"].items())
+                    )
+                )
+                lines.append(
+                    f"| {condition} | {task_id} | {row['turn_idx']} | {progress:.2f} | {row['input_token_count']} | {row['output_token_count']} | {fmt(row['mean_selected_ut'])} | {fmt(row['p50_selected_ut'], 1)} | {fmt(row['p90_selected_ut'], 1)} | {histogram_text} |"
+                )
 
     lines.extend(["", "## Synchronized batch heterogeneity", "", "The pilot has six primary trajectories, so only B=4 forms cross-task batches; B=8 and B=16 are reported as unavailable rather than reusing the same task concurrently.", "", "| B | H | Batches | FCFS variance | Oracle variance | FCFS utilization | Oracle utilization |", "|---:|---:|---:|---:|---:|---:|---:|"])
     for row in all_batch_results:
