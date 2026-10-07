@@ -286,6 +286,29 @@ This corresponds to a **41.2% counterfactual recurrence saving**. With 48
 runtime decoder layers, the mean selected work is approximately 169.3 decoder
 layer calls per token, versus 288 calls actually executed by fixed-UT decoding.
 
+### Exit-threshold sensitivity
+
+Because every token trace stores the complete exit distribution, thresholds can
+be evaluated offline on the identical 23,829 UT=6 output tokens. The mean below
+is the threshold-selected depth, not a new decoding run:
+
+| Threshold | Mean selected UT | UT distribution | Saving vs. UT=6 | Corr(input, UT) | First-turn mean | Final-turn mean |
+|---:|---:|---|---:|---:|---:|---:|
+| 0.6 | 3.326 | UT3 68.74%, UT4 29.94%, UT5 1.32%, UT6 <0.01% | 44.6% | -0.615 | 3.639 | 3.077 |
+| 0.7 | 3.528 | UT3 55.11%, UT4 37.07%, UT5 7.71%, UT6 0.11% | 41.2% | -0.617 | 3.926 | 3.221 |
+| 0.8 | 4.328 | UT4 68.69%, UT5 29.83%, UT6 1.48% | 27.9% | -0.615 | 4.645 | 4.071 |
+| 0.9 | 5.313 | UT5 68.74%, UT6 31.26% | 11.5% | -0.618 | 5.627 | 5.071 |
+
+As expected, a stricter threshold monotonically shifts selection toward later
+UT steps. More importantly, the correlation with growing input context remains
+stable at approximately -0.62 for every threshold, and the final-turn mean is
+lower than the first-turn mean in every condition. The observed context-growth
+tendency is therefore not specific to the originally chosen 0.7 threshold.
+
+Separately, the mean probabilistic expectation of the learned exit distribution
+is **3.154 UT** (median 2.816). This expectation is threshold-independent;
+threshold selection converts that distribution into a discrete stopping rule.
+
 ### Variation over growing multi-turn contexts
 
 Selected depth generally decreased as the recorded trajectory context grew:
