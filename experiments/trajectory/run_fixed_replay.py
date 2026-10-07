@@ -19,6 +19,7 @@ from typing import Any, Iterable
 import torch
 from huggingface_hub import hf_hub_download
 from transformers import AutoTokenizer
+import pyarrow.parquet as pq
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -50,6 +51,11 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=None,
         help="Stop cleanly after this many newly completed requests (smoke tests).",
+    )
+    parser.add_argument(
+        "--condition",
+        action="append",
+        help="Run only the named condition (repeatable); defaults to all conditions.",
     )
     return parser.parse_args()
 
@@ -143,6 +149,88 @@ def load_trajectory(config: dict[str, Any], instance_id: str) -> dict[str, Any]:
     if not trajectory["info"].get("resolved"):
         raise ValueError(f"Trajectory {instance_id} is not marked resolved")
     return trajectory
+
+
+def normalize_web_messages(messages: list[dict[str, Any]]) -> list[dict[str, str]]:
+    """Merge EntiWeave thought + tool_call records into model-facing turns."""
+
+    normalized: list[dict[str, str]] = []
+    for message in messages:
+        role = message["role"]
+        content = message.get("content") or ""
+        if role == "tool_call":
+            if not normalized or normalized[-1]["role"] != "assistant":
+                raise ValueError("EntiWeave tool_call does not follow assistant thought")
+            normalized[-1]["content"] += f"\n<tool_call>\n{content}\n</tool_call>"
+        else:
+            normalized.append({"role": role, "content": content})
+    return normalized
+
+
+def load_crossdomain_trajectories(config: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """Load only configured records from pinned public trajectory sources."""
+
+    selected_by_source: dict[str, set[str]] = defaultdict(set)
+    for condition in config["conditions"]:
+        selected_by_source[condition["dataset"]].update(condition["trajectory_ids"])
+    trajectories: dict[str, dict[str, Any]] = {}
+    for source_name, selected_ids in selected_by_source.items():
+        source = config["datasets"][source_name]
+        if source["adapter"] == "ipw_math":
+            path = hf_hub_download(
+                repo_id=source["repo_id"],
+                repo_type="dataset",
+                revision=source["revision"],
+                filename=source["files"][0],
+            )
+            with Path(path).open(encoding="utf-8") as stream:
+                for line in stream:
+                    row = json.loads(line)
+                    instance_id = row["sample_id"]
+                    if instance_id not in selected_ids:
+                        continue
+                    if not row.get("success"):
+                        raise ValueError(f"Math trajectory {instance_id} is not successful")
+                    trajectories[instance_id] = {
+                        "instance_id": instance_id,
+                        "messages": row["conversations"],
+                        "info": {
+                            "resolved": True,
+                            "domain": source_name,
+                            "category": row.get("category"),
+                        },
+                    }
+        elif source["adapter"] == "entiweave":
+            for filename in source["files"]:
+                path = hf_hub_download(
+                    repo_id=source["repo_id"],
+                    repo_type="dataset",
+                    revision=source["revision"],
+                    filename=filename,
+                )
+                table = pq.read_table(path, columns=["id", "trajectory", "answer"])
+                for row in table.to_pylist():
+                    instance_id = row["id"]
+                    if instance_id not in selected_ids:
+                        continue
+                    messages = normalize_web_messages(json.loads(row["trajectory"]))
+                    if not messages or messages[-1]["role"] != "assistant":
+                        raise ValueError(f"Web trajectory {instance_id} is incomplete")
+                    trajectories[instance_id] = {
+                        "instance_id": instance_id,
+                        "messages": messages,
+                        "info": {
+                            "resolved": True,
+                            "domain": source_name,
+                            "answer": row["answer"],
+                        },
+                    }
+        else:
+            raise ValueError(f"Unknown dataset adapter: {source['adapter']}")
+        missing = selected_ids - trajectories.keys()
+        if missing:
+            raise ValueError(f"Missing {source_name} trajectories: {sorted(missing)}")
+    return trajectories
 
 
 def normalized_message(message: dict[str, Any]) -> dict[str, str]:
@@ -379,23 +467,35 @@ def main() -> None:
         **model_load_kwargs,
         trust_remote_code=True,
     )
+    conditions = [
+        condition
+        for condition in config["conditions"]
+        if args.condition is None or condition["name"] in args.condition
+    ]
+    if not conditions:
+        raise ValueError(f"No configured condition matches {args.condition}")
     all_ids = sorted(
         {
             instance_id
-            for condition in config["conditions"]
+            for condition in conditions
             for instance_id in condition["trajectory_ids"]
         }
     )
-    trajectories = {
-        instance_id: load_trajectory(config, instance_id) for instance_id in all_ids
-    }
+    trajectories = (
+        load_crossdomain_trajectories(config)
+        if "datasets" in config
+        else {
+            instance_id: load_trajectory(config, instance_id)
+            for instance_id in all_ids
+        }
+    )
     requests_by_id = {
         instance_id: replay_requests(tokenizer, trajectory)
         for instance_id, trajectory in trajectories.items()
     }
     planned_requests = sum(
         len(requests_by_id[instance_id])
-        for condition in config["conditions"]
+        for condition in conditions
         for instance_id in condition["trajectory_ids"]
     )
     print(
@@ -406,7 +506,7 @@ def main() -> None:
 
     completed_this_process = 0
     error_count = 0
-    for condition in config["conditions"]:
+    for condition in conditions:
         ouro_config = OuroConfig.from_pretrained(
             model_source, **model_load_kwargs
         )

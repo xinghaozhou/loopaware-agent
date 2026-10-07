@@ -15,6 +15,11 @@ def main() -> None:
     parser.add_argument("--config", required=True, type=Path)
     parser.add_argument("--run-dir", required=True, type=Path)
     parser.add_argument("--model-path", required=True, type=Path)
+    parser.add_argument(
+        "--analyzer",
+        type=Path,
+        default=Path(__file__).with_name("analyze_fixed_replay.py"),
+    )
     parser.add_argument("--max-restarts", default=5, type=int)
     args = parser.parse_args()
     args.run_dir.mkdir(parents=True, exist_ok=True)
@@ -50,7 +55,7 @@ def main() -> None:
         print(f"Restarting incomplete replay in 15 seconds ({completed}/{planned})", flush=True)
         time.sleep(15)
     subprocess.run(
-        [sys.executable, str(Path(__file__).with_name("analyze_fixed_replay.py")), "--run-dir", str(args.run_dir)],
+        [sys.executable, str(args.analyzer), "--run-dir", str(args.run_dir)],
         check=True,
     )
 

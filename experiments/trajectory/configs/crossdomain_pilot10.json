@@ -1,0 +1,63 @@
+{
+  "run_name": "math_web_selected_ut_pilot10",
+  "datasets": {
+    "math": {
+      "adapter": "ipw_math",
+      "repo_id": "mai-ll/ipw-sft-trajectories",
+      "revision": "fba4d8a229d244de458d36edf26d93c68c9681e7",
+      "files": ["all_correct_trajectories_deduped.jsonl"]
+    },
+    "web_search": {
+      "adapter": "entiweave",
+      "repo_id": "jxg25/EntiWeave",
+      "revision": "20f4c223b8ddec46afc92a764275acc77c528fdb",
+      "files": [
+        "data/train_sft-00000-of-00002.parquet",
+        "data/train_sft-00001-of-00002.parquet"
+      ]
+    }
+  },
+  "model_id": "ByteDance/Ouro-2.6B-Thinking",
+  "model_revision": "f1edd81e7ac41355db670500ceaf204e0f73af68",
+  "trace_exit_threshold": 0.7,
+  "max_new_tokens": 512,
+  "max_input_tokens": 8200,
+  "conditions": [
+    {
+      "name": "math_ut6",
+      "dataset": "math",
+      "total_ut_steps": 6,
+      "trajectory_ids": [
+        "traj_15a0cc45",
+        "traj_b016fe0b",
+        "traj_a353fd61",
+        "traj_e10c62ae",
+        "traj_90384477"
+      ]
+    },
+    {
+      "name": "web_search_ut6",
+      "dataset": "web_search",
+      "total_ut_steps": 6,
+      "trajectory_ids": [
+        "69c942a515d630c7be0a3623",
+        "69c56e5a2491ffad205ce718",
+        "69c3bef4e503b850260d20a6",
+        "69c1a13bd0033c36734e3cd7",
+        "69c5db17126af843b3035b4e"
+      ]
+    }
+  ],
+  "sample": [
+    {"instance_id": "traj_15a0cc45", "domain": "math", "turns": 7, "max_input_tokens": 1931},
+    {"instance_id": "traj_b016fe0b", "domain": "math", "turns": 6, "max_input_tokens": 5041},
+    {"instance_id": "traj_a353fd61", "domain": "math", "turns": 6, "max_input_tokens": 7021},
+    {"instance_id": "traj_e10c62ae", "domain": "math", "turns": 6, "max_input_tokens": 7025},
+    {"instance_id": "traj_90384477", "domain": "math", "turns": 6, "max_input_tokens": 8114},
+    {"instance_id": "69c942a515d630c7be0a3623", "domain": "web_search", "turns": 7, "max_input_tokens": 3193},
+    {"instance_id": "69c56e5a2491ffad205ce718", "domain": "web_search", "turns": 10, "max_input_tokens": 4795},
+    {"instance_id": "69c3bef4e503b850260d20a6", "domain": "web_search", "turns": 9, "max_input_tokens": 5717},
+    {"instance_id": "69c1a13bd0033c36734e3cd7", "domain": "web_search", "turns": 12, "max_input_tokens": 7564},
+    {"instance_id": "69c5db17126af843b3035b4e", "domain": "web_search", "turns": 10, "max_input_tokens": 8025}
+  ]
+}

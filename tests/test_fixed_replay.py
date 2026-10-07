@@ -7,6 +7,7 @@ from experiments.trajectory.run_fixed_replay import (
     normalized_message,
     percentile,
     request_trace_path,
+    normalize_web_messages,
 )
 
 
@@ -39,6 +40,19 @@ class FixedReplayTest(unittest.TestCase):
             path.as_posix(),
             "run/raw/requests/ut6/owner__repo-1/turn-0012.jsonl",
         )
+
+    def test_web_thought_and_tool_call_form_one_assistant_turn(self) -> None:
+        messages = normalize_web_messages(
+            [
+                {"role": "system", "content": "system"},
+                {"role": "assistant", "content": "thought"},
+                {"role": "tool_call", "content": '{"name":"search"}'},
+                {"role": "tool", "content": "observation"},
+            ]
+        )
+        self.assertEqual([message["role"] for message in messages], ["system", "assistant", "tool"])
+        self.assertIn("thought", messages[1]["content"])
+        self.assertIn('"name":"search"', messages[1]["content"])
 
 
 if __name__ == "__main__":
