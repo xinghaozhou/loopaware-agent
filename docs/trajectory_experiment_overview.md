@@ -253,3 +253,104 @@ Every run will save, without overwriting earlier results:
 The full 30–50 trajectory experiment will not start until the replay adapter,
 stratified sample, example replay, exact commands, memory cutoff, and revised
 runtime estimate have been reviewed.
+
+## Completed pilot results
+
+The six-trajectory pilot completed on 2026-10-07 with all 83 planned requests
+and no errors. The run produced 61 UT=6 requests across six complete
+trajectories and 22 UT=4 reference requests across two of those trajectories.
+The raw traces contain 31,646 generated tokens in total. There is one raw trace
+file for every request, all request keys are unique, and every raw token count
+matches its request summary.
+
+At runtime, `model.config.num_hidden_layers` reported **48** for both
+conditions. The primary condition executed exactly six UT iterations for every
+token, and the reference condition executed exactly four. The layer count and
+all executed/selected decoder-layer-call fields were derived from those runtime
+values rather than a hard-coded constant.
+
+### Primary UT=6 selected-depth distribution
+
+The UT=6 condition generated 23,829 output tokens. At the 0.7 cumulative-exit
+threshold, its counterfactual selected-UT distribution was:
+
+| Selected UT | Tokens | Percentage |
+|---:|---:|---:|
+| 3 | 13,132 | 55.11% |
+| 4 | 8,833 | 37.07% |
+| 5 | 1,837 | 7.71% |
+| 6 | 27 | 0.11% |
+
+The mean selected depth was **3.528 UT**, compared with six executed UT steps.
+This corresponds to a **41.2% counterfactual recurrence saving**. With 48
+runtime decoder layers, the mean selected work is approximately 169.3 decoder
+layer calls per token, versus 288 calls actually executed by fixed-UT decoding.
+
+### Variation over growing multi-turn contexts
+
+Selected depth generally decreased as the recorded trajectory context grew:
+
+- correlation of request mean selected UT with input-token count: **-0.617**;
+- correlation with raw turn index: **-0.659**;
+- correlation with normalized trajectory progress: **-0.714**;
+- unweighted mean across the six first turns: **3.926 UT**;
+- unweighted mean across the six final turns: **3.221 UT**.
+
+All six complete trajectories independently showed a negative relationship:
+
+| SWE-bench task | Turns | Input tokens, first→last | Mean UT, first→last | Corr(input, UT) |
+|---|---:|---:|---:|---:|
+| `django__django-11451` | 6 | 1,684→6,841 | 3.859→3.164 | -0.908 |
+| `pytest-dev__pytest-6202` | 10 | 2,035→8,163 | 4.066→3.344 | -0.558 |
+| `scikit-learn__scikit-learn-14141` | 14 | 1,195→7,648 | 3.910→3.268 | -0.703 |
+| `sphinx-doc__sphinx-8475` | 8 | 1,365→4,627 | 3.850→3.239 | -0.686 |
+| `sphinx-doc__sphinx-9258` | 13 | 1,300→8,180 | 3.986→3.163 | -0.821 |
+| `sympy__sympy-16886` | 10 | 1,212→5,971 | 3.887→3.148 | -0.781 |
+
+The turn-level series are not monotonic: several trajectories temporarily
+return to higher selected depth at intermediate turns. Context length and task
+progress therefore carry signal, but do not fully determine token-level depth.
+The relationship is descriptive rather than causal because turn content,
+response length, and context size change together in this replay design.
+
+### UT=4 reference
+
+The UT=4 reference generated 7,817 tokens and selected UT=3 for 4,522 tokens
+(57.85%) and UT=4 for 3,295 tokens (42.15%). Its mean selected depth was 3.422
+and its counterfactual recurrence saving was 14.5%. On the same two trajectory
+contexts, the UT=6 condition's mean selected depth was 3.442.
+
+The UT=4 and UT=6 decoders can generate different output text and lengths, so
+this is a paired-context condition comparison, not an identical-output-token
+comparison.
+
+### Candidate batch heterogeneity
+
+With only six primary trajectories, honest cross-task synchronized batches are
+available for `B=4` but not `B=8` or `B=16`. Across ten synchronized B=4
+batches, recurrence utilization declined as the lookahead horizon grew:
+
+| Horizon | FCFS variance | Oracle variance | FCFS utilization | Oracle utilization |
+|---:|---:|---:|---:|---:|
+| 4 | 0.019 | 0.014 | 0.979 | 0.985 |
+| 8 | 0.099 | 0.079 | 0.944 | 0.954 |
+| 16 | 0.123 | 0.111 | 0.934 | 0.941 |
+| 32 | 0.218 | 0.196 | 0.888 | 0.900 |
+
+The pilot shows measurable cross-request recurrence heterogeneity, although the
+oracle grouping advantage is modest at this scale. A larger trajectory sample
+is required to evaluate B=8/B=16 and to estimate scheduling gains reliably.
+
+### Runtime and scope
+
+The UT=6 requests consumed 1.41 sequential GPU-hours and peaked at 23.8 GiB
+allocated memory. The UT=4 reference consumed 0.31 GPU-hours and peaked at
+17.0 GiB. The reported saving is counterfactual: Ouro-HF still executed fixed
+final-UT decoding during measurement.
+
+These results cover complete resolved trajectories whose contexts fit the
+unchanged A40. They do not include the long-trajectory bin, because its smallest
+candidate reached 15,881 input tokens and the UT=6 16K memory probe failed. No
+trajectory context was truncated. Replay is teacher-forced: each next request
+uses the original successful assistant action and tool observation, not Ouro's
+newly generated output.
