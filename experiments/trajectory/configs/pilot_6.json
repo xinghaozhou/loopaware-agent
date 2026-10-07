@@ -1,0 +1,45 @@
+{
+  "run_name": "swebench_verified_gpt5mini_pilot6",
+  "dataset_repo": "tarsur385/swebench-verified-trajectories",
+  "dataset_revision": "773748a7c1222e8a642a7059821498e14293562a",
+  "dataset_model_subset": "gpt-5-mini",
+  "model_id": "ByteDance/Ouro-2.6B-Thinking",
+  "model_revision": "f1edd81e7ac41355db670500ceaf204e0f73af68",
+  "trace_exit_threshold": 0.7,
+  "max_new_tokens": 512,
+  "max_input_tokens": 8200,
+  "conditions": [
+    {
+      "name": "ut6_primary",
+      "total_ut_steps": 6,
+      "trajectory_ids": [
+        "sphinx-doc__sphinx-8475",
+        "sympy__sympy-16886",
+        "django__django-11451",
+        "pytest-dev__pytest-6202",
+        "scikit-learn__scikit-learn-14141",
+        "sphinx-doc__sphinx-9258"
+      ]
+    },
+    {
+      "name": "ut4_reference",
+      "total_ut_steps": 4,
+      "trajectory_ids": [
+        "sphinx-doc__sphinx-8475",
+        "scikit-learn__scikit-learn-14141"
+      ]
+    }
+  ],
+  "sample": [
+    {"instance_id": "sphinx-doc__sphinx-8475", "length_bin": "short", "turns": 8, "max_input_tokens": 4627},
+    {"instance_id": "sympy__sympy-16886", "length_bin": "short", "turns": 10, "max_input_tokens": 5971},
+    {"instance_id": "django__django-11451", "length_bin": "short", "turns": 6, "max_input_tokens": 6841},
+    {"instance_id": "pytest-dev__pytest-6202", "length_bin": "short", "turns": 10, "max_input_tokens": 8163},
+    {"instance_id": "scikit-learn__scikit-learn-14141", "length_bin": "medium", "turns": 14, "max_input_tokens": 7648},
+    {"instance_id": "sphinx-doc__sphinx-9258", "length_bin": "medium", "turns": 13, "max_input_tokens": 8180}
+  ],
+  "excluded_length_bin": {
+    "length_bin": "long",
+    "reason": "No complete resolved 26+ turn trajectory fits the validated device limit; the smallest reaches 15881 input tokens and UT=6 OOMs at 16000 tokens on the current A40."
+  }
+}

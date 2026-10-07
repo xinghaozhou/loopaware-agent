@@ -1,0 +1,318 @@
+
+
+We want to move from standalone SWE-bench prompts to a realistic multi-turn agent trajectory recurrence characterization.
+
+The immediate goal is not to build the predictor or scheduler yet. First, we need to establish whether realistic agent trajectories naturally exhibit enough recurrence heterogeneity to justify proactive recurrence-aware batching.
+
+Research question
+
+How does recurrent-depth demand evolve across turns of a realistic coding-agent task, and does this create enough cross-request heterogeneity for recurrence-aware batching to have meaningful headroom?
+
+The hierarchy we care about is:
+
+task -> turn/request -> generated token -> selected UT step
+
+Terminology
+
+- One UT step / recurrent iteration executes the entire Ouro decoder stack once.
+- selected_ut_step is the UT iteration whose hidden state/logits are selected for next-token prediction.
+- executed_ut_steps is the number of UT iterations actually executed by the current HF runtime.
+- Current Ouro-HF still executes all configured UT steps; selected UT is therefore a counterfactual indicator of how much recurrence a true adaptive implementation would require.
+- For Ouro-1.4B, num_decoder_layers = 24.
+- For example, executed_ut_steps = 4 means 4 x 24 = 96 decoder-layer executions per generated token.
+
+Experiment 1: Fixed-trajectory multi-turn replay
+
+Use existing successful SWE-agent / OpenHands-style trajectories.
+
+Do not let Ouro's generated response determine the next agent state.
+
+For every trajectory:
+
+1. Obtain the recorded model context/query for turn 1.
+2. Run Ouro autoregressive decoding on that context and collect recurrence traces.
+3. Discard Ouro's generated text/action for trajectory progression.
+4. Advance using the recorded agent response/action and recorded tool observation from the original trajectory.
+5. Repeat for every turn.
+
+Conceptually:
+
+recorded turn context
+    ->
+Ouro decode
+    ->
+collect recurrence trace
+    ->
+discard Ouro output
+    ->
+use recorded response/tool observation
+    ->
+next recorded turn
+
+If the trajectory dataset already stores the exact full model query for each turn, prefer replaying that exact recorded query instead of reconstructing the context manually.
+
+This experiment should be described as:
+
+fixed-trajectory replay / teacher-forced workload characterization
+
+and not as on-policy agent execution.
+
+Sampling
+
+Start with 30-50 successful trajectories.
+
+Do not purely random-sample them. Stratify the sample so we cover different trajectory and context regimes.
+
+Suggested trajectory-length bins:
+
+short:   ~5-10 turns
+medium:  ~10-25 turns
+long:    25+ turns
+
+Also ensure the requests cover a broad input-context distribution, for example:
+
+<4K tokens
+4K-8K
+8K-16K
+16K+ if supported safely
+
+Report the actual sampled distribution rather than forcing exact bin counts if the dataset does not naturally support them.
+
+Prefer successful trajectories for this initial study so that we characterize normal software-engineering execution rather than pathological retry loops.
+
+Model configuration
+
+Primary experimental condition:
+
+total_ut_steps = 6
+early_exit_threshold = 0.7
+greedy decoding
+batch_size = 1
+max_new_tokens = 512
+
+We are using UT=6 to expose possible recurrent-depth headroom, but we must retain a reference condition.
+
+For an initial subset of approximately 10 trajectories, also run:
+
+total_ut_steps = 4
+early_exit_threshold = 0.7
+
+using the same requests and decoding configuration.
+
+This is needed to verify that the observed heterogeneity is not simply an artifact of increasing the recurrence budget.
+
+Do not increase UT merely to manufacture variance.
+
+Before the full run, perform a worst-case memory test using the longest-context request in the sampled trajectories with:
+
+UT = 6
+threshold = 0.7
+max_new_tokens = 512
+batch_size = 1
+
+Record peak GPU memory.
+
+Token-level trace schema
+
+Every generated-token record should include at least:
+
+{
+  "task_id": "...",
+  "request_id": "...",
+  "turn_idx": 0,
+  "token_idx": 0,
+  "token_id": 0,
+  "input_token_count": 0,
+  "output_token_count_final": 0,
+  "num_decoder_layers": 24,
+  "executed_ut_steps": 6,
+  "selected_ut_step": 4,
+  "executed_decoder_layer_calls": 144,
+  "selected_decoder_layer_calls_counterfactual": 96,
+  "gate_probability_by_ut": [],
+  "exit_probability_by_ut": [],
+  "cumulative_exit_probability_by_ut": []
+}
+
+Avoid ambiguous field names such as only recurrence_count.
+
+If backward compatibility requires them, document them explicitly as aliases.
+
+Request / turn-level summary
+
+For each turn/request, compute:
+
+- number of generated tokens
+- input context length
+- selected_ut_total = sum(selected_ut_step)
+- executed_ut_total = sum(executed_ut_steps)
+- mean selected UT
+- std selected UT
+- P50 selected UT
+- P90 selected UT
+- P95 selected UT
+- min/max selected UT
+- selected decoder-layer calls counterfactual total
+- executed decoder-layer calls total
+- theoretical recurrence saving
+
+where:
+
+theoretical_recurrence_saving = 1 - selected_ut_total / executed_ut_total
+
+Remember that this is only counterfactual theoretical saving. The current HF runtime still performs all configured UT steps.
+
+Task-level analysis
+
+For every agent trajectory, analyze how recurrence changes across turns.
+
+Report:
+
+- number of turns
+- input-context length by turn
+- mean selected UT by turn
+- total selected recurrent work by turn
+- theoretical saving by turn
+
+Analyze both raw turn index and normalized task progress:
+
+normalized_progress = turn_idx / total_turns
+
+We want to distinguish:
+
+- early-task behavior
+- middle-task behavior
+- late-task behavior
+
+Also analyze whether recurrence demand correlates with:
+
+- input-context length
+- turn index
+- normalized task progress
+
+We should not assume that a turn effect is independent of context growth.
+
+Experiment 2: Batch heterogeneity characterization
+
+Once the trajectory traces are collected, do not train a predictor yet.
+
+First answer whether there is enough natural heterogeneity for recurrence-aware batching to matter.
+
+Treat turns from different active tasks as candidate concurrent requests.
+
+Simulate candidate batches with several batch sizes, for example:
+
+B = 4, 8, 16
+
+For each batch and token horizon:
+
+H = 4, 8, 16, 32
+
+use the ground-truth selected-UT traces to measure recurrence heterogeneity.
+
+For each future token position h, we have:
+
+R_1,h, R_2,h, ..., R_B,h
+
+Measure at least:
+
+1. Within-batch UT variance.
+2. UT range: max(R) - min(R).
+3. Mean excess work relative to the shallowest / average sequence.
+4. Active batch size at each UT step under counterfactual adaptive execution.
+
+Example:
+
+UT1: 8 active
+UT2: 8 active
+UT3: 6 active
+UT4: 3 active
+
+5. Average active-batch ratio across UT steps.
+6. Frequency of upward recurrence transitions across adjacent generated tokens.
+
+Oracle cohorting study
+
+Before building a predictor, use the known future selected-UT traces as an oracle.
+
+Compare:
+
+random / FCFS-style grouping
+vs
+oracle recurrence-compatible grouping
+
+Oracle grouping should attempt to place requests with similar next-H-token recurrence profiles in the same batch.
+
+We want to quantify the maximum available scheduling headroom.
+
+Report whether oracle grouping reduces:
+
+- within-batch recurrence variance
+- depth range
+- late-UT batch shrinkage
+- number of heterogeneous exit events
+
+and improves:
+
+- average active batch size
+- predicted effective recurrent utilization
+
+The key question is:
+
+Does recurrence-aware oracle grouping materially improve batch homogeneity over normal grouping?
+
+If the oracle improvement is negligible, stop before implementing a predictor.
+
+Decision criteria
+
+This phase should answer four questions:
+
+1. Does token-level selected UT vary meaningfully in realistic multi-turn agent contexts?
+2. Does recurrent work vary meaningfully across turns within the same agent task?
+3. Is there temporal/context structure in recurrence demand as the task progresses?
+4. Most importantly, do concurrently ready requests exhibit enough recurrence heterogeneity that oracle recurrence-aware batching materially improves batch efficiency?
+
+Only if question 4 is clearly positive should we proceed to the next research stage:
+
+speculative / early recurrent states
+    ->
+predict next-H-token recurrence profile
+    ->
+relative recurrence ranking
+    ->
+proactive cross-request cohorting
+
+Do not implement the predictor, CDB replacement, global scheduler, vLLM integration, or task-level queueing yet.
+
+The purpose of this experiment is first to establish the workload opportunity and oracle upper bound.
+
+Git / reproducibility requirements
+
+Continue all work on the existing xinghao-codex branch.
+
+Before modifying code:
+
+- report the current git commit
+- list the files that will be modified/added
+- keep model instrumentation minimal
+- do not modify Hugging Face cache files directly
+
+Save:
+
+raw traces/
+per-request summaries/
+per-task summaries/
+batch-heterogeneity results/
+oracle-grouping results/
+exact experiment config/
+git commit hash/
+
+Never overwrite previous traces.
+
+Before launching the full 30-50 trajectory run, show me:
+
+1. the selected trajectory dataset/source
+2. its available trajectory/query schema
+3. the proposed stratified sample
+4. one reconstructed/replayed example trajectory
+5. the exact experiment commands and estimated runtime
