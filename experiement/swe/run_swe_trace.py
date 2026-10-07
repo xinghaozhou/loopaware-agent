@@ -1,3 +1,15 @@
+"""Compatibility entry point; use experiments/swe/run_swe_ut_trace.py."""
+
+if __name__ == "__main__":
+    from pathlib import Path as _Path
+    import sys as _sys
+
+    _sys.path.insert(0, str(_Path(__file__).resolve().parents[2]))
+    from experiments.swe.run_swe_ut_trace import main as _main
+
+    _main()
+    raise SystemExit
+
 import json
 from pathlib import Path
 import sys

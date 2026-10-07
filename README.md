@@ -1,104 +1,65 @@
 # Setup
 
+This branch traces Ouro's Universal Transformer (UT) decision for every output
+token generated across multiple SWE-bench trajectories. The Hugging Face
+reference model always computes every configured UT step. This experiment keeps
+decoding fixed at the final UT step and uses the learned gates only to trace which
+UT step adaptive decoding would have selected. The trace records both values so
+the mimicked selected depth is not mistaken for actual saved compute.
 
-0. git repo
-git clone 
+Clone with submodules, install
+[uv](https://docs.astral.sh/uv/getting-started/installation/), and synchronize the
+locked environment:
+
+```bash
+git clone --recurse-submodules <repository-url> loopaware-agent
 cd loopaware-agent
-
-
-1. If you have not download uv: 
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-2. update uv env based on pyproject.toml & uv.lock
 uv sync
+```
 
-3. how to run script (test if model works)
-uv run python try.py
+If uv's cache is on a filesystem that does not support reflinks, use:
 
-4. how to run vllm + ouro (tes if compatible)
-vllm serve ByteDance/Ouro-2.6B-Thinking   --dtype bfloat16   --max-model-len 8192   --trust-remote-code
+```bash
+UV_CACHE_DIR=/tmp/loopaware-uv-cache uv sync
+```
 
-use following to test:
+## Per-output-token UT experiment
 
-curl http://localhost:8000/v1/completions   -H "Content-Type: application/json"   -d '{
-    "model": "ByteDance/Ouro-2.6B-Thinking",
-    "prompt": "Explain what a recurrent transformer is in one sentence.",
-    "max_tokens": 32,
-    "temperature": 0
-  }'
+The vendored repositories are registered as submodules. Model weights and the
+dataset parquet are Git LFS objects; a normal submodule checkout retrieves their
+pointers, while the experiment downloads the requested artifacts through the
+Hugging Face libraries.
 
-5. Any modification to vllm 
-cd vendor/vllm
-git add vllm/model_executor/models/ouro.py
-git commit -m <message>
-cd /root/loopaware-agent
-git status
-git add vendor/vllm
+Run a small sampled experiment:
 
-6. Any modification to ouro_hf
-cd vendor/ouro_hf
-git add modeling_ouro.py
-git commit -m <message>
-cd /root/loopaware-agent
-git status
-git add vendor/ouro_hf
+```bash
+uv run python experiments/swe/run_swe_ut_trace.py \
+  --num-instances 1 \
+  --num-trajectories 4 \
+  --max-new-tokens 128 \
+  --temperature 0.7 \
+  --trace-exit-threshold 0.8
+```
 
-# Bugs
+The command writes:
 
-1. When doing try.py
-For missing key_cahche, value_cache using following command:
-sed -i \
-'s/self\.key_cache/self.k_cache/g; s/self\.value_cache/self.v_cache/g' \
-/workspace/.cache/huggingface/modules/transformers_modules/Bytedance/Ouro-2.6B-Thinking/f1edd81e7ac41355db670500ceaf204e0f73af68/modeling_ouro.py
+- `traces/swe_ut_trajectories.jsonl`: one record per trajectory, including a
+  token-level list of gate probabilities, exit probabilities, expected UT depth,
+  counterfactually selected UT step, fixed decoding UT step, and actually
+  executed UT steps.
+- `traces/swe_ut_summary.json`: per-trajectory summaries and a global selected
+  UT-step histogram, plus the mean learned exit probability for every UT step.
 
-2. When doing vllm+ouro, vllm=0.11.2 works, if the version goes up, it does not support ouro
+Greedy decoding is available with `--temperature 0`. The token-to-forward
+alignment currently supports standard generation only, not beam search or
+assisted/speculative decoding.
 
+`--trace-exit-threshold` affects only the reported selected UT step. It does not
+change generation: output-token logits always come from the final configured UT
+step.
 
-# working notes
-1. To see the output structure: 
-print(out.outputs[0].__dict__.keys())
+Run the lightweight tests with:
 
-It looks like: 
-dict_keys(['index', 'text', 'token_ids', 'cumulative_logprob', 'logprobs', 'finish_reason', 'stop_reason', 'lora_request'])
-
-'test': the genereated text
-
-2. git clone branch v0.11.2 and git switch to this branch for our implementation (scratch)
-git clone --branch v0.11.2   https://github.com/vllm-project/vllm.git   vendor/vllm
-git switch -c loopaware-vllm
-
-Sanity check: /root/loopaware-agent/vendor/vllm/vllm/model_executor/models/ouro.py
-
-uv run python - <<'PY'
-import inspect
-from vllm.model_executor.models.ouro import OuroModel
-
-print(inspect.getfile(OuroModel))
-PY
-
-3. vllm 0.11.2 in vendor, and ouro's exeuction code, now add the recurrence tracer
-vendor/vllm/vllm/model_executor/models/ouro.py
-
-4. ouro structure:
-  - OuroMLP: MLP after attention
-  - OuroAttention: Attention block reside in recurrent block
-  - OuroDecoderLayer: Recurrent Block (important)
-  - OuroModel: Ouro Structure
-  - OuroForCausalLM: quick start use abtract wrapper
-
-5. There is no early stop applied in vllm 0.11.2!!!
-
-6. But there is one in ouro-2.6B-reasoning, called early_exit_threshold
-
-7. Do a trajectory characterization:
-  - Count the actual recurrence (expect it to hit the same recurrence config)
-  - Count the predicted recurrence (If we apply a threshold to it, does it hit the same recurrence?)
-  - vendor/vllm/vllm/model_executor/models/ouro.py
-
-  - 7.1
-    - Add trace collector in model_init
-    - Shown that it hits the same recurrences
-
-  - 7.2
-    - Adding early exit gate to in model forward()
-    - Identify the gap between actual & expected recurrence
+```bash
+uv run python -m unittest discover -s tests -v
+```
