@@ -35,9 +35,21 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--config", type=Path, required=True)
     parser.add_argument("--run-dir", type=Path, required=True)
     parser.add_argument(
+        "--model-path",
+        type=Path,
+        default=None,
+        help="Optional local checkpoint directory; the configured revision remains recorded.",
+    )
+    parser.add_argument(
         "--resume",
         action="store_true",
         help="Skip requests already checkpointed in request_summaries.jsonl",
+    )
+    parser.add_argument(
+        "--max-requests",
+        type=int,
+        default=None,
+        help="Stop cleanly after this many newly completed requests (smoke tests).",
     )
     return parser.parse_args()
 
@@ -330,6 +342,12 @@ def main() -> None:
     args = parse_args()
     config = json.loads(args.config.read_text(encoding="utf-8"))
     run_dir = args.run_dir.resolve()
+    model_source: str | Path = (
+        args.model_path.resolve() if args.model_path is not None else config["model_id"]
+    )
+    model_load_kwargs = (
+        {} if args.model_path is not None else {"revision": config["model_revision"]}
+    )
     run_dir.mkdir(parents=True, exist_ok=True)
     config_output = run_dir / "experiment_config.json"
     if config_output.exists():
@@ -345,6 +363,7 @@ def main() -> None:
                 "git_commit": git_commit(),
                 "started_at": utc_now(),
                 "torch_version": torch.__version__,
+                "runtime_model_source": str(model_source),
             },
         )
 
@@ -356,8 +375,8 @@ def main() -> None:
         raise RuntimeError("Run output exists; pass --resume or choose a new run directory")
 
     tokenizer = AutoTokenizer.from_pretrained(
-        config["model_id"],
-        revision=config["model_revision"],
+        model_source,
+        **model_load_kwargs,
         trust_remote_code=True,
     )
     all_ids = sorted(
@@ -389,12 +408,12 @@ def main() -> None:
     error_count = 0
     for condition in config["conditions"]:
         ouro_config = OuroConfig.from_pretrained(
-            config["model_id"], revision=config["model_revision"]
+            model_source, **model_load_kwargs
         )
         ouro_config.total_ut_steps = condition["total_ut_steps"]
         model = OuroForCausalLM.from_pretrained(
-            config["model_id"],
-            revision=config["model_revision"],
+            model_source,
+            **model_load_kwargs,
             config=ouro_config,
             dtype=torch.bfloat16,
             device_map="cuda",
@@ -437,6 +456,7 @@ def main() -> None:
                     continue
 
                 input_ids = request["input_ids"].to(model.device)
+                attention_mask = torch.ones_like(input_ids)
                 torch.cuda.empty_cache()
                 torch.cuda.reset_peak_memory_stats()
                 torch.cuda.synchronize()
@@ -447,6 +467,7 @@ def main() -> None:
                     ) as tracer:
                         output_ids = model.generate(
                             input_ids,
+                            attention_mask=attention_mask,
                             max_new_tokens=config["max_new_tokens"],
                             do_sample=False,
                             use_cache=True,
@@ -502,6 +523,24 @@ def main() -> None:
                         flush=True,
                     )
                     del output_ids, generated_ids, events
+                    if (
+                        args.max_requests is not None
+                        and completed_this_process >= args.max_requests
+                    ):
+                        summarize_tasks(run_dir)
+                        atomic_json(
+                            run_dir / "completion.json",
+                            {
+                                "planned_requests": planned_requests,
+                                "completed_requests": len(completed),
+                                "completed_this_process": completed_this_process,
+                                "errors_this_process": error_count,
+                                "stopped_at_max_requests": True,
+                                "finished_at": utc_now(),
+                            },
+                        )
+                        print("STOPPED at --max-requests", flush=True)
+                        return
                 except Exception as error:
                     elapsed = time.perf_counter() - start
                     append_jsonl(
@@ -522,7 +561,7 @@ def main() -> None:
                     if isinstance(error, torch.cuda.OutOfMemoryError):
                         torch.cuda.empty_cache()
                 finally:
-                    del input_ids
+                    del input_ids, attention_mask
 
         del model
         torch.cuda.empty_cache()
