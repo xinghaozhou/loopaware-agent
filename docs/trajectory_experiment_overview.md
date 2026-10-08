@@ -1,5 +1,9 @@
 # Loop-Aware Agent Trajectory Experiment Overview
 
+> The canonical cross-domain summary, exact interpretation boundaries, and
+> recommended token-difficulty follow-up are in
+> [`selected_ut_experiment_summary.md`](selected_ut_experiment_summary.md).
+
 ## Objective
 
 This study characterizes counterfactual recurrent-depth demand during realistic,
