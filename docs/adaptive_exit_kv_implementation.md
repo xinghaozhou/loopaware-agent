@@ -82,6 +82,23 @@ prefill-produced first output token. The two policies need not generate the
 same continuation because their historical-KV semantics intentionally differ.
 Each physical run matched its own run-all reference exactly.
 
+### Threshold-one equivalence sanity check
+
+At threshold `1.0`, every tested token selected and physically executed
+`U_max = 6`. Therefore `last_available` resolves every historical decoded
+token at recurrence `u` from `min(u, U_j) = u`, which reduces to the original
+per-depth Ouro cache semantics.
+
+A two-request, eight-token BF16 check on the pinned Ouro-2.6B checkpoint
+compared original `full_per_depth` run-all execution against physical
+`last_available` execution. Generated token IDs and selected depths matched,
+and the maximum absolute logit difference was exactly `0.0` on every forward
+pass. The fast tiny-model equivalent is retained as a regression test in
+`tests/test_adaptive_kv.py`.
+
+The machine-readable real-checkpoint result is stored locally at
+`results/threshold_one_equivalence.json`.
+
 The machine-readable result is in
 `results/adaptive_kv_checkpoint_validation.json`.
 

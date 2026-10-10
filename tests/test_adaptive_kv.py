@@ -119,6 +119,41 @@ def tiny_model(policy: str, physical: bool, state_dict=None) -> OuroForCausalLM:
 
 
 class AdaptiveModelParityTest(unittest.TestCase):
+    def test_threshold_one_last_available_matches_full_per_depth(self) -> None:
+        torch.manual_seed(7)
+        with torch.inference_mode():
+            original = tiny_model("full_per_depth", physical=False)
+            adaptive = tiny_model(
+                "last_available", physical=True, state_dict=original.state_dict()
+            )
+            for model in (original, adaptive):
+                model.early_exit_threshold = 1.0
+                model.config.early_exit_threshold = 1.0
+                model.model.config.early_exit_threshold = 1.0
+
+            original_output = original(torch.tensor([[1, 4, 5]]), use_cache=True)
+            adaptive_output = adaptive(torch.tensor([[1, 4, 5]]), use_cache=True)
+            torch.testing.assert_close(
+                original_output.logits, adaptive_output.logits, rtol=0, atol=0
+            )
+
+            for token in (6, 7, 8):
+                original_output = original(
+                    torch.tensor([[token]]),
+                    past_key_values=original_output.past_key_values,
+                    use_cache=True,
+                )
+                adaptive_output = adaptive(
+                    torch.tensor([[token]]),
+                    past_key_values=adaptive_output.past_key_values,
+                    use_cache=True,
+                )
+                torch.testing.assert_close(
+                    original_output.logits, adaptive_output.logits, rtol=0, atol=0
+                )
+                self.assertEqual(adaptive_output.selected_ut_steps.tolist(), [3])
+                self.assertEqual(adaptive_output.executed_ut_steps.tolist(), [3])
+
     def test_full_per_depth_baseline_still_generates(self) -> None:
         torch.manual_seed(5)
         config = OuroConfig(
