@@ -29,7 +29,7 @@ class TokenUTTrace:
     token: str | None
     gate_probabilities: list[float]
     exit_probabilities: list[float]
-    expected_ut_steps: float
+    expected_ut_steps: float | None
     selected_ut_step: int
     decode_ut_step: int
     executed_ut_steps: int
@@ -112,28 +112,51 @@ class OuroUTTracer(AbstractContextManager["OuroUTTracer"]):
         gate_logits = torch.stack(
             [gate.detach().squeeze(-1) for gate in gate_list], dim=-1
         )[:, -1, :]
-        gate_probabilities = torch.sigmoid(gate_logits.float())
-        exit_probabilities = _exit_distribution(gate_logits)
-        cumulative = exit_probabilities.cumsum(dim=-1)
-        crossed = cumulative >= self.exit_threshold
-        selected = crossed.to(torch.int64).argmax(dim=-1)
-        selected = torch.where(
-            crossed.any(dim=-1),
-            selected,
-            torch.full_like(selected, exit_probabilities.shape[-1] - 1),
-        )
-        step_numbers = torch.arange(
-            1,
-            exit_probabilities.shape[-1] + 1,
-            device=exit_probabilities.device,
-            dtype=exit_probabilities.dtype,
-        )
-        expected = (exit_probabilities * step_numbers).sum(dim=-1)
+        metadata = output[3] if len(output) >= 4 else None
+        physical = metadata is not None and metadata.physical_early_exit
+        if physical:
+            selected = metadata.selected_ut_steps.detach() - 1
+            executed = metadata.executed_ut_steps.detach()
+            expected = None
+        else:
+            exit_probabilities = _exit_distribution(gate_logits)
+            cumulative = exit_probabilities.cumsum(dim=-1)
+            crossed = cumulative >= self.exit_threshold
+            selected = crossed.to(torch.int64).argmax(dim=-1)
+            selected = torch.where(
+                crossed.any(dim=-1),
+                selected,
+                torch.full_like(selected, exit_probabilities.shape[-1] - 1),
+            )
+            executed = torch.full_like(selected, exit_probabilities.shape[-1])
+            step_numbers = torch.arange(
+                1,
+                exit_probabilities.shape[-1] + 1,
+                device=exit_probabilities.device,
+                dtype=exit_probabilities.dtype,
+            )
+            expected = (exit_probabilities * step_numbers).sum(dim=-1)
 
         positions = _last_cache_positions(
             kwargs.get("cache_position"), gate_logits.shape[0]
         )
         for batch_index in range(gate_logits.shape[0]):
+            executed_steps = int(executed[batch_index].cpu())
+            row_gate_logits = gate_logits[batch_index, :executed_steps]
+            row_gate_probabilities = torch.sigmoid(row_gate_logits.float())
+            if physical:
+                remaining = torch.ones((), device=row_gate_logits.device)
+                row_exit_probabilities = []
+                for step, gate_probability in enumerate(row_gate_probabilities):
+                    if step == self.model.model.total_ut_steps - 1:
+                        probability = remaining
+                    else:
+                        probability = gate_probability * remaining
+                    row_exit_probabilities.append(probability)
+                    remaining = remaining * (1.0 - gate_probability)
+                exit_values = torch.stack(row_exit_probabilities)
+            else:
+                exit_values = exit_probabilities[batch_index]
             output_index = self._next_output_index.get(batch_index, 0)
             self._next_output_index[batch_index] = output_index + 1
             self.events.append(
@@ -143,16 +166,16 @@ class OuroUTTracer(AbstractContextManager["OuroUTTracer"]):
                     input_position=positions[batch_index],
                     token_id=None,
                     token=None,
-                    gate_probabilities=gate_probabilities[batch_index]
-                    .cpu()
-                    .tolist(),
-                    exit_probabilities=exit_probabilities[batch_index]
-                    .cpu()
-                    .tolist(),
-                    expected_ut_steps=float(expected[batch_index].cpu()),
+                    gate_probabilities=row_gate_probabilities.cpu().tolist(),
+                    exit_probabilities=exit_values.cpu().tolist(),
+                    expected_ut_steps=(
+                        None
+                        if expected is None
+                        else float(expected[batch_index].cpu())
+                    ),
                     selected_ut_step=int(selected[batch_index].cpu()) + 1,
-                    decode_ut_step=exit_probabilities.shape[-1],
-                    executed_ut_steps=exit_probabilities.shape[-1],
+                    decode_ut_step=executed_steps,
+                    executed_ut_steps=executed_steps,
                     exit_threshold=self.exit_threshold,
                 )
             )
@@ -227,18 +250,29 @@ def summarize_ut_trace(events: Sequence[TokenUTTrace]) -> dict[str, Any]:
             "mean_exit_probabilities": [],
             "selected_ut_step_histogram": {},
         }
-    expected = [event.expected_ut_steps for event in events]
-    selected = [event.selected_ut_step for event in events]
-    mean_exit_probabilities = [
-        sum(event.exit_probabilities[step] for event in events) / len(events)
-        for step in range(events[0].executed_ut_steps)
+    expected = [
+        event.expected_ut_steps
+        for event in events
+        if event.expected_ut_steps is not None
     ]
+    selected = [event.selected_ut_step for event in events]
+    max_steps = max(len(event.exit_probabilities) for event in events)
+    mean_exit_probabilities = []
+    for step in range(max_steps):
+        values = [
+            event.exit_probabilities[step]
+            for event in events
+            if step < len(event.exit_probabilities)
+        ]
+        mean_exit_probabilities.append(sum(values) / len(values))
     histogram = {
         str(step): selected.count(step) for step in sorted(set(selected))
     }
     return {
         "num_output_tokens": len(events),
-        "mean_expected_ut_steps": sum(expected) / len(expected),
+        "mean_expected_ut_steps": (
+            sum(expected) / len(expected) if expected else None
+        ),
         "mean_selected_ut_steps": sum(selected) / len(selected),
         "mean_exit_probabilities": mean_exit_probabilities,
         "selected_ut_step_histogram": histogram,

@@ -20,12 +20,35 @@ class FakeOuroBase(nn.Module):
         return SimpleNamespace(), [], gates
 
 
+class FakePhysicalOuroBase(FakeOuroBase):
+    total_ut_steps = 3
+
+    def forward(self, values: torch.Tensor, cache_position=None):
+        batch, sequence = values.shape
+        gates = [
+            torch.zeros(batch, sequence, 1),
+            torch.zeros(batch, sequence, 1),
+        ]
+        metadata = SimpleNamespace(
+            physical_early_exit=True,
+            selected_ut_steps=torch.tensor([2]),
+            executed_ut_steps=torch.tensor([2]),
+        )
+        return SimpleNamespace(), [], gates, metadata
+
+
 class FakeOuroForCausalLM(nn.Module):
     def __init__(self) -> None:
         super().__init__()
         self.model = FakeOuroBase()
         self.config = SimpleNamespace(early_exit_threshold=0.7)
         self.early_exit_threshold = 0.7
+
+
+class FakePhysicalOuroForCausalLM(FakeOuroForCausalLM):
+    def __init__(self) -> None:
+        super().__init__()
+        self.model = FakePhysicalOuroBase()
 
 
 class OuroUTTracerTest(unittest.TestCase):
@@ -55,6 +78,18 @@ class OuroUTTracerTest(unittest.TestCase):
             model.model(torch.zeros(1, 1))
         with self.assertRaisesRegex(ValueError, "one Ouro forward pass"):
             tracer.attach_output_tokens([[1, 2]])
+
+    def test_uses_authoritative_physical_exit_metadata(self) -> None:
+        model = FakePhysicalOuroForCausalLM()
+        with OuroUTTracer(model) as tracer:
+            model.model(torch.zeros(1, 1), cache_position=torch.tensor([4]))
+        event = tracer.attach_output_tokens([[11]])[0]
+        self.assertEqual(event.selected_ut_step, 2)
+        self.assertEqual(event.executed_ut_steps, 2)
+        self.assertEqual(event.decode_ut_step, 2)
+        self.assertEqual(event.gate_probabilities, [0.5, 0.5])
+        self.assertEqual(event.exit_probabilities, [0.5, 0.25])
+        self.assertIsNone(event.expected_ut_steps)
 
 
 if __name__ == "__main__":
