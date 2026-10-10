@@ -1,6 +1,3 @@
-[submodule "vendor/ouro_hf"]
-	path = vendor/ouro_hf
-	url = https://huggingface.co/ByteDance/Ouro-2.6B-Thinking
 [submodule "vendor/SWE-dataset"]
 	path = vendor/SWE-dataset
 	url = https://huggingface.co/datasets/SWE-bench/SWE-bench_Verified
