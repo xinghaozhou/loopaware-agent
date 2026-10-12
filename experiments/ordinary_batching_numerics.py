@@ -15,7 +15,7 @@ import sys
 from typing import Any
 
 import torch
-from datasets import load_dataset
+from datasets import Dataset, load_dataset
 from transformers import AutoTokenizer
 
 
@@ -92,13 +92,24 @@ def render_prompt(tokenizer: Any, question: str) -> str:
     return f"User: {question}\nAssistant:"
 
 
+def load_prepared_arrow(
+    cache_name: str, config_name: str, revision: str, split: str
+) -> Dataset | None:
+    """Load a pinned prepared cache when Hub parquet files are unavailable."""
+
+    hf_root = Path(os.environ.get("HF_HOME", Path.home() / ".cache/huggingface"))
+    pattern = f"{cache_name}/{config_name}/*/{revision}/*-{split}.arrow"
+    candidates = sorted((hf_root / "datasets").glob(pattern))
+    return Dataset.from_file(str(candidates[-1])) if candidates else None
+
+
 def load_requests(tokenizer: Any, count: int) -> list[Request]:
-    gsm = load_dataset(
-        GSM8K_ID, "main", split="test", revision=GSM8K_REVISION
-    )
-    math500 = load_dataset(
-        MATH500_ID, split="test", revision=MATH500_REVISION
-    )
+    gsm = load_prepared_arrow(
+        "openai___gsm8k", "main", GSM8K_REVISION, "test"
+    ) or load_dataset(GSM8K_ID, "main", split="test", revision=GSM8K_REVISION)
+    math500 = load_prepared_arrow(
+        "HuggingFaceH4___math-500", "default", MATH500_REVISION, "test"
+    ) or load_dataset(MATH500_ID, split="test", revision=MATH500_REVISION)
     requests = []
     for index in range(count):
         requests.extend(

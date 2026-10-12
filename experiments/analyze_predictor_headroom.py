@@ -27,7 +27,7 @@ from loopaware_agent.ut_scheduling import (  # noqa: E402
 
 ACCURACIES = (0.7, 0.8, 0.9, 1.0)
 THRESHOLDS = (0.2, 0.4)
-BATCH_SIZE = 4
+BATCH_SIZES = (4, 8, 16)
 GROUP_SIZE = 16
 SEEDS = tuple(20261012 + offset for offset in range(10))
 
@@ -113,6 +113,7 @@ def evaluate_groups(
     groups: list[list[tuple[str, int]]],
     predictions: list[int] | None,
     *,
+    batch_size: int,
     u_max: int,
 ) -> dict[str, Any]:
     costs = []
@@ -128,16 +129,16 @@ def evaluate_groups(
             samples.append(UTSample(sample_id, true_ut, predicted_ut))
         if predictions is None:
             batches = form_fcfs_batches(
-                samples, batch_size=BATCH_SIZE, u_max=u_max
+                samples, batch_size=batch_size, u_max=u_max
             )
         else:
             batches = schedule_shortest_ut_first(
                 form_homogeneous_batches(
-                    samples, batch_size=BATCH_SIZE, u_max=u_max
+                    samples, batch_size=batch_size, u_max=u_max
                 )
             )
         evaluation = evaluate_lockstep_adaptive_exit(
-            batches, batch_size=BATCH_SIZE, u_max=u_max
+            batches, batch_size=batch_size, u_max=u_max
         )
         costs.append(evaluation.total_execution_cost)
         completion_times.extend(
@@ -161,68 +162,94 @@ def analyze_threshold(trace_dir: Path, threshold: float) -> dict[str, Any]:
     groups, metadata = load_frontiers(trace_dir, threshold)
     u_max = metadata["manifest"]["total_ut_steps"]
     flat_true = [value for group in groups for _, value in group]
-    fcfs = evaluate_groups(groups, None, u_max=u_max)
-    oracle_predictions = list(flat_true)
-    oracle = evaluate_groups(groups, oracle_predictions, u_max=u_max)
-    denominator = fcfs["mean_total_cost"] - oracle["mean_total_cost"]
-    oracle_headroom = denominator / fcfs["mean_total_cost"]
+    batch_results = []
+    for batch_size in BATCH_SIZES:
+        if GROUP_SIZE % batch_size:
+            raise ValueError(f"Group size {GROUP_SIZE} is not divisible by {batch_size}")
+        fcfs = evaluate_groups(
+            groups, None, batch_size=batch_size, u_max=u_max
+        )
+        oracle = evaluate_groups(
+            groups, list(flat_true), batch_size=batch_size, u_max=u_max
+        )
+        denominator = fcfs["mean_total_cost"] - oracle["mean_total_cost"]
 
-    strategies = []
-    for accuracy in ACCURACIES:
-        seeds = (SEEDS[0],) if accuracy == 1.0 else SEEDS
-        evaluations = []
-        realized = []
-        for seed in seeds:
-            predictions, actual_accuracy = controlled_predictions(
-                flat_true, accuracy=accuracy, u_max=u_max, seed=seed
+        strategies = []
+        for accuracy in ACCURACIES:
+            seeds = (SEEDS[0],) if accuracy == 1.0 else SEEDS
+            evaluations = []
+            realized = []
+            for seed in seeds:
+                predictions, actual_accuracy = controlled_predictions(
+                    flat_true, accuracy=accuracy, u_max=u_max, seed=seed
+                )
+                realized.append(actual_accuracy)
+                evaluations.append(
+                    evaluate_groups(
+                        groups,
+                        predictions,
+                        batch_size=batch_size,
+                        u_max=u_max,
+                    )
+                )
+            mean_cost = statistics.fmean(
+                row["mean_total_cost"] for row in evaluations
             )
-            realized.append(actual_accuracy)
-            evaluations.append(evaluate_groups(groups, predictions, u_max=u_max))
-        mean_cost = statistics.fmean(row["mean_total_cost"] for row in evaluations)
-        strategies.append(
+            strategies.append(
+                {
+                    "strategy": (
+                        "ut_aware_oracle" if accuracy == 1.0 else "ut_aware"
+                    ),
+                    "target_accuracy": accuracy,
+                    "realized_accuracy": statistics.fmean(realized),
+                    "num_seeds": len(seeds),
+                    "mean_total_cost": mean_cost,
+                    "cost_reduction_vs_fcfs": 1.0
+                    - mean_cost / fcfs["mean_total_cost"],
+                    "recovered_oracle_headroom": (
+                        (fcfs["mean_total_cost"] - mean_cost) / denominator
+                        if denominator
+                        else None
+                    ),
+                    "mean_ut_range": statistics.fmean(
+                        row["mean_ut_range"] for row in evaluations
+                    ),
+                    "mean_ut_variance": statistics.fmean(
+                        row["mean_ut_variance"] for row in evaluations
+                    ),
+                    "mean_batch_completion_time": statistics.fmean(
+                        row["mean_batch_completion_time"] for row in evaluations
+                    ),
+                    "mean_total_cost_by_seed": [
+                        row["mean_total_cost"] for row in evaluations
+                    ],
+                }
+            )
+        batch_results.append(
             {
-                "strategy": "ut_aware_oracle" if accuracy == 1.0 else "ut_aware",
-                "target_accuracy": accuracy,
-                "realized_accuracy": statistics.fmean(realized),
-                "num_seeds": len(seeds),
-                "mean_total_cost": mean_cost,
-                "cost_reduction_vs_fcfs": 1.0
-                - mean_cost / fcfs["mean_total_cost"],
-                "recovered_oracle_headroom": (
-                    (fcfs["mean_total_cost"] - mean_cost) / denominator
-                    if denominator
-                    else None
-                ),
-                "mean_ut_range": statistics.fmean(
-                    row["mean_ut_range"] for row in evaluations
-                ),
-                "mean_ut_variance": statistics.fmean(
-                    row["mean_ut_variance"] for row in evaluations
-                ),
-                "mean_batch_completion_time": statistics.fmean(
-                    row["mean_batch_completion_time"] for row in evaluations
-                ),
-                "mean_total_cost_by_seed": [
-                    row["mean_total_cost"] for row in evaluations
-                ],
+                "batch_size": batch_size,
+                "batches_per_instance": GROUP_SIZE // batch_size,
+                "fcfs": {
+                    **{
+                        key: value
+                        for key, value in fcfs.items()
+                        if key != "total_cost_by_instance"
+                    },
+                    "cost_reduction_vs_fcfs": 0.0,
+                    "recovered_oracle_headroom": 0.0,
+                },
+                "oracle_headroom": denominator / fcfs["mean_total_cost"],
+                "strategies": strategies,
             }
         )
     return {
         "threshold": threshold,
         "scheduling_instances": len(groups),
         "samples_per_instance": GROUP_SIZE,
-        "batch_size": BATCH_SIZE,
-        "batches_per_instance": GROUP_SIZE // BATCH_SIZE,
         "true_ut_histogram": {
             str(value): flat_true.count(value) for value in sorted(set(flat_true))
         },
-        "fcfs": {
-            **{key: value for key, value in fcfs.items() if key != "total_cost_by_instance"},
-            "cost_reduction_vs_fcfs": 0.0,
-            "recovered_oracle_headroom": 0.0,
-        },
-        "oracle_headroom": oracle_headroom,
-        "strategies": strategies,
+        "batch_sizes": batch_results,
         "trace_metadata": metadata,
     }
 
@@ -235,8 +262,10 @@ def markdown(result: dict[str, Any]) -> str:
     source = result["thresholds"][0]["trace_metadata"]["manifest"]
     gsm = source["datasets"]["gsm8k"]
     math500 = source["datasets"]["math500"]
+    max_new_tokens = source["max_new_tokens"]
+    label_count = result["thresholds"][0]["scheduling_instances"] * GROUP_SIZE
     lines = [
-        "# Controlled-Accuracy UT Predictor Headroom Study",
+        "# Controlled-Accuracy UT Predictor Batch-Size Sweep",
         "",
         "This is an analytical adaptive-exit scheduling simulation, not measured GPU speedup.",
         "Predicted UT is used only for grouping and ordering; all costs use true UT.",
@@ -246,14 +275,14 @@ def markdown(result: dict[str, Any]) -> str:
         f"- 8 GSM8K test prompts, indices 0--7: `{gsm['id']}` at `{gsm['revision']}`",
         f"- 8 MATH-500 test prompts, indices 0--7: `{math500['id']}` at `{math500['revision']}`",
         "- Ouro-2.6B-Thinking, UT=4, BF16, `full_per_depth`, physical exit disabled",
-        "- One B=1 fixed-final-UT trajectory per request, up to 64 tokens",
+        f"- One B=1 fixed-final-UT trajectory per request, up to {max_new_tokens} tokens",
         "- Scheduling frontiers align the same output position across all 16 requests",
         "",
         "## Controlled predictor and scheduler",
         "",
-        "For each accuracy and seed, an aggregate exact-match count is selected over all 1,024 labels. Every incorrect prediction is true UT +1 or -1, clipped to UT 1--4. Results at 70%, 80%, and 90% average ten fixed seeds; the oracle is deterministic.",
+        f"For each accuracy and seed, an aggregate exact-match count is selected over all {label_count:,} labels. Every incorrect prediction is true UT +1 or -1, clipped to UT 1--4. Results at 70%, 80%, and 90% average ten fixed seeds; the oracle is deterministic.",
         "",
-        "FCFS retains request order. UT-aware batching stably sorts the 16 samples by predicted UT, forms four adjacent batches of four, and executes batches from smallest predicted depth to largest. Adaptive-exit cost always uses true UT: `4 * max(true UT)`.",
+        "FCFS retains request order. UT-aware batching stably sorts the 16 samples by predicted UT, forms adjacent fixed-size batches, and executes batches from smallest predicted depth to largest. Adaptive-exit cost always uses true UT: `B * max(true UT)`.",
         "",
     ]
     for threshold_result in result["thresholds"]:
@@ -262,28 +291,32 @@ def markdown(result: dict[str, Any]) -> str:
                 f"## Exit threshold {threshold_result['threshold']}",
                 "",
                 f"Scheduling instances: {threshold_result['scheduling_instances']}",
-                f"  ",
-                f"Oracle headroom: **{percent(threshold_result['oracle_headroom'])}**",
                 "",
-                "| Strategy | Predictor accuracy | Realized accuracy | Mean total cost | Cost reduction vs FCFS | Recovered oracle headroom | Mean UT range | Mean batch completion time |",
-                "|---|---:|---:|---:|---:|---:|---:|---:|",
+                "| Batch | Strategy | Predictor accuracy | Realized accuracy | Mean total cost | Cost reduction vs FCFS | Recovered oracle headroom | Mean UT range | Mean batch completion time |",
+                "|---:|---|---:|---:|---:|---:|---:|---:|---:|",
             ]
         )
-        fcfs = threshold_result["fcfs"]
-        lines.append(
-            f"| FCFS | N/A | N/A | {fcfs['mean_total_cost']:.3f} | 0.00% | 0.00% | "
-            f"{fcfs['mean_ut_range']:.3f} | {fcfs['mean_batch_completion_time']:.3f} |"
-        )
-        for row in threshold_result["strategies"]:
-            label = "UT-aware Oracle" if row["target_accuracy"] == 1.0 else "UT-aware"
+        for batch_result in threshold_result["batch_sizes"]:
+            batch_size = batch_result["batch_size"]
+            fcfs = batch_result["fcfs"]
             lines.append(
-                f"| {label} | {100 * row['target_accuracy']:.0f}% | "
-                f"{100 * row['realized_accuracy']:.2f}% | {row['mean_total_cost']:.3f} | "
-                f"{percent(row['cost_reduction_vs_fcfs'])} | "
-                f"{percent(row['recovered_oracle_headroom'])} | "
-                f"{row['mean_ut_range']:.3f} | "
-                f"{row['mean_batch_completion_time']:.3f} |"
+                f"| {batch_size} | FCFS | N/A | N/A | {fcfs['mean_total_cost']:.3f} | 0.00% | 0.00% | "
+                f"{fcfs['mean_ut_range']:.3f} | {fcfs['mean_batch_completion_time']:.3f} |"
             )
+            for row in batch_result["strategies"]:
+                label = (
+                    "UT-aware Oracle"
+                    if row["target_accuracy"] == 1.0
+                    else "UT-aware"
+                )
+                lines.append(
+                    f"| {batch_size} | {label} | {100 * row['target_accuracy']:.0f}% | "
+                    f"{100 * row['realized_accuracy']:.2f}% | {row['mean_total_cost']:.3f} | "
+                    f"{percent(row['cost_reduction_vs_fcfs'])} | "
+                    f"{percent(row['recovered_oracle_headroom'])} | "
+                    f"{row['mean_ut_range']:.3f} | "
+                    f"{row['mean_batch_completion_time']:.3f} |"
+                )
         lines.extend(
             [
                 "",
@@ -298,27 +331,28 @@ def markdown(result: dict[str, Any]) -> str:
         ]
     )
     for threshold_result in result["thresholds"]:
-        ninety = next(
-            row
-            for row in threshold_result["strategies"]
-            if row["target_accuracy"] == 0.9
-        )
-        fcfs = threshold_result["fcfs"]
-        completion_reduction = 1.0 - (
-            ninety["mean_batch_completion_time"]
-            / fcfs["mean_batch_completion_time"]
-        )
-        lines.append(
-            f"- At threshold {threshold_result['threshold']}, oracle headroom is "
-            f"{percent(threshold_result['oracle_headroom'])}; 90% prediction recovers "
-            f"{percent(ninety['recovered_oracle_headroom'])}, reduces cost by "
-            f"{percent(ninety['cost_reduction_vs_fcfs'])}, and reduces the mean "
-            f"batch-completion proxy by {percent(completion_reduction)}."
-        )
+        for batch_result in threshold_result["batch_sizes"]:
+            ninety = next(
+                row
+                for row in batch_result["strategies"]
+                if row["target_accuracy"] == 0.9
+            )
+            fcfs = batch_result["fcfs"]
+            completion_reduction = 1.0 - (
+                ninety["mean_batch_completion_time"]
+                / fcfs["mean_batch_completion_time"]
+            )
+            lines.append(
+                f"- At threshold {threshold_result['threshold']} and B={batch_result['batch_size']}, "
+                f"oracle headroom is {percent(batch_result['oracle_headroom'])}; "
+                f"90% prediction recovers {percent(ninety['recovered_oracle_headroom'])}, "
+                f"reduces cost by {percent(ninety['cost_reduction_vs_fcfs'])}, and "
+                f"reduces the mean batch-completion proxy by {percent(completion_reduction)}."
+            )
     lines.extend(
         [
-            "- UT-aware batching lowers within-batch true-UT range at every tested accuracy.",
-            "- In this controlled local-error model, 90% accuracy recovers more than 80% of oracle batching benefit at both thresholds.",
+            "- For B=4 and B=8, UT-aware batching lowers within-batch true-UT range at every tested accuracy.",
+            "- B=16 is a negative control: with N=16 it forms one batch, so reordering cannot reduce lockstep cost and recovered headroom is undefined.",
             "",
             "**Conclusion:** next-token UT prediction is worth pursuing for a real predictor pilot. This conclusion is about analytical recurrence-slot headroom, not measured speedup.",
             "",
@@ -338,7 +372,7 @@ def main() -> None:
         "accuracies": ACCURACIES,
         "seeds": SEEDS,
         "group_size": GROUP_SIZE,
-        "batch_size": BATCH_SIZE,
+        "batch_sizes": BATCH_SIZES,
         "thresholds": [
             analyze_threshold(args.trace_dir.resolve(), threshold)
             for threshold in THRESHOLDS

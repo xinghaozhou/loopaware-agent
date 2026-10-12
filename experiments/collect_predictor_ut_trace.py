@@ -81,8 +81,8 @@ def main() -> None:
         raise ValueError("The controlled pilot requires 8 examples per dataset")
     if args.total_ut_steps != 4:
         raise ValueError("The controlled pilot is fixed at UT=4")
-    if args.max_new_tokens != 64:
-        raise ValueError("The controlled pilot is fixed at 64 output positions")
+    if args.max_new_tokens not in (64, 128):
+        raise ValueError("The controlled pilot supports 64 or 128 output positions")
     args.output_dir.mkdir(parents=True, exist_ok=True)
     set_determinism(args.seed)
 
