@@ -162,8 +162,39 @@ class AdaptiveDecodeCache(_CacheUtilities, ABC):
         ] * self.max_cache_size
         self._prompt_length = 0
         self._committed: list[_CommittedToken] = []
+        self._pending: Optional[_CommittedToken] = None
+        self._history_key_cache: list[Optional[torch.Tensor]] = [
+            None
+        ] * self.max_cache_size
+        self._history_value_cache: list[Optional[torch.Tensor]] = [
+            None
+        ] * self.max_cache_size
         self._staged: list[Optional[_SparseKV]] = [None] * self.max_cache_size
         self._decode_batch_size: Optional[int] = None
+        self._prompt_batch_size: Optional[int] = None
+        self._next_decode_batch_indices: Optional[torch.LongTensor] = None
+        self._decode_batch_indices: Optional[torch.LongTensor] = None
+
+    def set_decode_batch_indices(self, batch_indices: torch.LongTensor) -> None:
+        """Identify global request rows for the next decode microbatch.
+
+        Multiple disjoint microbatches may contribute one logical token before
+        it becomes visible in history. This enables token-level regrouping
+        without copying the accumulated KV cache between physical batches.
+        """
+
+        if self.in_decode or self._next_decode_batch_indices is not None:
+            raise RuntimeError("Decode batch indices are already configured")
+        if self._prompt_batch_size is None:
+            raise RuntimeError("Scheduled decode requires a completed prefill")
+        indices = batch_indices.detach().to(dtype=torch.long)
+        if indices.ndim != 1 or indices.numel() == 0:
+            raise ValueError("batch_indices must be a non-empty vector")
+        if bool(((indices < 0) | (indices >= self._prompt_batch_size)).any()):
+            raise ValueError("batch_indices are outside the prefill batch")
+        if indices.unique().numel() != indices.numel():
+            raise ValueError("batch_indices must be unique")
+        self._next_decode_batch_indices = indices
 
     def begin_decode(self, batch_size: int) -> None:
         if self._decode_batch_size is not None:
@@ -174,6 +205,13 @@ class AdaptiveDecodeCache(_CacheUtilities, ABC):
             raise RuntimeError("Adaptive decode requires a completed prefill")
         self._prepare_prompt_for_decode()
         self._decode_batch_size = batch_size
+        if self._next_decode_batch_indices is None:
+            self._decode_batch_indices = torch.arange(batch_size)
+        else:
+            if self._next_decode_batch_indices.numel() != batch_size:
+                raise ValueError("Configured batch indices do not match decode batch size")
+            self._decode_batch_indices = self._next_decode_batch_indices
+            self._next_decode_batch_indices = None
 
     @property
     def in_decode(self) -> bool:
@@ -200,6 +238,11 @@ class AdaptiveDecodeCache(_CacheUtilities, ABC):
         batch_indices = batch_indices.to(device=key_states.device, dtype=torch.long)
         if batch_indices.numel() != key_states.shape[0]:
             raise ValueError("batch_indices must identify every incoming KV row")
+        if self._decode_batch_indices is None:
+            raise RuntimeError("Decode transaction has no global batch mapping")
+        batch_indices = self._decode_batch_indices.to(key_states.device).index_select(
+            0, batch_indices
+        )
         self._staged[layer_idx] = _SparseKV(
             batch_indices=batch_indices.detach().clone(),
             key=key_states,
@@ -236,6 +279,10 @@ class AdaptiveDecodeCache(_CacheUtilities, ABC):
         self.prompt_key_cache[layer_idx] = new_key
         self.prompt_value_cache[layer_idx] = new_value
         self._prompt_length = new_key.shape[2]
+        if self._prompt_batch_size is None:
+            self._prompt_batch_size = new_key.shape[0]
+        elif self._prompt_batch_size != new_key.shape[0]:
+            raise ValueError("Prefill batch size changed across cache layers")
         return new_key, new_value
 
     def commit(self, selected_depth: torch.LongTensor) -> None:
@@ -246,8 +293,17 @@ class AdaptiveDecodeCache(_CacheUtilities, ABC):
             raise ValueError("selected_depth must contain one value per batch row")
         if bool(((selected_depth < 1) | (selected_depth > self.total_ut_steps)).any()):
             raise ValueError("selected_depth is outside the configured UT range")
+        if self._decode_batch_indices is None or self._prompt_batch_size is None:
+            raise RuntimeError("Decode transaction has no global batch mapping")
+        global_indices = self._decode_batch_indices.to(selected_depth.device)
+        selected_global = torch.zeros(
+            self._prompt_batch_size,
+            dtype=torch.long,
+            device=selected_depth.device,
+        )
+        selected_global.index_copy_(0, global_indices, selected_depth)
 
-        for batch_index, depth in enumerate(selected_depth.tolist()):
+        for depth in selected_depth.tolist():
             for current_depth in range(depth):
                 for layer in range(self.num_hidden_layers):
                     slot = self._staged[current_depth * self.num_hidden_layers + layer]
@@ -256,42 +312,63 @@ class AdaptiveDecodeCache(_CacheUtilities, ABC):
                             f"Missing staged KV at depth={current_depth + 1}, "
                             f"layer={layer}"
                         )
-                    slot.row(batch_index)
         retained_slots: list[Optional[_SparseKV]] = []
         for flat_index, slot in enumerate(self._staged):
             if slot is None:
                 retained_slots.append(None)
                 continue
             depth = flat_index // self.num_hidden_layers
-            keep_rows = [
-                row
-                for row, batch_index in enumerate(slot.batch_indices.tolist())
-                if self._retain_token_depth(
-                    depth, int(selected_depth[batch_index]) - 1
-                )
-            ]
-            if not keep_rows:
-                retained_slots.append(None)
-                continue
-            row_indices = torch.tensor(keep_rows, device=slot.key.device)
+            exit_depth = selected_global.index_select(
+                0, slot.batch_indices.to(selected_depth.device)
+            ) - 1
+            keep = depth <= exit_depth if self.policy == LAST_AVAILABLE else depth == exit_depth
             retained_slots.append(
                 _SparseKV(
-                    batch_indices=slot.batch_indices.index_select(
-                        0, row_indices.to(slot.batch_indices.device)
-                    ),
-                    key=slot.key.index_select(0, row_indices),
-                    value=slot.value.index_select(0, row_indices),
+                    batch_indices=slot.batch_indices[keep],
+                    key=slot.key[keep],
+                    value=slot.value[keep],
                 )
             )
-        self._committed.append(
-            _CommittedToken(selected_depth=selected_depth, slots=retained_slots)
-        )
+        if self._pending is None:
+            self._pending = _CommittedToken(
+                selected_depth=torch.zeros(
+                    self._prompt_batch_size,
+                    dtype=torch.long,
+                    device=selected_depth.device,
+                ),
+                slots=[None] * self.max_cache_size,
+            )
+        if bool((self._pending.selected_depth.index_select(0, global_indices) != 0).any()):
+            raise RuntimeError("A request was committed twice at one token position")
+        self._pending.selected_depth.index_copy_(0, global_indices, selected_depth)
+        for index, slot in enumerate(retained_slots):
+            if slot is None:
+                continue
+            pending_slot = self._pending.slots[index]
+            if pending_slot is None:
+                self._pending.slots[index] = slot
+            else:
+                self._pending.slots[index] = _SparseKV(
+                    batch_indices=torch.cat(
+                        (pending_slot.batch_indices, slot.batch_indices)
+                    ),
+                    key=torch.cat((pending_slot.key, slot.key), dim=0),
+                    value=torch.cat((pending_slot.value, slot.value), dim=0),
+                )
+        if bool((self._pending.selected_depth > 0).all()):
+            self._append_resolved_token(self._pending)
+            self._committed.append(self._pending)
+            self._pending = None
         self._staged = [None] * self.max_cache_size
         self._decode_batch_size = None
+        self._decode_batch_indices = None
 
     def abort_decode(self) -> None:
         self._staged = [None] * self.max_cache_size
         self._decode_batch_size = None
+        self._decode_batch_indices = None
+        self._next_decode_batch_indices = None
+        self._pending = None
 
     def get_seq_length(self, layer_idx: Optional[int] = 0) -> int:
         del layer_idx
@@ -313,27 +390,52 @@ class AdaptiveDecodeCache(_CacheUtilities, ABC):
                 f"layer={physical_layer}"
             )
         prompt_rows = batch_indices.to(prompt_key.device)
-        key_parts = [prompt_key.index_select(0, prompt_rows)]
-        value_parts = [prompt_value.index_select(0, prompt_rows)]
+        prompt_key = prompt_key.index_select(0, prompt_rows)
+        prompt_value = prompt_value.index_select(0, prompt_rows)
+        flat_index = current_depth * self.num_hidden_layers + physical_layer
+        history_key = self._history_key_cache[flat_index]
+        history_value = self._history_value_cache[flat_index]
+        if history_key is None or history_value is None:
+            return prompt_key, prompt_value
+        return (
+            torch.cat((prompt_key, history_key.index_select(0, prompt_rows)), dim=2),
+            torch.cat((prompt_value, history_value.index_select(0, prompt_rows)), dim=2),
+        )
 
-        for token in self._committed:
-            token_keys = []
-            token_values = []
-            for batch_index in batch_indices.tolist():
-                source_depth = self._token_source_depth(
-                    current_depth, int(token.selected_depth[batch_index]) - 1
+    def _append_resolved_token(self, token: _CommittedToken) -> None:
+        if self._prompt_batch_size is None:
+            raise RuntimeError("Resolved token requires a prefill batch")
+        for current_depth in range(self.total_ut_steps):
+            for layer in range(self.num_hidden_layers):
+                flat_index = current_depth * self.num_hidden_layers + layer
+                base_slot = token.slots[layer]
+                if base_slot is None:
+                    raise RuntimeError("Every request must execute the first UT depth")
+                key = torch.zeros(
+                    (self._prompt_batch_size, *base_slot.key.shape[1:]),
+                    dtype=base_slot.key.dtype,
+                    device=base_slot.key.device,
                 )
-                slot = token.slots[
-                    source_depth * self.num_hidden_layers + physical_layer
-                ]
-                if slot is None:
-                    raise RuntimeError("Policy selected an unavailable historical KV")
-                key_row, value_row = slot.row(batch_index)
-                token_keys.append(key_row)
-                token_values.append(value_row)
-            key_parts.append(torch.cat(token_keys, dim=0))
-            value_parts.append(torch.cat(token_values, dim=0))
-        return torch.cat(key_parts, dim=2), torch.cat(value_parts, dim=2)
+                value = torch.zeros_like(key)
+                if self.policy == LAST_AVAILABLE:
+                    source_depths = range(current_depth + 1)
+                else:
+                    source_depths = range(self.total_ut_steps)
+                for source_depth in source_depths:
+                    slot = token.slots[source_depth * self.num_hidden_layers + layer]
+                    if slot is None:
+                        continue
+                    rows = slot.batch_indices.to(key.device)
+                    key.index_copy_(0, rows, slot.key)
+                    value.index_copy_(0, rows, slot.value)
+                old_key = self._history_key_cache[flat_index]
+                old_value = self._history_value_cache[flat_index]
+                self._history_key_cache[flat_index] = (
+                    key if old_key is None else torch.cat((old_key, key), dim=2)
+                )
+                self._history_value_cache[flat_index] = (
+                    value if old_value is None else torch.cat((old_value, value), dim=2)
+                )
 
     @abstractmethod
     def _prompt_source_depth(self, current_depth: int) -> int:
@@ -393,12 +495,23 @@ class AdaptiveDecodeCache(_CacheUtilities, ABC):
                         value=torch.cat(values, dim=0),
                     )
                 )
+        for index, key in enumerate(self._history_key_cache):
+            if key is None:
+                continue
+            value = self._history_value_cache[index]
+            indices = beam_idx.to(key.device)
+            self._history_key_cache[index] = key.index_select(0, indices)
+            self._history_value_cache[index] = value.index_select(0, indices)
 
     def clear(self) -> None:
         self.prompt_key_cache = [None] * self.max_cache_size
         self.prompt_value_cache = [None] * self.max_cache_size
         self._prompt_length = 0
+        self._prompt_batch_size = None
         self._committed = []
+        self._pending = None
+        self._history_key_cache = [None] * self.max_cache_size
+        self._history_value_cache = [None] * self.max_cache_size
         self.abort_decode()
 
 
@@ -455,6 +568,42 @@ def make_ut_cache(
     raise ValueError(f"Unknown Ouro KV policy {policy!r}; expected one of {KV_POLICIES}")
 
 
+def merge_adaptive_prefill_caches(
+    caches: list[AdaptiveDecodeCache],
+) -> AdaptiveDecodeCache:
+    """Combine equal-width prefill caches for dynamically scheduled decode."""
+
+    if not caches:
+        raise ValueError("At least one prefill cache is required")
+    first = caches[0]
+    if first.get_seq_length() == 0:
+        raise ValueError("Cannot merge an empty prefill cache")
+    combined = type(first)(first.num_hidden_layers, first.total_ut_steps)
+    for cache in caches:
+        if type(cache) is not type(first):
+            raise TypeError("All prefill caches must use the same policy")
+        if (
+            cache.num_hidden_layers != first.num_hidden_layers
+            or cache.total_ut_steps != first.total_ut_steps
+            or cache.get_seq_length() != first.get_seq_length()
+        ):
+            raise ValueError("Prefill cache configurations do not match")
+        if cache._committed or cache._pending or cache.in_decode:
+            raise ValueError("Only untouched prefill caches can be merged")
+    for index in range(first.max_cache_size):
+        keys = [cache.prompt_key_cache[index] for cache in caches]
+        values = [cache.prompt_value_cache[index] for cache in caches]
+        if any(value is None for value in keys + values):
+            raise ValueError("Every prefill cache layer must be populated")
+        combined.prompt_key_cache[index] = torch.cat(keys, dim=0)
+        combined.prompt_value_cache[index] = torch.cat(values, dim=0)
+    combined._prompt_length = first.get_seq_length()
+    combined._prompt_batch_size = sum(
+        int(cache._prompt_batch_size or 0) for cache in caches
+    )
+    return combined
+
+
 def _validate_kv_shapes(left: torch.Tensor, right: torch.Tensor) -> None:
     if left.ndim != 4 or right.ndim != 4:
         raise ValueError("KV tensors must have [batch, heads, sequence, head_dim]")
@@ -472,6 +621,7 @@ __all__ = [
     "FinalExitSharedCache",
     "FullPerDepthCache",
     "LastAvailableCache",
+    "merge_adaptive_prefill_caches",
     "UniversalTransformerCache",
     "KV_POLICIES",
     "make_ut_cache",
