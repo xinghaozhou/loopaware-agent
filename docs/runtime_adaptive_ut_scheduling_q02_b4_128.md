@@ -1,17 +1,27 @@
 # Runtime Latency Evaluation of Adaptive Exit and UT-Aware Scheduling
 
-## Outcome
+## Corrected outcome
 
-At `q=0.2`, B=4, and 127 timed decode positions per request, controlled
-90%-accurate UT scheduling reduced mean decode makespan by **17.92%** relative
-to the same physical adaptive-exit + Last-Available implementation under FCFS.
-It recovered **82.58%** of the Oracle scheduling opportunity.
+This report supersedes the earlier result from the same experiment. The earlier
+harness dynamically remapped all adaptive configurations and converted GPU
+metadata to Python inside the timed decode loop. That did not implement the
+intended fixed-group Adaptive-FCFS baseline and introduced synchronization
+overhead.
 
-Physical adaptive exit itself did not outperform Original Ouro in this
-implementation: Adaptive FCFS was **28.27% slower** even though it reduced
-executed token-recurrence steps from 8,128 to 3,987. The current adaptive cache
-and dynamic-compaction overhead outweigh the saved transformer work at this
-workload and context length.
+The corrected harness keeps Original Ouro and Adaptive FCFS in four persistent
+B=4 request groups. Only the UT-aware policies dynamically regroup requests at
+each token position. A shared-cache dynamic-FCFS control is included to separate
+the shared-cache runtime effect from homogeneous batching and SUF scheduling.
+There are no tensor-to-host conversions or intermediate synchronizations in the
+timed decode loop. CUDA synchronization occurs only immediately before and after
+the complete decode interval, as required for wall-clock timing.
+
+At `q=0.2`, B=4, and 127 timed decode positions, fixed-group physical Adaptive
+FCFS was **53.09% slower** than Original Ouro despite executing roughly half as
+many recurrence steps. Pred90 homogeneous batching + SUF reduced makespan by
+**35.34%** versus fixed Adaptive FCFS and by **18.28%** versus the clean
+shared-cache dynamic-FCFS control. It recovered **88.75%** of the Oracle
+scheduler opportunity measured against fixed Adaptive FCFS.
 
 ## Fixed workload and runtime configuration
 
@@ -23,30 +33,34 @@ workload and context length.
 - UT maximum: 4
 - Exit threshold: 0.2
 - Physical batch size: 4
-- Requests: the same eight GSM8K and eight MATH-500 samples used by the
-  controlled-headroom experiment
+- Requests: eight GSM8K and eight MATH-500 samples
 - Reference trajectory: 128 fixed token IDs per request
-- Primary timed workload: positions 1--127, or 2,032 decode tokens total;
-  position 0 is emitted by prefill
+- Primary workload: positions 1--127, or 2,032 timed decode tokens; position 0
+  is emitted by prefill
 - Adaptive KV policy: Last-Available
-- Tokenizer, dataset loading, and model loading are excluded
-- Prefill is separately timed and excluded from primary decode makespan
 - One full warmup and two measured runs
+- Tokenizer, dataset, model loading, and prefill are excluded from primary
+  decode timing
 
-The initial full-compute B=1 trace agreed with physical Last-Available selected
-UT on only 73.82% of decode positions. It was therefore not used as the runtime
-Oracle. An untimed Adaptive-FCFS fixed-token replay first collected the physical
-selected-UT sequence. The 90% labels and Oracle labels were constructed from
-that calibration trace. During measured execution, Pred90 retained 89.67%
-accuracy against actually executed UT; Oracle retained 99.66%. The remaining
-difference is caused by small batching-dependent numerical shifts around exit
-thresholds.
+An untimed fixed-group Adaptive-FCFS replay collected the physical selected-UT
+sequence. The controlled 90% and Oracle labels were derived from that trace.
+Predicted UT affects only dynamic batch membership and batch execution order;
+the model always exits according to its runtime threshold decision.
 
-Dynamic regrouping occurs before every decode position. Four batches are formed
-from the 16 ready requests, executed in predicted-UT order, and atomically
-committed into a shared request-indexed KV history. Predicted UT affects only
-batch membership and execution order. The model always exits from its own
-runtime threshold decision.
+## Scheduling and cache behavior
+
+| System | Request grouping | Cache organization |
+|---|---|---|
+| Original Ouro | Fixed FCFS groups | Four persistent B=4 full-compute caches |
+| Adaptive + FCFS | Fixed FCFS groups | Four persistent B=4 Last-Available caches |
+| Adaptive + dynamic FCFS control | Fixed FCFS membership/order at every step | One request-indexed Last-Available cache |
+| Adaptive + Pred90 homogeneous + SUF | Regrouped every token position | One request-indexed Last-Available cache |
+| Adaptive + Oracle homogeneous + SUF | Regrouped every token position | One request-indexed Last-Available cache |
+
+The dynamic-FCFS control is diagnostic. It is not a replacement for the
+required fixed Adaptive-FCFS system; it lets us compare Pred90 against the same
+shared-cache machinery and attribute the remaining difference to homogeneous
+batching plus SUF rather than cache organization.
 
 ## Aggregate decode results
 
@@ -55,48 +69,47 @@ measured runs.
 
 | System | Makespan | Mean completion | Median | P95 / max | Tokens/s | Recurrence steps |
 |---|---:|---:|---:|---:|---:|---:|
-| Original Ouro | 114.4009 +/- 5.2422 | 114.0598 | 114.0600 | 114.4009 / 114.4009 | 17.78 | 8,128 |
-| Adaptive + FCFS | 146.7381 +/- 8.1756 | 146.2747 | 146.2057 | 146.7380 / 146.7380 | 13.87 | 3,987 |
-| Adaptive + 90% UT + homogeneous + SUF | 120.4372 +/- 2.8168 | 119.9235 | 119.8501 | 120.4372 / 120.4372 | 16.88 | 3,990 |
-| Adaptive + Oracle UT + homogeneous + SUF | 114.8908 +/- 7.7739 | 114.3751 | 114.3040 | 114.8907 / 114.8907 | 17.73 | 3,988 |
+| Original Ouro | 116.9106 +/- 3.3103 | 116.5503 | 116.5503 | 116.9103 / 116.9103 | 17.39 | 8,128 |
+| Adaptive + fixed FCFS | 178.9736 +/- 5.9978 | 178.4810 | 178.4305 | 178.9732 / 178.9732 | 11.36 | 3,987 |
+| Adaptive + dynamic-cache FCFS control | 141.5984 +/- 6.7365 | 141.1622 | 141.0984 | 141.5981 / 141.5981 | 14.37 | 3,987 |
+| Adaptive + Pred90 homogeneous + SUF | 115.7188 +/- 1.3834 | 115.1940 | 115.1206 | 115.7185 / 115.7185 | 17.56 | 3,990 |
+| Adaptive + Oracle homogeneous + SUF | 107.6983 +/- 5.4596 | 107.2111 | 107.1428 | 107.6980 / 107.6980 | 18.89 | 3,988 |
 
-Mean prefill times were 2.8670s, 2.9331s, 2.9128s, and 2.9172s respectively.
-Including prefill does not change the conclusions because prefill differs by
-less than 0.07s across systems.
+Runtime selected-UT agreement with the calibration trace was 100% for both
+FCFS controls, 99.56% for Pred90, and 99.66% for Oracle. Realized predictor
+accuracy was 89.67% for Pred90 and 99.66% for Oracle; small batching-dependent
+BF16 changes near the threshold explain the departures from the labels.
 
 ## Raw measured makespans
 
 | System | Run 1 | Run 2 |
 |---|---:|---:|
-| Original Ouro | 110.6941 | 118.1077 |
-| Adaptive + FCFS | 140.9571 | 152.5191 |
-| Pred90 + homogeneous + SUF | 122.4290 | 118.4455 |
-| Oracle + homogeneous + SUF | 120.3877 | 109.3938 |
-
-Paired scheduler reductions were 13.14% and 22.34% for Pred90, and 14.59%
-and 28.28% for Oracle. Only two measured runs were used because each full
-matrix is expensive; the means are directionally useful, but their uncertainty
-must not be hidden.
+| Original Ouro | 119.2514 | 114.5699 |
+| Adaptive + fixed FCFS | 174.7326 | 183.2147 |
+| Adaptive + dynamic-cache FCFS control | 146.3619 | 136.8350 |
+| Pred90 + homogeneous + SUF | 114.7406 | 116.6971 |
+| Oracle + homogeneous + SUF | 111.5588 | 103.8377 |
 
 ## Decomposition
 
-- Physical adaptive exit versus Original Ouro:
-  - speedup: 0.780x
-  - latency reduction: **-28.27%** (a slowdown)
-- Pred90 scheduler versus Adaptive FCFS:
-  - speedup: 1.218x
-  - additional makespan reduction: **17.92%**
-  - mean-completion reduction: **18.01%**
-- Oracle scheduler versus Adaptive FCFS:
-  - makespan reduction: **21.70%**
-- Pred90 recovered Oracle wall-clock opportunity: **82.58%**
-- Pred90 runtime reduction divided by the earlier 20.88% analytical B=4
-  headroom: **85.84%**
+- Physical adaptive exit, fixed FCFS versus Original Ouro:
+  - speedup: 0.653x
+  - latency reduction: **-53.09%** (a slowdown)
+- Shared dynamic cache, FCFS versus fixed-cache Adaptive FCFS:
+  - latency reduction: **20.88%**
+- Pred90 homogeneous + SUF versus dynamic-cache FCFS:
+  - additional latency reduction on the same runtime infrastructure: **18.28%**
+- Pred90 homogeneous + SUF versus required fixed Adaptive FCFS:
+  - speedup: 1.547x
+  - additional latency reduction: **35.34%**
+- Oracle homogeneous + SUF versus fixed Adaptive FCFS:
+  - latency reduction: **39.82%**
+- Pred90 recovered Oracle opportunity versus fixed Adaptive FCFS: **88.75%**
 
-The last ratio is contextual rather than an identity: the analytical study used
-full-compute B=1 threshold labels and a `B * max(UT)` cost model, whereas this
-runtime experiment uses physical Last-Available calibration labels and actual
-GPU execution.
+The scheduler results are meaningful, but the 35.34% number combines the
+shared-cache architecture improvement and scheduling. The cleaner isolated
+scheduler comparison is the **18.28%** reduction from dynamic FCFS to Pred90,
+because those systems use identical adaptive execution and shared-cache paths.
 
 ## Request IDs and lengths
 
@@ -119,27 +132,30 @@ GPU execution.
 | `gsm8k:7` | 7 | 91 | 128 |
 | `math500:7` | 7 | 96 | 128 |
 
-Exact token IDs, the original full-compute UT traces, calibrated physical UT
-traces, per-request completion times, and per-run measurements are stored in
-`results/runtime_adaptive_ut_scheduling_q02_b4_128_20261013/results.json`.
-That results directory is gitignored.
+Exact token IDs, calibration UT traces, per-request completion events, and raw
+runs are stored in
+`results/runtime_adaptive_ut_scheduling_q02_b4_128_nosync_v2_20261013/results.json`.
+The results directory is gitignored.
 
 ## Interpretation
 
-The answer to the scheduler question is provisionally **yes**: on the same
-physical adaptive model, 90%-accurate homogeneous batching + SUF produced a
-meaningful real makespan reduction and recovered most of the Oracle opportunity.
-Nearly identical recurrence counts show that this gain comes from more
-GPU-efficient batch shapes rather than additional early exits.
+The corrected result explains why Original Ouro appeared fastest in the first
+comparison: reducing recurrence work is not sufficient when the current
+Last-Available physical-exit implementation pays substantial cache
+materialization, indexing, and small-kernel overhead. The effect persists after
+removing timed-loop host synchronization. Four independent fixed caches add
+further overhead, as shown by the dynamic-FCFS control.
 
-The answer for the current physical adaptive implementation as a whole is
-**no**: its cache and compaction overhead make Adaptive FCFS slower than
-Original Ouro. Scheduler gains almost recover that loss—Oracle is approximately
-level with Original Ouro—but do not yet establish an end-to-end adaptive-exit
-speedup.
+UT-aware homogeneous batching is nevertheless useful. On identical dynamic
+adaptive infrastructure, Pred90 reduces makespan by 18.28%, and Oracle by
+23.94%, relative to dynamic FCFS. Pred90 therefore captures most of the
+scheduling opportunity. In absolute terms Pred90 is approximately level with
+Original Ouro (1.02% faster), while Oracle is 7.88% faster, but the current
+physical adaptive path still needs optimization before adaptive exit alone is a
+latency win.
 
-Mean request completion latency falls with scheduled makespan, but this run does
-not isolate SUF from homogeneous grouping. Because all requests have the same
-128-position replay length and synchronize at every token frontier, SUF affects
-completion order primarily during the last frontier. A homogeneous-only
-ablation would be required to attribute a separate SUF latency benefit.
+This experiment does not isolate SUF from homogeneous grouping. With equal
+128-position trajectories and a synchronization frontier after every token,
+most makespan benefit comes from homogeneous batch composition. A
+homogeneous-only ablation would be needed to attribute a separate SUF effect on
+mean completion latency.

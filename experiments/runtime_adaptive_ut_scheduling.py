@@ -209,7 +209,7 @@ def prefill(
     model: Any,
     inputs: dict[str, Any],
     *,
-    adaptive: bool,
+    merge_for_dynamic_scheduling: bool,
 ) -> tuple[list[Any] | AdaptiveDecodeCache, float]:
     groups = fcfs_groups()
     torch.cuda.synchronize()
@@ -227,7 +227,11 @@ def prefill(
                 ),
             )
             caches.append(output.past_key_values)
-        result = merge_adaptive_prefill_caches(caches) if adaptive else caches
+        result = (
+            merge_adaptive_prefill_caches(caches)
+            if merge_for_dynamic_scheduling
+            else caches
+        )
     torch.cuda.synchronize()
     return result, time.perf_counter() - started
 
@@ -244,6 +248,7 @@ def run_once(
     *,
     system: str,
     predictions: list[list[int]] | None,
+    dynamic_cache: bool = False,
     ground_truth_uts: list[list[int]] | None = None,
 ) -> dict[str, Any]:
     adaptive = system != "original"
@@ -253,21 +258,18 @@ def run_once(
         physical=adaptive,
         threshold=THRESHOLD if adaptive else None,
     )
-    caches, prefill_seconds = prefill(model, inputs, adaptive=adaptive)
+    caches, prefill_seconds = prefill(
+        model, inputs, merge_for_dynamic_scheduling=dynamic_cache
+    )
     prompt_width = inputs["input_ids"].shape[1]
     decode_positions = len(workload.token_ids[0]) - 1
-    recurrence_steps = 0
-    selected_matches = 0
-    selected_count = 0
-    prediction_matches = 0
-    prediction_count = 0
-    selected_ut_by_request = [
-        [0] * decode_positions for _ in range(REQUEST_COUNT)
-    ]
-    completion = [0.0] * REQUEST_COUNT
+    metadata: list[tuple[int, list[int], torch.Tensor, torch.Tensor]] = []
+    completion_events: list[torch.cuda.Event | None] = [None] * REQUEST_COUNT
 
     torch.cuda.synchronize()
+    start_event = torch.cuda.Event(enable_timing=True)
     started = time.perf_counter()
+    start_event.record()
     with torch.inference_mode():
         for offset, output_position in enumerate(
             range(1, len(workload.token_ids[0]))
@@ -281,14 +283,14 @@ def run_once(
                 )
             for batch_number, group in enumerate(groups):
                 indices = torch.tensor(group, dtype=torch.long, device="cuda")
-                if adaptive:
+                if dynamic_cache:
                     if not isinstance(caches, AdaptiveDecodeCache):
                         raise TypeError("Adaptive execution requires a shared cache")
-                    caches.set_decode_batch_indices(indices)
+                    caches.set_decode_batch_indices(indices, validate=False)
                     cache = caches
                 else:
                     if not isinstance(caches, list):
-                        raise TypeError("Original execution requires FCFS caches")
+                        raise TypeError("Fixed grouping requires per-batch caches")
                     cache = caches[batch_number]
                 output = model_forward(
                     model,
@@ -304,31 +306,59 @@ def run_once(
                     ),
                 )
                 if adaptive:
-                    executed = output.executed_ut_steps.tolist()
-                    selected = output.selected_ut_steps.tolist()
-                    recurrence_steps += sum(int(value) for value in executed)
-                    for local_index, request_index in enumerate(group):
-                        actual = int(selected[local_index])
-                        selected_ut_by_request[request_index][offset] = actual
-                        if ground_truth_uts is not None:
-                            selected_matches += int(
-                                actual == ground_truth_uts[request_index][offset]
-                            )
-                            selected_count += 1
-                        if predictions is not None:
-                            prediction_matches += int(
-                                actual == predictions[offset][request_index]
-                            )
-                            prediction_count += 1
-                else:
-                    recurrence_steps += BATCH_SIZE * workload.manifest["total_ut_steps"]
+                    metadata.append(
+                        (
+                            offset,
+                            group,
+                            output.executed_ut_steps.detach(),
+                            output.selected_ut_steps.detach(),
+                        )
+                    )
                 if output_position + 1 == len(workload.token_ids[0]):
-                    torch.cuda.synchronize()
-                    finished = time.perf_counter() - started
+                    event = torch.cuda.Event(enable_timing=True)
+                    event.record()
                     for request_index in group:
-                        completion[request_index] = finished
+                        completion_events[request_index] = event
     torch.cuda.synchronize()
     makespan = time.perf_counter() - started
+    completion = [
+        start_event.elapsed_time(event) / 1000.0
+        for event in completion_events
+        if event is not None
+    ]
+    if len(completion) != REQUEST_COUNT:
+        raise RuntimeError("Missing request completion event")
+    selected_ut_by_request = [
+        [0] * decode_positions for _ in range(REQUEST_COUNT)
+    ]
+    recurrence_steps = 0
+    selected_matches = 0
+    selected_count = 0
+    prediction_matches = 0
+    prediction_count = 0
+    for offset, group, executed_tensor, selected_tensor in metadata:
+        executed = executed_tensor.cpu().numpy()
+        selected = selected_tensor.cpu().numpy()
+        recurrence_steps += int(executed.sum())
+        for local_index, request_index in enumerate(group):
+            actual = int(selected[local_index])
+            selected_ut_by_request[request_index][offset] = actual
+            if ground_truth_uts is not None:
+                selected_matches += int(
+                    actual == ground_truth_uts[request_index][offset]
+                )
+                selected_count += 1
+            if predictions is not None:
+                prediction_matches += int(
+                    actual == predictions[offset][request_index]
+                )
+                prediction_count += 1
+    if not adaptive:
+        recurrence_steps = (
+            REQUEST_COUNT
+            * decode_positions
+            * workload.manifest["total_ut_steps"]
+        )
     decode_tokens = REQUEST_COUNT * decode_positions
     return {
         "prefill_seconds": prefill_seconds,
@@ -395,6 +425,7 @@ def reduction(reference: float, candidate: float) -> float:
 def build_comparisons(systems: dict[str, dict[str, Any]]) -> dict[str, float]:
     original = systems["original"]["mean_decode_makespan_seconds"]
     adaptive = systems["adaptive_fcfs"]["mean_decode_makespan_seconds"]
+    dynamic_fcfs = systems["adaptive_dynamic_fcfs"]["mean_decode_makespan_seconds"]
     pred90 = systems["pred90_suf"]["mean_decode_makespan_seconds"]
     oracle = systems["oracle_suf"]["mean_decode_makespan_seconds"]
     oracle_delta = adaptive - oracle
@@ -403,6 +434,10 @@ def build_comparisons(systems: dict[str, dict[str, Any]]) -> dict[str, float]:
         "adaptive_exit_reduction": reduction(original, adaptive),
         "scheduler_speedup_pred90": adaptive / pred90,
         "scheduler_reduction_pred90": reduction(adaptive, pred90),
+        "dynamic_cache_reduction_vs_fixed_fcfs": reduction(adaptive, dynamic_fcfs),
+        "homogeneous_suf_reduction_vs_dynamic_fcfs": reduction(
+            dynamic_fcfs, pred90
+        ),
         "oracle_scheduler_reduction": reduction(adaptive, oracle),
         "recovered_oracle_headroom": (
             (adaptive - pred90) / oracle_delta if oracle_delta else float("nan")
@@ -436,7 +471,9 @@ def markdown(result: dict[str, Any]) -> str:
         f"- Controlled predictor realized calibration-label accuracy: {percent(result['predictor_realized_accuracy'])}",
         "- Runtime UT ground truth: untimed physical Adaptive-FCFS calibration",
         "- Adaptive KV policy: Last-Available",
-        "- Dynamic regrouping occurs before every decode position",
+        "- Original Ouro and required Adaptive FCFS keep four fixed B=4 caches and groups",
+        "- An additional shared-cache FCFS control isolates cache architecture; Pred90 and Oracle dynamically regroup before every decode position",
+        "- No GPU-to-CPU metadata transfer or synchronization occurs inside the timed decode loop",
         "",
         "## Aggregate results",
         "",
@@ -446,6 +483,7 @@ def markdown(result: dict[str, Any]) -> str:
     labels = {
         "original": "Original Ouro",
         "adaptive_fcfs": "Adaptive + FCFS",
+        "adaptive_dynamic_fcfs": "Adaptive + dynamic cache + FCFS control",
         "pred90_suf": "Adaptive + 90% UT + homogeneous + SUF",
         "oracle_suf": "Adaptive + oracle UT + homogeneous + SUF",
     }
@@ -468,6 +506,8 @@ def markdown(result: dict[str, Any]) -> str:
             "",
             f"- Physical adaptive exit reduction over Original Ouro: **{percent(comparisons['adaptive_exit_reduction'])}** ({comparisons['adaptive_exit_speedup']:.3f}x).",
             f"- Additional Pred90 scheduler reduction over Adaptive FCFS: **{percent(comparisons['scheduler_reduction_pred90'])}** ({comparisons['scheduler_speedup_pred90']:.3f}x).",
+            f"- Dynamic-cache FCFS reduction versus fixed-cache Adaptive FCFS: **{percent(comparisons['dynamic_cache_reduction_vs_fixed_fcfs'])}**.",
+            f"- Pred90 homogeneous + SUF reduction versus dynamic-cache FCFS: **{percent(comparisons['homogeneous_suf_reduction_vs_dynamic_fcfs'])}**.",
             f"- Oracle scheduler reduction over Adaptive FCFS: **{percent(comparisons['oracle_scheduler_reduction'])}**.",
             f"- Pred90 recovered Oracle wall-clock opportunity: **{percent(comparisons['recovered_oracle_headroom'])}**.",
             f"- Realized scheduler reduction / prior 20.88% modeled B=4 headroom: **{percent(comparisons['realized_fraction_of_modeled_b4_headroom'])}**.",
@@ -546,6 +586,7 @@ def main() -> None:
         inputs,
         system="adaptive_fcfs",
         predictions=None,
+        dynamic_cache=False,
     )
     physical_true_uts = calibration["selected_ut_by_request"]
     pred90, oracle, predictor_accuracy = predictor_tables(
@@ -559,21 +600,23 @@ def main() -> None:
     )
 
     policies = {
-        "original": None,
-        "adaptive_fcfs": None,
-        "pred90_suf": pred90,
-        "oracle_suf": oracle,
+        "original": (None, False),
+        "adaptive_fcfs": (None, False),
+        "adaptive_dynamic_fcfs": (None, True),
+        "pred90_suf": (pred90, True),
+        "oracle_suf": (oracle, True),
     }
     measured: dict[str, list[dict[str, Any]]] = {key: [] for key in policies}
     for phase, repetitions in (("warmup", args.warmups), ("measured", args.runs)):
         for repetition in range(repetitions):
-            for system, predictions in policies.items():
+            for system, (predictions, dynamic_cache) in policies.items():
                 row = run_once(
                     model,
                     workload,
                     inputs,
                     system=system,
                     predictions=predictions,
+                    dynamic_cache=dynamic_cache,
                     ground_truth_uts=physical_true_uts if system != "original" else None,
                 )
                 if phase == "measured":

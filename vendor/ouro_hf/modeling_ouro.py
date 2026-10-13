@@ -736,8 +736,6 @@ class OuroModel(OuroPreTrainedModel):
                     gate_list.append(gate)
 
             if adaptive_decode:
-                if bool((selected_depth == 0).any()):
-                    raise RuntimeError("Adaptive decode ended without selecting every row")
                 if not physical_early_exit:
                     executed_depth.fill_(self.total_ut_steps)
                 past_key_values.commit(selected_depth)
