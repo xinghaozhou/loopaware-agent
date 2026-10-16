@@ -36,6 +36,7 @@ from .cache_ouro import (
     FullPerDepthCache,
     UniversalTransformerCache,
     make_ut_cache,
+    profile_range,
 )
 from .configuration_ouro import OuroConfig
 
@@ -713,24 +714,25 @@ class OuroModel(OuroPreTrainedModel):
                     else:
                         should_exit = active_cumulative[:, -1] >= float(exit_threshold)
 
-                    unresolved = selected_depth.index_select(0, active_indices) == 0
-                    newly_exited = should_exit & unresolved
-                    exited_indices = active_indices[newly_exited]
-                    if exited_indices.numel():
-                        selected_hidden.index_copy_(
-                            0, exited_indices, hidden_states[newly_exited]
-                        )
-                        selected_depth.index_fill_(
-                            0, exited_indices, current_ut + 1
-                        )
+                    with profile_range("physical_compaction"):
+                        unresolved = selected_depth.index_select(0, active_indices) == 0
+                        newly_exited = should_exit & unresolved
+                        exited_indices = active_indices[newly_exited]
+                        if exited_indices.numel():
+                            selected_hidden.index_copy_(
+                                0, exited_indices, hidden_states[newly_exited]
+                            )
+                            selected_depth.index_fill_(
+                                0, exited_indices, current_ut + 1
+                            )
 
-                    if physical_early_exit:
-                        executed_depth.index_fill_(0, active_indices, current_ut + 1)
-                        keep = ~should_exit
-                        active_indices = active_indices[keep]
-                        hidden_states = hidden_states[keep]
-                        if active_indices.numel() == 0:
-                            break
+                        if physical_early_exit:
+                            executed_depth.index_fill_(0, active_indices, current_ut + 1)
+                            keep = ~should_exit
+                            active_indices = active_indices[keep]
+                            hidden_states = hidden_states[keep]
+                            if active_indices.numel() == 0:
+                                break
                 else:
                     hidden_states_list.append(hidden_states)
                     gate_list.append(gate)

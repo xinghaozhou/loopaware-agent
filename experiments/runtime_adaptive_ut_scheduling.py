@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import nullcontext
 from dataclasses import dataclass
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 import statistics
 import sys
@@ -53,6 +55,16 @@ THRESHOLD = 0.2
 PREDICTOR_ACCURACY = 0.9
 PREDICTOR_SEED = 20261012
 MODELED_B4_HEADROOM = 0.2088
+_PROFILE_RANGES = os.environ.get("OURO_PROFILE_RANGES") == "1"
+
+
+def set_profile_ranges(enabled: bool) -> None:
+    global _PROFILE_RANGES
+    _PROFILE_RANGES = enabled
+
+
+def profile_range(name: str):
+    return torch.profiler.record_function(name) if _PROFILE_RANGES else nullcontext()
 
 
 @dataclass(frozen=True)
@@ -250,6 +262,8 @@ def run_once(
     predictions: list[list[int]] | None,
     dynamic_cache: bool = False,
     ground_truth_uts: list[list[int]] | None = None,
+    profile_context: Any = None,
+    profile_step: bool = False,
 ) -> dict[str, Any]:
     adaptive = system != "original"
     set_mode(
@@ -270,17 +284,19 @@ def run_once(
     start_event = torch.cuda.Event(enable_timing=True)
     started = time.perf_counter()
     start_event.record()
-    with torch.inference_mode():
+    active_profile = profile_context if profile_context is not None else nullcontext()
+    with active_profile, torch.inference_mode():
         for offset, output_position in enumerate(
             range(1, len(workload.token_ids[0]))
         ):
-            if predictions is None:
-                groups = fcfs_groups()
-            else:
-                groups = scheduled_groups(
-                    [row[offset] for row in ground_truth_uts],
-                    predictions[offset],
-                )
+            with profile_range("batch_regroup"):
+                if predictions is None:
+                    groups = fcfs_groups()
+                else:
+                    groups = scheduled_groups(
+                        [row[offset] for row in ground_truth_uts],
+                        predictions[offset],
+                    )
             for batch_number, group in enumerate(groups):
                 indices = torch.tensor(group, dtype=torch.long, device="cuda")
                 if dynamic_cache:
@@ -292,19 +308,20 @@ def run_once(
                     if not isinstance(caches, list):
                         raise TypeError("Fixed grouping requires per-batch caches")
                     cache = caches[batch_number]
-                output = model_forward(
-                    model,
-                    input_ids=inputs["tokens"].index_select(0, indices)[
-                        :, output_position - 1 : output_position
-                    ],
-                    attention_mask=inputs["masks"][output_position].index_select(
-                        0, indices
-                    ),
-                    cache=cache,
-                    cache_position=torch.tensor(
-                        [prompt_width + output_position - 1], device="cuda"
-                    ),
-                )
+                with profile_range("recurrent_core"):
+                    output = model_forward(
+                        model,
+                        input_ids=inputs["tokens"].index_select(0, indices)[
+                            :, output_position - 1 : output_position
+                        ],
+                        attention_mask=inputs["masks"][output_position].index_select(
+                            0, indices
+                        ),
+                        cache=cache,
+                        cache_position=torch.tensor(
+                            [prompt_width + output_position - 1], device="cuda"
+                        ),
+                    )
                 if adaptive:
                     metadata.append(
                         (
@@ -319,6 +336,8 @@ def run_once(
                     event.record()
                     for request_index in group:
                         completion_events[request_index] = event
+            if profile_step:
+                profile_context.step()
     torch.cuda.synchronize()
     makespan = time.perf_counter() - started
     completion = [

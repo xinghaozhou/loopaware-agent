@@ -9,7 +9,9 @@ policy.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from contextlib import nullcontext
 from dataclasses import dataclass
+import os
 from typing import Any, Optional
 
 import torch
@@ -20,6 +22,18 @@ FULL_PER_DEPTH = "full_per_depth"
 LAST_AVAILABLE = "last_available"
 FINAL_EXIT_SHARED = "final_exit_shared"
 KV_POLICIES = (FULL_PER_DEPTH, LAST_AVAILABLE, FINAL_EXIT_SHARED)
+_PROFILE_RANGES = os.environ.get("OURO_PROFILE_RANGES") == "1"
+
+
+def set_profile_ranges(enabled: bool) -> None:
+    global _PROFILE_RANGES
+    _PROFILE_RANGES = enabled
+
+
+def profile_range(name: str):
+    """Return an opt-in profiler range without introducing synchronization."""
+
+    return torch.profiler.record_function(name) if _PROFILE_RANGES else nullcontext()
 
 
 class _CacheUtilities(Cache):
@@ -77,21 +91,22 @@ class FullPerDepthCache(_CacheUtilities):
             self.key_cache.append(None)
             self.value_cache.append(None)
 
-        cached_key = self.key_cache[layer_idx]
-        cached_value = self.value_cache[layer_idx]
-        if cached_key is None:
-            result_key = key_states
-            result_value = value_states
-        else:
-            if cached_value is None:
-                raise RuntimeError("Key cache exists without a value cache")
-            _validate_kv_shapes(cached_key, key_states)
-            result_key = torch.cat((cached_key, key_states), dim=2)
-            result_value = torch.cat((cached_value, value_states), dim=2)
-        self.key_cache[layer_idx] = result_key
-        self.value_cache[layer_idx] = result_value
-        self._seen_tokens = result_key.shape[2]
-        return result_key, result_value
+        with profile_range("kv_prepare"):
+            cached_key = self.key_cache[layer_idx]
+            cached_value = self.value_cache[layer_idx]
+            if cached_key is None:
+                result_key = key_states
+                result_value = value_states
+            else:
+                if cached_value is None:
+                    raise RuntimeError("Key cache exists without a value cache")
+                _validate_kv_shapes(cached_key, key_states)
+                result_key = torch.cat((cached_key, key_states), dim=2)
+                result_value = torch.cat((cached_value, value_states), dim=2)
+            self.key_cache[layer_idx] = result_key
+            self.value_cache[layer_idx] = result_value
+            self._seen_tokens = result_key.shape[2]
+            return result_key, result_value
 
     def get_seq_length(self, layer_idx: Optional[int] = 0) -> int:
         layer_idx = 0 if layer_idx is None else layer_idx
@@ -251,13 +266,14 @@ class AdaptiveDecodeCache(_CacheUtilities, ABC):
         )
 
         depth, physical_layer = divmod(layer_idx, self.num_hidden_layers)
-        historical_key, historical_value = self._resolve_history(
-            depth, physical_layer, batch_indices
-        )
-        return (
-            torch.cat((historical_key, key_states), dim=2),
-            torch.cat((historical_value, value_states), dim=2),
-        )
+        with profile_range("kv_prepare"):
+            historical_key, historical_value = self._resolve_history(
+                depth, physical_layer, batch_indices
+            )
+            return (
+                torch.cat((historical_key, key_states), dim=2),
+                torch.cat((historical_value, value_states), dim=2),
+            )
 
     def _update_prefill(
         self,
@@ -307,22 +323,27 @@ class AdaptiveDecodeCache(_CacheUtilities, ABC):
         selected_global.index_copy_(0, global_indices, selected_depth)
 
         retained_slots: list[Optional[_SparseKV]] = []
-        for flat_index, slot in enumerate(self._staged):
-            if slot is None:
-                retained_slots.append(None)
-                continue
-            depth = flat_index // self.num_hidden_layers
-            exit_depth = selected_global.index_select(
-                0, slot.batch_indices.to(selected_depth.device)
-            ) - 1
-            keep = depth <= exit_depth if self.policy == LAST_AVAILABLE else depth == exit_depth
-            retained_slots.append(
-                _SparseKV(
-                    batch_indices=slot.batch_indices[keep],
-                    key=slot.key[keep],
-                    value=slot.value[keep],
+        with profile_range("kv_prepare"):
+            for flat_index, slot in enumerate(self._staged):
+                if slot is None:
+                    retained_slots.append(None)
+                    continue
+                depth = flat_index // self.num_hidden_layers
+                exit_depth = selected_global.index_select(
+                    0, slot.batch_indices.to(selected_depth.device)
+                ) - 1
+                keep = (
+                    depth <= exit_depth
+                    if self.policy == LAST_AVAILABLE
+                    else depth == exit_depth
                 )
-            )
+                retained_slots.append(
+                    _SparseKV(
+                        batch_indices=slot.batch_indices[keep],
+                        key=slot.key[keep],
+                        value=slot.value[keep],
+                    )
+                )
         if self._pending is None:
             self._pending = _CommittedToken(
                 selected_depth=torch.zeros(
@@ -334,22 +355,24 @@ class AdaptiveDecodeCache(_CacheUtilities, ABC):
             )
         self._pending.selected_depth.index_copy_(0, global_indices, selected_depth)
         self._pending_request_count += selected_depth.shape[0]
-        for index, slot in enumerate(retained_slots):
-            if slot is None:
-                continue
-            pending_slot = self._pending.slots[index]
-            if pending_slot is None:
-                self._pending.slots[index] = slot
-            else:
-                self._pending.slots[index] = _SparseKV(
-                    batch_indices=torch.cat(
-                        (pending_slot.batch_indices, slot.batch_indices)
-                    ),
-                    key=torch.cat((pending_slot.key, slot.key), dim=0),
-                    value=torch.cat((pending_slot.value, slot.value), dim=0),
-                )
+        with profile_range("kv_prepare"):
+            for index, slot in enumerate(retained_slots):
+                if slot is None:
+                    continue
+                pending_slot = self._pending.slots[index]
+                if pending_slot is None:
+                    self._pending.slots[index] = slot
+                else:
+                    self._pending.slots[index] = _SparseKV(
+                        batch_indices=torch.cat(
+                            (pending_slot.batch_indices, slot.batch_indices)
+                        ),
+                        key=torch.cat((pending_slot.key, slot.key), dim=0),
+                        value=torch.cat((pending_slot.value, slot.value), dim=0),
+                    )
         if self._pending_request_count == self._prompt_batch_size:
-            self._append_resolved_token(self._pending)
+            with profile_range("kv_prepare"):
+                self._append_resolved_token(self._pending)
             self._committed.append(self._pending)
             self._pending = None
             self._pending_request_count = 0
