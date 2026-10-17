@@ -1,0 +1,229 @@
+diff --git a/src/looped_cdb/benchmarks/runner.py b/src/looped_cdb/benchmarks/runner.py
+index 7c191c6..f92219b 100644
+--- a/src/looped_cdb/benchmarks/runner.py
++++ b/src/looped_cdb/benchmarks/runner.py
+@@ -97,6 +97,11 @@ class EngineArgs:
+     # and one lagged token per request is computed and discarded (see the engine configs).
+     replay_eos_finishes: bool = False
+     mem_fraction_static: float | None = None
++    # Scheduler-only ablations may keep more requests resident than the
++    # decode-side launch width. None preserves the upstream coupled setting.
++    decode_batch_size: int | None = None
++    frontier_policy: str | None = None
++    frontier_groups: list[list[list[int]]] | None = None
+ 
+ 
+ @dataclass(frozen=True)
+@@ -323,6 +328,12 @@ def load_serving_model(
+     from looped_cdb.models.ouro import OuroConfig, OuroForCausalLM
+ 
+     config = OuroConfig.from_pretrained(model_id)
++    # ByteDance/Ouro-2.6B-Thinking does not record a padding id. Transformers 5
++    # no longer materializes a missing ``pad_token_id`` attribute, while the CBD
++    # Ouro embedding constructor reads it unconditionally. Generation is
++    # unpadded here, so EOS is the conventional inert fallback.
++    if getattr(config, "pad_token_id", None) is None:
++        config.pad_token_id = config.eos_token_id
+     config.total_ut_steps = int(max_recurrent_depth)
+     model = OuroForCausalLM.from_pretrained(
+         model_id,
+@@ -404,6 +415,9 @@ def build_engine(
+                 synthetic_exit_replay=True,
+                 refill=engine_args.refill,
+                 min_coda_batch_size=engine_args.min_coda_batch_size,
++                decode_batch_size=engine_args.decode_batch_size,
++                frontier_policy=engine_args.frontier_policy,
++                frontier_groups=engine_args.frontier_groups,
+             ),
+             dtype=dtype,
+         )
+diff --git a/src/looped_cdb/continuous_depth_batching/config.py b/src/looped_cdb/continuous_depth_batching/config.py
+index d76a703..74e5a36 100644
+--- a/src/looped_cdb/continuous_depth_batching/config.py
++++ b/src/looped_cdb/continuous_depth_batching/config.py
+@@ -100,6 +100,17 @@ class ContinuousDepthBatchingConfig:
+     # Maximum resident requests and recurrent or coda launch width.
+     max_num_seqs: int = DEFAULT_MAX_NUM_SEQS
+ 
++    # Optional decode-side launch width.  When unset it equals max_num_seqs.
++    # Keeping this separate permits scheduler-only experiments with a larger
++    # resident request set while holding recurrent/coda concurrency fixed.
++    decode_batch_size: int | None = None
++
++    # Optional token-frontier policy for the no-refill loop.  ``None`` keeps
++    # upstream behavior; ``fcfs`` and ``pred90_suf`` use a global token
++    # frontier with groups supplied by ``frontier_groups``.
++    frontier_policy: str | None = None
++    frontier_groups: list[list[list[int]]] | None = None
++
+     # Open resident slots required before admitting a prefill batch.
+     min_free_slots: int | None = None
+ 
+@@ -163,6 +174,17 @@ class ContinuousDepthBatchingConfig:
+             raise ValueError(f"max_recurrent_steps must be greater than 1, but got {self.max_recurrent_steps}")
+         if self.max_num_seqs <= 0:
+             raise ValueError(f"max_num_seqs must be positive, but got {self.max_num_seqs}")
++        if self.decode_batch_size is not None and self.decode_batch_size <= 0:
++            raise ValueError(f"decode_batch_size must be positive, but got {self.decode_batch_size}")
++        if self.decode_batch_size is not None and self.decode_batch_size > self.max_num_seqs:
++            raise ValueError(
++                f"decode_batch_size must not exceed max_num_seqs, got "
++                f"{self.decode_batch_size} > {self.max_num_seqs}"
++            )
++        if self.frontier_policy not in (None, "fcfs", "pred90_suf"):
++            raise ValueError(f"unsupported frontier_policy={self.frontier_policy!r}")
++        if self.frontier_policy == "pred90_suf" and not self.frontier_groups:
++            raise ValueError("pred90_suf requires frontier_groups")
+         if self.min_free_slots is not None and self.min_free_slots <= 0:
+             raise ValueError(f"min_free_slots must be positive, but got {self.min_free_slots}")
+         if self.min_coda_batch_size <= 0:
+diff --git a/src/looped_cdb/continuous_depth_batching/continuous_api.py b/src/looped_cdb/continuous_depth_batching/continuous_api.py
+index 507367f..fad8b5e 100644
+--- a/src/looped_cdb/continuous_depth_batching/continuous_api.py
++++ b/src/looped_cdb/continuous_depth_batching/continuous_api.py
+@@ -5,6 +5,7 @@ from __future__ import annotations
+ from collections import Counter, deque
+ from contextlib import nullcontext
+ from dataclasses import dataclass, field
++import time
+ from typing import Literal, get_args
+ 
+ import torch
+@@ -167,6 +168,9 @@ class ContinuousDepthBatchingStats:
+     # Peak number of active requests that have generated past their prefill token, i.e. whose KV is
+     # still growing. Sampled, not exact: an O(active) scan every tick would dominate the tick.
+     max_growing_requests: int = 0
++    # Wall-clock decode interval: first decode prelude through final device
++    # completion. Prompt prefill and output materialization are excluded.
++    decode_wall_time_s: float | None = None
+ 
+     @property
+     def skipped_recurrent_steps(self) -> int:
+@@ -267,6 +271,7 @@ class ContinuousDepthBatchingEngine:
+     # their exit-step KV into deeper slots is batched per recurrent launch, not issued per token.
+     _exit_kv_backlog: list[tuple[DepthWorkItem, int]] = field(default_factory=list)
+     schedule_trace: ScheduleTrace | None = None
++    _decode_timer_start: float | None = None
+ 
+     @classmethod
+     def from_model(
+@@ -347,6 +352,7 @@ class ContinuousDepthBatchingEngine:
+             kv_pressure_mode=cdb_config.kv_pressure_mode,
+             max_model_len=cdb_config.max_model_len,
+             min_coda_batch_size=cdb_config.min_coda_batch_size,
++            decode_batch_size=cdb_config.decode_batch_size,
+         )
+         offloading_manager = OffloadingManager(
+             cache,
+@@ -433,6 +439,10 @@ class ContinuousDepthBatchingEngine:
+             self._run_scheduler_loop(model_kwargs=model_kwargs, arrivals=arrivals)
+         else:
+             self._run_no_refill_loop(model_kwargs=model_kwargs, arrivals=arrivals)
++        if self._decode_timer_start is not None:
++            if self.cache.device.type == "cuda":
++                torch.cuda.synchronize(self.cache.device)
++            self.last_stats.decode_wall_time_s = time.perf_counter() - self._decode_timer_start
+         self.scheduler.close_steady_window()
+         self._free_finished_or_active()
+         # Read outputs from the finish-time capture, not the original ``states`` list: soft-reset
+@@ -452,6 +462,7 @@ class ContinuousDepthBatchingEngine:
+         self.runner.reset_cdb_runtime_counters()
+         self.offloading_manager.reset()
+         self.last_stats = ContinuousDepthBatchingStats()
++        self._decode_timer_start = None
+         self.pending_coda_results.clear()
+         self.pending_prefill_results.clear()
+         self.stalled_decoders.clear()
+@@ -697,11 +708,31 @@ class ContinuousDepthBatchingEngine:
+         request is briefly decoding with only a placeholder token; the wave must not pick it up.
+         """
+ 
+-        return [
++        eligible = [
+             state
+             for state in self.scheduler.active_requests.values()
+             if state.status == RequestStatus.DECODING and state.tokens_to_process and state.tokens_to_process[0] >= 0
+         ]
++        if self.cdb_config.frontier_policy is None or not eligible:
++            return eligible
++
++        # All requests at the smallest generated-token count form the current
++        # global frontier. Requests already advanced by an earlier group wait.
++        frontier = min(len(state.generated_tokens) for state in eligible)
++        eligible = [state for state in eligible if len(state.generated_tokens) == frontier]
++        if self.cdb_config.frontier_policy == "fcfs":
++            return eligible
++
++        assert self.cdb_config.frontier_groups is not None
++        decode_position = frontier - 1  # prefill emitted output token zero
++        if not 0 <= decode_position < len(self.cdb_config.frontier_groups):
++            return eligible
++        eligible_by_index = {int(state.request_id.removeprefix("request-")): state for state in eligible}
++        for group in self.cdb_config.frontier_groups[decode_position]:
++            selected = [eligible_by_index[index] for index in group if index in eligible_by_index]
++            if selected:
++                return selected
++        return eligible
+ 
+     def _run_no_refill_prefill_batch(self, recurrent_kwargs: dict[str, object], boundary: NoRefillBoundary) -> bool:
+         """Run one full-depth monolithic prefill batch for the no-refill baseline.
+@@ -821,7 +852,7 @@ class ContinuousDepthBatchingEngine:
+         # Bound the cohort to the recurrent launch shape; any overflow decodes in the
+         # next wave, exactly as sequence-level CB caps its decode batch by memory.
+         # Carried successors already hold KV slots, so they take priority.
+-        decode_cohort = decode_cohort[: max(0, self.cdb_config.max_num_seqs - len(carried_items))]
++        decode_cohort = decode_cohort[: max(0, self.scheduler.decode_batch_size - len(carried_items))]
+ 
+         # A request whose next token cannot allocate a KV block stalls rather than joining this cohort;
+         # it is retried on a later wave, and preempted only if no wave can run at all.
+@@ -1519,6 +1550,10 @@ class ContinuousDepthBatchingEngine:
+         instead of the host.
+         """
+ 
++        if self._decode_timer_start is None:
++            if self.cache.device.type == "cuda":
++                torch.cuda.synchronize(self.cache.device)
++            self._decode_timer_start = time.perf_counter()
+         self.last_stats.prelude_batches[site] += 1
+         self.last_stats.prelude_tokens[site] += count
+         if gathered:
+diff --git a/src/looped_cdb/continuous_depth_batching/scheduler.py b/src/looped_cdb/continuous_depth_batching/scheduler.py
+index 247a726..db846c6 100644
+--- a/src/looped_cdb/continuous_depth_batching/scheduler.py
++++ b/src/looped_cdb/continuous_depth_batching/scheduler.py
+@@ -50,6 +50,7 @@ class CDBScheduler(BaseServingScheduler[RequestState]):
+         max_num_seqs: int = DEFAULT_MAX_NUM_SEQS,
+         min_free_slots: int | None = None,
+         min_coda_batch_size: int = 1,
++        decode_batch_size: int | None = None,
+     ) -> None:
+         if max_recurrent_steps <= 0:
+             raise ValueError(f"max_recurrent_steps must be positive, got {max_recurrent_steps}")
+@@ -64,6 +65,9 @@ class CDBScheduler(BaseServingScheduler[RequestState]):
+             min_free_slots=min_free_slots,
+         )
+         self.max_recurrent_steps = max_recurrent_steps
++        self.decode_batch_size = self.max_num_seqs if decode_batch_size is None else decode_batch_size
++        if not 0 < self.decode_batch_size <= self.max_num_seqs:
++            raise ValueError("decode_batch_size must be in [1, max_num_seqs]")
+         # Resolved against the clamped cap, not the requested one: the config rejects a minimum above
+         # the resident cap it was given, but a cap the token budget then clamps can leave the minimum
+         # above the resident set the coda queue is fed from. Clamping is schedule-preserving, since a
+@@ -320,7 +324,7 @@ class CDBScheduler(BaseServingScheduler[RequestState]):
+         state.tokens_to_process = request_tokens[:request_len]
+ 
+     def _schedule_recurrent_batch(self) -> list[DepthWorkItem]:
+-        batch_size = min(self.max_num_seqs, len(self.ready_queue))
++        batch_size = min(self.decode_batch_size, len(self.ready_queue))
+         if batch_size == 0:
+             return []
+ 
+@@ -346,7 +350,7 @@ class CDBScheduler(BaseServingScheduler[RequestState]):
+         return batch
+ 
+     def _schedule_coda_batch(self) -> list[DepthWorkItem]:
+-        return [self.coda_queue.popleft() for _ in range(min(self.max_num_seqs, len(self.coda_queue)))]
++        return [self.coda_queue.popleft() for _ in range(min(self.decode_batch_size, len(self.coda_queue)))]
+ 
+     def _prefill_admits(self, state: RequestState) -> bool:
+         """Hold back an in-progress chunked prefill whose previous chunk is still mid-forward."""
