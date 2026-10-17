@@ -66,7 +66,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--warmups", type=int, default=1)
     parser.add_argument("--timing-runs", type=int, default=1)
     parser.add_argument("--seed", type=int, default=20261012)
+    parser.add_argument(
+        "--resume",
+        action="store_true",
+        help="Reuse completed calibration, timing, and profile phase checkpoints",
+    )
     return parser.parse_args()
+
+
+def atomic_json(path: Path, value: Any) -> None:
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+    temporary.replace(path)
 
 
 def mean_std(values: list[float]) -> dict[str, float]:
@@ -525,21 +536,50 @@ def main() -> None:
         raise ValueError(f"Invalid runtime num_hidden_layers={runtime_layers!r}")
     print(f"runtime_num_hidden_layers={runtime_layers}", flush=True)
 
+    checkpoint_path = args.output_dir / "checkpoint.json"
+    checkpoint_key = {
+        "model": args.model,
+        "model_revision": args.model_revision,
+        "trace_dir": str(args.trace_dir.resolve()),
+        "positions": args.positions,
+        "seed": args.seed,
+        "warmups": args.warmups,
+        "timing_runs": args.timing_runs,
+    }
+    checkpoint: dict[str, Any] = {"key": checkpoint_key}
+    if args.resume and checkpoint_path.exists():
+        checkpoint = json.loads(checkpoint_path.read_text(encoding="utf-8"))
+        if checkpoint.get("key") != checkpoint_key:
+            raise RuntimeError("Profile checkpoint does not match requested run")
+
     # Match the previous Pred90 experiment exactly: calibrate labels with the
     # physical adaptive path, because full-compute counterfactual labels can
     # change the homogeneous batch composition.
-    calibration = run_once(
-        model,
-        workload,
-        inputs,
-        system="adaptive_fcfs",
-        predictions=None,
-        dynamic_cache=False,
-    )
-    physical_true_uts = calibration["selected_ut_by_request"]
-    predictions, _, realized_accuracy = predictor_tables(
-        physical_true_uts, u_max=workload.manifest["total_ut_steps"]
-    )
+    if "calibration" in checkpoint:
+        physical_true_uts = checkpoint["calibration"]["physical_true_uts"]
+        predictions = checkpoint["calibration"]["predictions"]
+        realized_accuracy = checkpoint["calibration"]["realized_accuracy"]
+        print("RESUME calibration", flush=True)
+    else:
+        calibration = run_once(
+            model,
+            workload,
+            inputs,
+            system="adaptive_fcfs",
+            predictions=None,
+            dynamic_cache=False,
+        )
+        physical_true_uts = calibration["selected_ut_by_request"]
+        predictions, _, realized_accuracy = predictor_tables(
+            physical_true_uts, u_max=workload.manifest["total_ut_steps"]
+        )
+        checkpoint["calibration"] = {
+            "physical_true_uts": physical_true_uts,
+            "predictions": predictions,
+            "realized_accuracy": realized_accuracy,
+        }
+        atomic_json(checkpoint_path, checkpoint)
+        print("CHECKPOINT calibration", flush=True)
     systems = {
         "original": {"predictions": None, "dynamic_cache": False},
         "pred90_suf": {"predictions": predictions, "dynamic_cache": True},
@@ -558,8 +598,11 @@ def main() -> None:
 
     # Measure both systems before activating CUPTI. Profiling one system must
     # not perturb the clean wall-clock timing of the system that follows it.
-    timing_by_system = {}
+    timing_by_system = checkpoint.get("timing_by_system", {})
     for name, policy in systems.items():
+        if name in timing_by_system:
+            print(f"RESUME timing {name}", flush=True)
+            continue
         set_cache_profile_ranges(False)
         set_benchmark_profile_ranges(False)
         for warmup in range(args.warmups):
@@ -591,8 +634,15 @@ def main() -> None:
             "summary": mean_std(timed),
             "last": last_timing,
         }
+        checkpoint["timing_by_system"] = timing_by_system
+        atomic_json(checkpoint_path, checkpoint)
+        print(f"CHECKPOINT timing {name}", flush=True)
 
+    result_systems = checkpoint.get("result_systems", {})
     for name, policy in systems.items():
+        if name in result_systems:
+            print(f"RESUME profile {name}", flush=True)
+            continue
         timed_summary = timing_by_system[name]["summary"]
         set_cache_profile_ranges(True)
         set_benchmark_profile_ranges(True)
@@ -637,6 +687,8 @@ def main() -> None:
                 predictions,
                 workload.manifest["total_ut_steps"],
             )
+        checkpoint["result_systems"] = result_systems
+        atomic_json(checkpoint_path, checkpoint)
         print(
             f"PROFILE {name} wall={profiled['decode_makespan_seconds']:.4f}s "
             f"gpu_active={profile['gpu_active_seconds']:.4f}s "
