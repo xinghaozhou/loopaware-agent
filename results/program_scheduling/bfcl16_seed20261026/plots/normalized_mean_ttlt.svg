@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="520" viewBox="0 0 900 520">
+<rect width="100%" height="100%" fill="white"/>
+<text x="450" y="32" text-anchor="middle" font-family="sans-serif" font-size="20">Normalized mean TTLT</text>
+<rect x="112.2" y="89.1" width="82.3" height="340.9" fill="#4c78a8"/>
+<text x="153.3" y="82.1" text-anchor="middle" font-family="sans-serif" font-size="12">1.082</text>
+<text x="153.3" y="450" text-anchor="middle" font-family="sans-serif" font-size="11" transform="rotate(25 153.3 450)">FCFS</text>
+<rect x="238.8" y="114.8" width="82.3" height="315.2" fill="#f58518"/>
+<text x="280.0" y="107.8" text-anchor="middle" font-family="sans-serif" font-size="12">1.000</text>
+<text x="280.0" y="450" text-anchor="middle" font-family="sans-serif" font-size="11" transform="rotate(25 280.0 450)">GPU_PLAS</text>
+<rect x="365.5" y="113.6" width="82.3" height="316.4" fill="#e45756"/>
+<text x="406.7" y="106.6" text-anchor="middle" font-family="sans-serif" font-size="12">1.004</text>
+<text x="406.7" y="450" text-anchor="middle" font-family="sans-serif" font-size="11" transform="rotate(25 406.7 450)">UT_LAS</text>
+<rect x="492.2" y="174.0" width="82.3" height="256.0" fill="#72b7b2"/>
+<text x="533.3" y="167.0" text-anchor="middle" font-family="sans-serif" font-size="12">0.812</text>
+<text x="533.3" y="450" text-anchor="middle" font-family="sans-serif" font-size="11" transform="rotate(25 533.3 450)">ORACLE_TOKEN_SUF</text>
+<rect x="618.8" y="206.6" width="82.3" height="223.4" fill="#54a24b"/>
+<text x="660.0" y="199.6" text-anchor="middle" font-family="sans-serif" font-size="12">0.709</text>
+<text x="660.0" y="450" text-anchor="middle" font-family="sans-serif" font-size="11" transform="rotate(25 660.0 450)">ORACLE_UT_SUF</text>
+<rect x="745.5" y="222.6" width="82.3" height="207.4" fill="#b279a2"/>
+<text x="786.7" y="215.6" text-anchor="middle" font-family="sans-serif" font-size="12">0.658</text>
+<text x="786.7" y="450" text-anchor="middle" font-family="sans-serif" font-size="11" transform="rotate(25 786.7 450)">ORACLE_RUNTIME_SJF</text>
+<line x1="90" y1="430" x2="850" y2="430" stroke="black"/>
+<text x="20" y="250" text-anchor="middle" font-family="sans-serif" font-size="13" transform="rotate(-90 20 250)">Mean TTLT / GPU-PLAS</text>
+</svg>

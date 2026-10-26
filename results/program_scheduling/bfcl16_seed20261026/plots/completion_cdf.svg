@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="520" viewBox="0 0 900 520">
+<rect width="100%" height="100%" fill="white"/>
+<text x="450" y="32" text-anchor="middle" font-family="sans-serif" font-size="20">Program completion-time CDF</text>
+<polyline points="562.4,420.6 605.9,396.2 698.7,371.9 749.5,347.5 770.9,323.1 786.4,298.8 791.8,274.4 796.2,250.0 801.4,225.6 808.0,201.2 822.5,176.9 828.6,152.5 836.3,128.1 845.4,103.8 849.8,79.4 860.0,55.0" fill="none" stroke="#4c78a8" stroke-width="2"/>
+<text x="650" y="75" font-family="sans-serif" font-size="12" fill="#4c78a8">FCFS</text>
+<polyline points="476.1,420.6 554.7,396.2 651.1,371.9 655.5,347.5 671.0,323.1 677.6,298.8 682.1,274.4 717.8,250.0 761.6,225.6 767.1,201.2 786.4,176.9 813.6,152.5 823.2,128.1 833.4,103.8 849.0,79.4 860.0,55.0" fill="none" stroke="#f58518" stroke-width="2"/>
+<text x="650" y="94" font-family="sans-serif" font-size="12" fill="#f58518">GPU_PLAS</text>
+<polyline points="500.0,420.6 524.0,396.2 651.1,371.9 655.5,347.5 669.0,323.1 677.6,298.8 682.1,274.4 750.1,250.0 762.4,225.6 777.2,201.2 789.6,176.9 813.6,152.5 823.2,128.1 833.4,103.8 849.0,79.4 860.0,55.0" fill="none" stroke="#e45756" stroke-width="2"/>
+<text x="650" y="113" font-family="sans-serif" font-size="12" fill="#e45756">UT_LAS</text>
+<polyline points="256.5,420.6 296.6,396.2 385.3,371.9 437.9,347.5 477.1,323.1 519.3,298.8 573.2,274.4 609.0,250.0 644.1,225.6 692.6,201.2 729.2,176.9 757.5,152.5 776.2,128.1 806.6,103.8 840.9,79.4 860.0,55.0" fill="none" stroke="#72b7b2" stroke-width="2"/>
+<text x="650" y="132" font-family="sans-serif" font-size="12" fill="#72b7b2">ORACLE_TOKEN_SUF</text>
+<polyline points="194.5,420.6 273.9,396.2 331.9,371.9 350.7,347.5 378.5,323.1 415.1,298.8 448.3,274.4 483.4,250.0 545.0,225.6 591.9,201.2 668.9,176.9 717.2,152.5 736.2,128.1 788.9,103.8 819.3,79.4 860.0,55.0" fill="none" stroke="#54a24b" stroke-width="2"/>
+<text x="650" y="151" font-family="sans-serif" font-size="12" fill="#54a24b">ORACLE_UT_SUF</text>
+<polyline points="167.6,420.6 222.6,396.2 256.4,371.9 329.1,347.5 359.1,323.1 399.2,298.8 432.4,274.4 479.3,250.0 518.5,225.6 556.0,201.2 627.5,176.9 668.2,152.5 703.3,128.1 722.4,103.8 784.0,79.4 860.0,55.0" fill="none" stroke="#b279a2" stroke-width="2"/>
+<text x="650" y="170" font-family="sans-serif" font-size="12" fill="#b279a2">ORACLE_RUNTIME_SJF</text>
+<line x1="85" y1="445" x2="860" y2="445" stroke="black"/>
+<line x1="85" y1="55" x2="85" y2="445" stroke="black"/>
+<text x="470" y="490" text-anchor="middle" font-family="sans-serif" font-size="14">Completion time (s)</text>
+<text x="20" y="250" text-anchor="middle" font-family="sans-serif" font-size="14" transform="rotate(-90 20 250)">CDF</text>
+</svg>
