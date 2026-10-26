@@ -22,9 +22,20 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--trace", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--program-limit",
+        type=int,
+        default=None,
+        help="Evaluate a nested prefix of the fixed trace.",
+    )
     args = parser.parse_args()
     bundle = json.loads(args.trace.read_text())
-    programs = bundle["programs"]
+    programs = bundle["programs"][: args.program_limit]
+    if args.program_limit is not None and len(programs) != args.program_limit:
+        raise ValueError(
+            f"trace contains {len(bundle['programs'])} programs, cannot select "
+            f"{args.program_limit}"
+        )
     validate_programs(programs)
     simulations = [simulate(programs, policy) for policy in POLICIES]
     summaries = [summarize_simulation(result) for result in simulations]
@@ -39,7 +50,11 @@ def main() -> None:
     tokens = [float(turn["output_token_count"]) for turn in turns]
     runtimes = [float(turn["full_compute_gpu_time_ms"]) for turn in turns]
     result = {
-        "configuration": bundle["configuration"],
+        "configuration": {
+            **bundle["configuration"],
+            "evaluated_program_count": len(programs),
+        },
+        "program_ids": [program["program_id"] for program in programs],
         "summaries": summaries,
         "headroom": {
             "oracle_sjf_over_plas_fraction": (plas - sjf) / plas,
@@ -74,6 +89,10 @@ def main() -> None:
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2) + "\n")
+    compact = {key: value for key, value in result.items() if key != "simulations"}
+    args.output.with_name("summary.json").write_text(
+        json.dumps(compact, indent=2) + "\n"
+    )
     print(json.dumps({"summaries": summaries, **result["headroom"], **result["characterization"]}, indent=2), flush=True)
 
 

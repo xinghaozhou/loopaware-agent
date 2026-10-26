@@ -42,6 +42,12 @@ def arguments() -> argparse.Namespace:
     parser.add_argument("--seed", type=int, default=20261026)
     parser.add_argument("--max-new-tokens", type=int, default=128)
     parser.add_argument("--max-input-tokens", type=int, default=12000)
+    parser.add_argument(
+        "--turn-cache",
+        type=Path,
+        default=None,
+        help="Shared per-turn checkpoint directory; defaults to OUTPUT.parent/turns.",
+    )
     parser.add_argument("--resume", action="store_true")
     return parser.parse_args()
 
@@ -57,12 +63,13 @@ def atomic_json(path: Path, value: Any) -> None:
     temporary.replace(path)
 
 
-def completed_turn_path(output: Path, program_id: str, turn_id: int) -> Path:
-    return output.parent / "turns" / program_id / f"turn-{turn_id:04d}.json"
+def completed_turn_path(turn_cache: Path, program_id: str, turn_id: int) -> Path:
+    return turn_cache / program_id / f"turn-{turn_id:04d}.json"
 
 
 def main() -> None:
     args = arguments()
+    turn_cache = args.turn_cache or (args.output.parent / "turns")
     source_rows = select_base_programs(args.programs, args.seed)
     contexts = {row["id"]: build_contexts(row) for row in source_rows}
     local_checkpoint = PROJECT_ROOT / ".cache/models/Ouro-2.6B-Thinking"
@@ -112,7 +119,7 @@ def main() -> None:
     for program_index, row in enumerate(source_rows, start=1):
         turns = []
         for context in contexts[row["id"]]:
-            path = completed_turn_path(args.output, row["id"], context["turn_id"])
+            path = completed_turn_path(turn_cache, row["id"], context["turn_id"])
             if args.resume and path.exists():
                 turns.append(json.loads(path.read_text()))
                 continue

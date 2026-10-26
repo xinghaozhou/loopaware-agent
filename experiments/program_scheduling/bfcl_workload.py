@@ -41,7 +41,16 @@ def select_base_programs(count: int, seed: int) -> list[dict[str, Any]]:
         row["id"]: row["ground_truth"]
         for row in read_jsonl(DATA_ROOT / "possible_answer/BFCL_v3_multi_turn_base.json")
     }
-    chosen = random.Random(seed).sample(rows, count)
+    if count > len(rows):
+        raise ValueError(f"requested {count} programs from {len(rows)} BFCL rows")
+    # Preserve the already reported 16-program sample as a stable prefix, then
+    # extend it deterministically for nested 32/64-program comparisons.
+    prefix_count = min(count, 16)
+    prefix = random.Random(seed).sample(rows, prefix_count)
+    prefix_ids = {row["id"] for row in prefix}
+    remaining = [row for row in rows if row["id"] not in prefix_ids]
+    extension = random.Random(seed + 1).sample(remaining, count - prefix_count)
+    chosen = prefix + extension
     for row in chosen:
         row["ground_truth"] = answers[row["id"]]
     return chosen

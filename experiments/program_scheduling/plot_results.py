@@ -95,7 +95,13 @@ def main() -> None:
     bar_plot(args.output_dir / "normalized_mean_ttlt.svg", "Normalized mean TTLT", labels, [row["mean_ttlt_ms"] / plas for row in summaries], "Mean TTLT / GPU-PLAS")
     bar_plot(args.output_dir / "p95_ttlt.svg", "P95 program completion time", labels, [row["p95_ttlt_ms"] / 1000 for row in summaries], "P95 TTLT (s)")
     cdf(args.output_dir / "completion_cdf.svg", results["simulations"])
-    turns = [turn for program in trace["programs"] for turn in program["turns"]]
+    included = set(results.get("program_ids", []))
+    turns = [
+        turn
+        for program in trace["programs"]
+        if not included or program["program_id"] in included
+        for turn in program["turns"]
+    ]
     runtime = [turn["full_compute_gpu_time_ms"] for turn in turns]
     scatter(args.output_dir / "selected_ut_vs_runtime.svg", "Selected UT workload vs runtime", [turn["sum_selected_ut"] for turn in turns], runtime, "Sum selected UT")
     scatter(args.output_dir / "tokens_vs_runtime.svg", "Output tokens vs runtime", [turn["output_token_count"] for turn in turns], runtime, "Output token count")
