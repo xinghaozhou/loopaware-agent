@@ -7,7 +7,7 @@ from typing import Any
 
 POLICIES = (
     "FCFS",
-    "GPU_PLAS",
+    "GPU_PLAS_PROXY",
     "UT_LAS",
     "ORACLE_TOKEN_SUF",
     "ORACLE_UT_SUF",
@@ -20,7 +20,7 @@ def priority(policy: str, state: dict[str, Any]) -> tuple[Any, ...]:
     stable = (state["ready_time_ms"], state["program_id"])
     if policy == "FCFS":
         return stable
-    if policy == "GPU_PLAS":
+    if policy in {"GPU_PLAS", "GPU_PLAS_PROXY"}:
         return (state["attained_gpu_ms"], *stable)
     if policy == "UT_LAS":
         return (state["attained_ut"], *stable)

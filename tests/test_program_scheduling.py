@@ -51,7 +51,7 @@ class SimulatorTest(unittest.TestCase):
             {"program_id": "C", "turns": [turn("C", 0, 6, 2), turn("C", 1, 1, 1)]},
         ]
         expected = [("A", 0), ("B", 0), ("C", 0), ("B", 1), ("C", 1), ("A", 1)]
-        for policy in ("GPU_PLAS", "UT_LAS"):
+        for policy in ("GPU_PLAS", "GPU_PLAS_PROXY", "UT_LAS"):
             result = simulate(programs, policy)
             actual = [(row["program_id"], row["turn_id"]) for row in result["schedule"]]
             self.assertEqual(actual, expected)

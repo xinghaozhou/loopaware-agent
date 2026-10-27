@@ -91,7 +91,7 @@ def main() -> None:
     args.output_dir.mkdir(parents=True, exist_ok=True)
     summaries = results["summaries"]
     labels = [row["policy"] for row in summaries]
-    plas = next(row["mean_ttlt_ms"] for row in summaries if row["policy"] == "GPU_PLAS")
+    plas = next(row["mean_ttlt_ms"] for row in summaries if row["policy"] == "GPU_PLAS_PROXY")
     bar_plot(args.output_dir / "normalized_mean_ttlt.svg", "Normalized mean TTLT", labels, [row["mean_ttlt_ms"] / plas for row in summaries], "Mean TTLT / GPU-PLAS")
     bar_plot(args.output_dir / "p95_ttlt.svg", "P95 program completion time", labels, [row["p95_ttlt_ms"] / 1000 for row in summaries], "P95 TTLT (s)")
     cdf(args.output_dir / "completion_cdf.svg", results["simulations"])
@@ -108,7 +108,7 @@ def main() -> None:
     characterization = results["characterization"]
     bar_plot(
         args.output_dir / "pairwise_accuracy.svg",
-        "READY-pair runtime ordering under GPU-PLAS",
+        "READY-pair runtime ordering under GPU-PLAS-PROXY",
         ["Selected UT", "Output tokens"],
         [characterization["ready_pairwise_selected_ut_runtime_accuracy_under_gpu_plas"], characterization["ready_pairwise_output_tokens_runtime_accuracy_under_gpu_plas"]],
         "Tie-aware accuracy",

@@ -40,7 +40,7 @@ def main() -> None:
     simulations = [simulate(programs, policy) for policy in POLICIES]
     summaries = [summarize_simulation(result) for result in simulations]
     by_policy = {row["policy"]: row for row in summaries}
-    plas = by_policy["GPU_PLAS"]["mean_ttlt_ms"]
+    plas = by_policy["GPU_PLAS_PROXY"]["mean_ttlt_ms"]
     ut_las = by_policy["UT_LAS"]["mean_ttlt_ms"]
     ut_oracle = by_policy["ORACLE_UT_SUF"]["mean_ttlt_ms"]
     sjf = by_policy["ORACLE_RUNTIME_SJF"]["mean_ttlt_ms"]
@@ -74,13 +74,13 @@ def main() -> None:
             "pairwise_output_tokens_runtime_accuracy": pairwise_order_accuracy(tokens, runtimes),
             "ready_pairwise_selected_ut_runtime_accuracy_under_gpu_plas": (
                 ready_pairwise_order_accuracy(
-                    next(result for result in simulations if result["policy"] == "GPU_PLAS"),
+                    next(result for result in simulations if result["policy"] == "GPU_PLAS_PROXY"),
                     "sum_selected_ut",
                 )
             ),
             "ready_pairwise_output_tokens_runtime_accuracy_under_gpu_plas": (
                 ready_pairwise_order_accuracy(
-                    next(result for result in simulations if result["policy"] == "GPU_PLAS"),
+                    next(result for result in simulations if result["policy"] == "GPU_PLAS_PROXY"),
                     "output_token_count",
                 )
             ),
