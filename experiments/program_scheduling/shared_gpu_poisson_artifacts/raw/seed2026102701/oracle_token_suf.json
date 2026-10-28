@@ -1,0 +1,5142 @@
+{
+  "configuration": {
+    "dataset": "BFCL_v3_multi_turn_base",
+    "model": "ByteDance/Ouro-2.6B-Thinking",
+    "model_revision": "f1edd81e7ac41355db670500ceaf204e0f73af68",
+    "program_count": 64,
+    "seed": 20261026,
+    "batch_size": 4,
+    "policy": "ORACLE_TOKEN_SUF",
+    "arrival_trace": "/root/loopaware-agent/results/program_scheduling/shared_gpu_arrivals/poisson/medium_seed2026102701.json",
+    "arrival_seed": 2026102701,
+    "arrival_lambda_programs_per_second": 0.03481916732304454,
+    "max_new_tokens": 128,
+    "physical_ut": 4,
+    "selected_ut_threshold": 0.2,
+    "runtime_num_hidden_layers": 48,
+    "generated_at": "2026-10-27T22:17:18.882974+00:00",
+    "teacher_forcing": "recorded BFCL calls and official tool results",
+    "teacher_forced_token_ids": true,
+    "execution_model": "one_shared_static_gpu_batch",
+    "refill_boundary": "after the active physical batch completes",
+    "maximum_overlapping_gpu_batches": 1,
+    "autellix_note": null
+  },
+  "summary": {
+    "policy": "ORACLE_TOKEN_SUF",
+    "mean_ttlt_ms": 88401.34300745044,
+    "p95_ttlt_ms": 132750.3591577764,
+    "mean_queueing_time_ms": 14396.367879276619,
+    "makespan_ms": 2260396.761380626,
+    "throughput_programs_per_s": 0.02831361338569141,
+    "physical_gpu_utilization": 0.8378331085381902,
+    "time_weighted_batch_fill": 0.625228411554624,
+    "mean_ready_queue_length": 0.4076131942920243
+  },
+  "latency": {
+    "batch_count": 106,
+    "total_gpu_time_ms": 1893835.2451171875,
+    "mean_batch_gpu_time_ms": 17866.3702369546,
+    "p50_batch_gpu_time_ms": 21163.3671875,
+    "p95_batch_gpu_time_ms": 24546.7109375,
+    "generated_token_count_including_eos": 19425,
+    "throughput_tokens_per_second": 10.256964036382168,
+    "max_peak_allocated_gib": 22.00005865097046,
+    "max_peak_reserved_gib": 31.568359375,
+    "batch_size_histogram": {
+      "1": 36,
+      "2": 31,
+      "3": 14,
+      "4": 25
+    }
+  },
+  "simulation": {
+    "policy": "ORACLE_TOKEN_SUF_B4",
+    "programs": [
+      {
+        "program_id": "multi_turn_base_29",
+        "completion_time_ms": 57252.99609375,
+        "queue_time_ms": 0.0,
+        "execution_time_ms": 57252.99609375,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0
+      },
+      {
+        "program_id": "multi_turn_base_58",
+        "completion_time_ms": 104166.47980537807,
+        "queue_time_ms": 17025.32160225306,
+        "execution_time_ms": 87141.158203125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.1953763520398393
+      },
+      {
+        "program_id": "multi_turn_base_172",
+        "completion_time_ms": 101682.99035336195,
+        "queue_time_ms": 14541.83215023695,
+        "execution_time_ms": 87141.158203125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.166876737125069
+      },
+      {
+        "program_id": "multi_turn_base_34",
+        "completion_time_ms": 50493.40872733208,
+        "queue_time_ms": 5716.5806023320765,
+        "execution_time_ms": 44776.828125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.1276682793692654
+      },
+      {
+        "program_id": "multi_turn_base_124",
+        "completion_time_ms": 70621.7470703125,
+        "queue_time_ms": 0.0,
+        "execution_time_ms": 70621.7470703125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0
+      },
+      {
+        "program_id": "multi_turn_base_103",
+        "completion_time_ms": 100779.16436208223,
+        "queue_time_ms": 6103.167291769729,
+        "execution_time_ms": 94675.9970703125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.064463723442354
+      },
+      {
+        "program_id": "multi_turn_base_138",
+        "completion_time_ms": 80731.38157389726,
+        "queue_time_ms": 5129.572003584763,
+        "execution_time_ms": 75601.8095703125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0678498574668913
+      },
+      {
+        "program_id": "multi_turn_base_22",
+        "completion_time_ms": 90568.51917091542,
+        "queue_time_ms": 898.0035459154169,
+        "execution_time_ms": 89670.515625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0100144795606043
+      },
+      {
+        "program_id": "multi_turn_base_2",
+        "completion_time_ms": 116385.1119407859,
+        "queue_time_ms": 14158.605104848393,
+        "execution_time_ms": 102226.5068359375,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.1385022881352234
+      },
+      {
+        "program_id": "multi_turn_base_102",
+        "completion_time_ms": 125984.98798814468,
+        "queue_time_ms": 371.0084959571832,
+        "execution_time_ms": 125613.9794921875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0029535605627418
+      },
+      {
+        "program_id": "multi_turn_base_148",
+        "completion_time_ms": 126714.08772209025,
+        "queue_time_ms": 23644.469558027748,
+        "execution_time_ms": 103069.6181640625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.2294029024187452
+      },
+      {
+        "program_id": "multi_turn_base_90",
+        "completion_time_ms": 99453.773104352,
+        "queue_time_ms": 18959.371737164503,
+        "execution_time_ms": 80494.4013671875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.235536526952706
+      },
+      {
+        "program_id": "multi_turn_base_84",
+        "completion_time_ms": 68681.37417491019,
+        "queue_time_ms": 22531.81362803519,
+        "execution_time_ms": 46149.560546875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.488234630211683
+      },
+      {
+        "program_id": "multi_turn_base_87",
+        "completion_time_ms": 122697.66096320655,
+        "queue_time_ms": 35220.26057258155,
+        "execution_time_ms": 87477.400390625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.4026212532072013
+      },
+      {
+        "program_id": "multi_turn_base_49",
+        "completion_time_ms": 108523.9330869927,
+        "queue_time_ms": 20711.489727617765,
+        "execution_time_ms": 87812.443359375,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.2358605333740154
+      },
+      {
+        "program_id": "multi_turn_base_165",
+        "completion_time_ms": 146483.27711485937,
+        "queue_time_ms": 39689.589614859375,
+        "execution_time_ms": 106793.6875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.3716473374407956
+      },
+      {
+        "program_id": "multi_turn_base_43",
+        "completion_time_ms": 132750.3591577764,
+        "queue_time_ms": 35462.6228296514,
+        "execution_time_ms": 97287.736328125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.3645127758964979
+      },
+      {
+        "program_id": "multi_turn_base_13",
+        "completion_time_ms": 78211.29559698427,
+        "queue_time_ms": 30909.48700323433,
+        "execution_time_ms": 47301.80859375,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.6534525406565184
+      },
+      {
+        "program_id": "multi_turn_base_37",
+        "completion_time_ms": 126315.50400170428,
+        "queue_time_ms": 53610.386814204336,
+        "execution_time_ms": 72705.1171875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.7373674493357583
+      },
+      {
+        "program_id": "multi_turn_base_53",
+        "completion_time_ms": 119261.2015984006,
+        "queue_time_ms": 22351.406676525658,
+        "execution_time_ms": 96909.794921875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.2306413577135773
+      },
+      {
+        "program_id": "multi_turn_base_168",
+        "completion_time_ms": 104780.44921875,
+        "queue_time_ms": 0.0,
+        "execution_time_ms": 104780.44921875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0
+      },
+      {
+        "program_id": "multi_turn_base_196",
+        "completion_time_ms": 108225.06740104221,
+        "queue_time_ms": 11773.527850260958,
+        "execution_time_ms": 96451.53955078125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.1220667695414261
+      },
+      {
+        "program_id": "multi_turn_base_115",
+        "completion_time_ms": 93170.90484572924,
+        "queue_time_ms": 2398.4829707292374,
+        "execution_time_ms": 90772.421875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0264230359969035
+      },
+      {
+        "program_id": "multi_turn_base_27",
+        "completion_time_ms": 69330.17681573494,
+        "queue_time_ms": 1317.9053313599434,
+        "execution_time_ms": 68012.271484375,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0193774638399296
+      },
+      {
+        "program_id": "multi_turn_base_64",
+        "completion_time_ms": 65358.12227685051,
+        "queue_time_ms": 20419.07149560051,
+        "execution_time_ms": 44939.05078125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.454372558846303
+      },
+      {
+        "program_id": "multi_turn_base_7",
+        "completion_time_ms": 82611.56704082456,
+        "queue_time_ms": 16168.018212699564,
+        "execution_time_ms": 66443.548828125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.2433346577336306
+      },
+      {
+        "program_id": "multi_turn_base_8",
+        "completion_time_ms": 96016.51471951604,
+        "queue_time_ms": 5942.417063266039,
+        "execution_time_ms": 90074.09765625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0659725405847984
+      },
+      {
+        "program_id": "multi_turn_base_139",
+        "completion_time_ms": 53387.8715889561,
+        "queue_time_ms": 6968.863776456099,
+        "execution_time_ms": 46419.0078125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.1501295289336082
+      },
+      {
+        "program_id": "multi_turn_base_118",
+        "completion_time_ms": 117180.36507317133,
+        "queue_time_ms": 630.4431981713278,
+        "execution_time_ms": 116549.921875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0054092116753839
+      },
+      {
+        "program_id": "multi_turn_base_187",
+        "completion_time_ms": 110191.07547153533,
+        "queue_time_ms": 16429.612580910325,
+        "execution_time_ms": 93761.462890625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.1752277756168956
+      },
+      {
+        "program_id": "multi_turn_base_155",
+        "completion_time_ms": 76792.28072750231,
+        "queue_time_ms": 30574.753383752308,
+        "execution_time_ms": 46217.52734375,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.66154022382781
+      },
+      {
+        "program_id": "multi_turn_base_11",
+        "completion_time_ms": 63801.76401106769,
+        "queue_time_ms": 16176.340182942688,
+        "execution_time_ms": 47625.423828125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.3396576635479687
+      },
+      {
+        "program_id": "multi_turn_base_21",
+        "completion_time_ms": 59578.869140625,
+        "queue_time_ms": 0.0,
+        "execution_time_ms": 59578.869140625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0
+      },
+      {
+        "program_id": "multi_turn_base_121",
+        "completion_time_ms": 61397.68311019032,
+        "queue_time_ms": 2301.0991258153226,
+        "execution_time_ms": 59096.583984375,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.038937938044333
+      },
+      {
+        "program_id": "multi_turn_base_65",
+        "completion_time_ms": 31353.347137139644,
+        "queue_time_ms": 1466.6430355771445,
+        "execution_time_ms": 29886.7041015625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0490734284581238
+      },
+      {
+        "program_id": "multi_turn_base_188",
+        "completion_time_ms": 111546.1513671875,
+        "queue_time_ms": 0.0,
+        "execution_time_ms": 111546.1513671875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0
+      },
+      {
+        "program_id": "multi_turn_base_59",
+        "completion_time_ms": 100035.35527682281,
+        "queue_time_ms": 7131.369925260311,
+        "execution_time_ms": 92903.9853515625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0767606459321863
+      },
+      {
+        "program_id": "multi_turn_base_71",
+        "completion_time_ms": 93576.1279734138,
+        "queue_time_ms": 15954.333051538793,
+        "execution_time_ms": 77621.794921875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.2055393471330642
+      },
+      {
+        "program_id": "multi_turn_base_109",
+        "completion_time_ms": 91533.24338080408,
+        "queue_time_ms": 6353.2155487728305,
+        "execution_time_ms": 85180.02783203125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.074585741640058
+      },
+      {
+        "program_id": "multi_turn_base_48",
+        "completion_time_ms": 69391.74341279408,
+        "queue_time_ms": 3146.9621627940796,
+        "execution_time_ms": 66244.78125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.047505057808521
+      },
+      {
+        "program_id": "multi_turn_base_56",
+        "completion_time_ms": 68266.75406666286,
+        "queue_time_ms": 18024.904457287863,
+        "execution_time_ms": 50241.849609375,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.358762756495423
+      },
+      {
+        "program_id": "multi_turn_base_136",
+        "completion_time_ms": 56957.45717225713,
+        "queue_time_ms": 3245.1744574133772,
+        "execution_time_ms": 53712.28271484375,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0604177348902089
+      },
+      {
+        "program_id": "multi_turn_base_92",
+        "completion_time_ms": 50442.81689453125,
+        "queue_time_ms": 0.0,
+        "execution_time_ms": 50442.81689453125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0
+      },
+      {
+        "program_id": "multi_turn_base_193",
+        "completion_time_ms": 75738.8466796875,
+        "queue_time_ms": 0.0,
+        "execution_time_ms": 75738.8466796875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0
+      },
+      {
+        "program_id": "multi_turn_base_197",
+        "completion_time_ms": 70696.04388740286,
+        "queue_time_ms": 13601.060488965362,
+        "execution_time_ms": 57094.9833984375,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.2382181354542188
+      },
+      {
+        "program_id": "multi_turn_base_72",
+        "completion_time_ms": 93238.16187203093,
+        "queue_time_ms": 8916.559332968434,
+        "execution_time_ms": 84321.6025390625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.1057446616818956
+      },
+      {
+        "program_id": "multi_turn_base_105",
+        "completion_time_ms": 55805.18488482805,
+        "queue_time_ms": 12111.56183795305,
+        "execution_time_ms": 43693.623046875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.2771928943717858
+      },
+      {
+        "program_id": "multi_turn_base_89",
+        "completion_time_ms": 35396.43085989263,
+        "queue_time_ms": 3223.646191923879,
+        "execution_time_ms": 32172.78466796875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.1001979227223482
+      },
+      {
+        "program_id": "multi_turn_base_24",
+        "completion_time_ms": 91111.59476903011,
+        "queue_time_ms": 2120.327190905111,
+        "execution_time_ms": 88991.267578125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0238262387828523
+      },
+      {
+        "program_id": "multi_turn_base_3",
+        "completion_time_ms": 64382.60576452315,
+        "queue_time_ms": 18442.85381139815,
+        "execution_time_ms": 45939.751953125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.4014574094831087
+      },
+      {
+        "program_id": "multi_turn_base_33",
+        "completion_time_ms": 165583.49808444828,
+        "queue_time_ms": 42316.40238132328,
+        "execution_time_ms": 123267.095703125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.343290333401199
+      },
+      {
+        "program_id": "multi_turn_base_60",
+        "completion_time_ms": 143808.13811349683,
+        "queue_time_ms": 16268.235769746825,
+        "execution_time_ms": 127539.90234375,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.1275540867665095
+      },
+      {
+        "program_id": "multi_turn_base_74",
+        "completion_time_ms": 64235.23383554304,
+        "queue_time_ms": 13971.87055429304,
+        "execution_time_ms": 50263.36328125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.2779732521302456
+      },
+      {
+        "program_id": "multi_turn_base_85",
+        "completion_time_ms": 84045.29294598615,
+        "queue_time_ms": 32022.455055361148,
+        "execution_time_ms": 52022.837890625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.6155461015542156
+      },
+      {
+        "program_id": "multi_turn_base_158",
+        "completion_time_ms": 121753.96987677622,
+        "queue_time_ms": 57483.49624396372,
+        "execution_time_ms": 64270.4736328125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.8943997608042555
+      },
+      {
+        "program_id": "multi_turn_base_152",
+        "completion_time_ms": 120366.87467839615,
+        "queue_time_ms": 56096.401045583654,
+        "execution_time_ms": 64270.4736328125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.872817607756734
+      },
+      {
+        "program_id": "multi_turn_base_194",
+        "completion_time_ms": 115864.62982537202,
+        "queue_time_ms": 4829.935489434516,
+        "execution_time_ms": 111034.6943359375,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.043499336115804
+      },
+      {
+        "program_id": "multi_turn_base_75",
+        "completion_time_ms": 78493.73330947245,
+        "queue_time_ms": 5804.997957909945,
+        "execution_time_ms": 72688.7353515625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0798610394008616
+      },
+      {
+        "program_id": "multi_turn_base_23",
+        "completion_time_ms": 70941.04847146478,
+        "queue_time_ms": 20616.504526152276,
+        "execution_time_ms": 50324.5439453125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.409670965892034
+      },
+      {
+        "program_id": "multi_turn_base_83",
+        "completion_time_ms": 63418.63026853767,
+        "queue_time_ms": 13094.086323225172,
+        "execution_time_ms": 50324.5439453125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.260192846207498
+      },
+      {
+        "program_id": "multi_turn_base_42",
+        "completion_time_ms": 80362.81074262038,
+        "queue_time_ms": 19569.56464887038,
+        "execution_time_ms": 60793.24609375,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.321903597953824
+      },
+      {
+        "program_id": "multi_turn_base_147",
+        "completion_time_ms": 52203.73318642378,
+        "queue_time_ms": 10181.682405173779,
+        "execution_time_ms": 42022.05078125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.2422938008945719
+      },
+      {
+        "program_id": "multi_turn_base_110",
+        "completion_time_ms": 97471.72796626762,
+        "queue_time_ms": 10595.995056111366,
+        "execution_time_ms": 86875.73291015625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.1219672594540222
+      },
+      {
+        "program_id": "multi_turn_base_91",
+        "completion_time_ms": 50082.800724282395,
+        "queue_time_ms": 6641.781193032395,
+        "execution_time_ms": 43441.01953125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.1528919271393832
+      }
+    ],
+    "schedule": [
+      {
+        "batch_index": 0,
+        "members": [
+          {
+            "program_id": "multi_turn_base_29",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1116
+        ],
+        "padded_input_tokens": 1116,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 20018.572265625,
+        "wall_time_ms": 20018.615507055074,
+        "peak_allocated_gib": 6.807873725891113,
+        "peak_reserved_gib": 7.716796875,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/390f570dcc218a65faa11128d643aca5d234aaebfaf5d3f4c9901639a2e24638.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_29",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 0.0,
+        "finish_time_ms": 20018.572265625
+      },
+      {
+        "batch_index": 1,
+        "members": [
+          {
+            "program_id": "multi_turn_base_29",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1219
+        ],
+        "padded_input_tokens": 1219,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 18674.267578125,
+        "wall_time_ms": 18674.444795004092,
+        "peak_allocated_gib": 6.960267066955566,
+        "peak_reserved_gib": 7.98046875,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/93fc9501c83026e73959e0a5813dc69e56c2bf427d278712e17460124983bbc6.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_29",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 20018.572265625,
+        "finish_time_ms": 38692.83984375
+      },
+      {
+        "batch_index": 2,
+        "members": [
+          {
+            "program_id": "multi_turn_base_29",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1276
+        ],
+        "padded_input_tokens": 1276,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 18560.15625,
+        "wall_time_ms": 18560.281803947873,
+        "peak_allocated_gib": 7.0448808670043945,
+        "peak_reserved_gib": 7.978515625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/41211158181fefbcb2f45bc88a2e7f89fc68698f7dd2bb5beb5743453908ac56.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_29",
+            "turn_id": 2
+          }
+        ],
+        "start_time_ms": 38692.83984375,
+        "finish_time_ms": 57252.99609375
+      },
+      {
+        "batch_index": 3,
+        "members": [
+          {
+            "program_id": "multi_turn_base_172",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_58",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1104,
+          1418
+        ],
+        "padded_input_tokens": 1418,
+        "teacher_forced_output_tokens": [
+          128,
+          128
+        ],
+        "gpu_time_ms": 21148.87890625,
+        "wall_time_ms": 21149.010374909267,
+        "peak_allocated_gib": 9.527710437774658,
+        "peak_reserved_gib": 12.107421875,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/5c4fcaefbf2da492dcfcd3de780955c10ff99f61de450c03d3cf4feaca316c42.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_58",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_172",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 57252.99609375,
+        "finish_time_ms": 78401.875
+      },
+      {
+        "batch_index": 4,
+        "members": [
+          {
+            "program_id": "multi_turn_base_172",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_58",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1367,
+          1590
+        ],
+        "padded_input_tokens": 1590,
+        "teacher_forced_output_tokens": [
+          128,
+          41
+        ],
+        "gpu_time_ms": 21215.451171875,
+        "wall_time_ms": 21215.579796000384,
+        "peak_allocated_gib": 10.080027103424072,
+        "peak_reserved_gib": 13.01953125,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/ac9a8b91eda62a25501f890f0530540ac495d5a8232c75e6cc1daebcd0669405.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_58",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_172",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 78401.875,
+        "finish_time_ms": 99617.326171875
+      },
+      {
+        "batch_index": 5,
+        "members": [
+          {
+            "program_id": "multi_turn_base_172",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_34",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_58",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          1675,
+          1363,
+          1727
+        ],
+        "padded_input_tokens": 1727,
+        "teacher_forced_output_tokens": [
+          46,
+          128,
+          24
+        ],
+        "gpu_time_ms": 21837.728515625,
+        "wall_time_ms": 21837.86303899251,
+        "peak_allocated_gib": 13.189488887786865,
+        "peak_reserved_gib": 17.537109375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/e7d624dae645246b4a033afe0794f69ac524a2829268d0993fd1ad96db274e42.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_58",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_172",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_34",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 99617.326171875,
+        "finish_time_ms": 121455.0546875
+      },
+      {
+        "batch_index": 6,
+        "members": [
+          {
+            "program_id": "multi_turn_base_172",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_34",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_58",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          1823,
+          1532,
+          1948
+        ],
+        "padded_input_tokens": 1948,
+        "teacher_forced_output_tokens": [
+          29,
+          128,
+          27
+        ],
+        "gpu_time_ms": 22939.099609375,
+        "wall_time_ms": 22939.23433299642,
+        "peak_allocated_gib": 14.144131183624268,
+        "peak_reserved_gib": 19.2265625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/6ba72509b346cd49319d5c42acf14716e0fdc90d91b7b1f6d1a3ef7ff09a0fde.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_58",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_172",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_34",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 121455.0546875,
+        "finish_time_ms": 144394.154296875
+      },
+      {
+        "batch_index": 7,
+        "members": [
+          {
+            "program_id": "multi_turn_base_124",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1372
+        ],
+        "padded_input_tokens": 1372,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 18942.44921875,
+        "wall_time_ms": 18942.57322093472,
+        "peak_allocated_gib": 7.18654727935791,
+        "peak_reserved_gib": 8.59765625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/994ffe3131a68b39ca372f5a21de7e2f8129880a7b81e9cd10c092831644d13d.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_124",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 154069.661151761,
+        "finish_time_ms": 173012.110370511
+      },
+      {
+        "batch_index": 8,
+        "members": [
+          {
+            "program_id": "multi_turn_base_103",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_124",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1214,
+          1532
+        ],
+        "padded_input_tokens": 1532,
+        "teacher_forced_output_tokens": [
+          128,
+          128
+        ],
+        "gpu_time_ms": 21192.951171875,
+        "wall_time_ms": 21193.077670992352,
+        "peak_allocated_gib": 9.863440036773682,
+        "peak_reserved_gib": 12.48828125,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/b7e24fa1d47898d368c75a883f84316c8e81cd825e59eab626c5fee92510d7d5.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_124",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_103",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 173012.110370511,
+        "finish_time_ms": 194205.061542386
+      },
+      {
+        "batch_index": 9,
+        "members": [
+          {
+            "program_id": "multi_turn_base_103",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_124",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1299,
+          1777
+        ],
+        "padded_input_tokens": 1777,
+        "teacher_forced_output_tokens": [
+          128,
+          31
+        ],
+        "gpu_time_ms": 21969.666015625,
+        "wall_time_ms": 21969.796495046467,
+        "peak_allocated_gib": 10.584967613220215,
+        "peak_reserved_gib": 13.80078125,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/cd9f88ddce9d554fd20098290315a4e5bb2ef0f5c1e903df94e59ab6a9ea9658.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_124",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_103",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 194205.061542386,
+        "finish_time_ms": 216174.727558011
+      },
+      {
+        "batch_index": 10,
+        "members": [
+          {
+            "program_id": "multi_turn_base_103",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_124",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1384,
+          1935
+        ],
+        "padded_input_tokens": 1935,
+        "teacher_forced_output_tokens": [
+          45,
+          29
+        ],
+        "gpu_time_ms": 8516.6806640625,
+        "wall_time_ms": 8516.75717602484,
+        "peak_allocated_gib": 10.900806903839111,
+        "peak_reserved_gib": 14.349609375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/2f977757e9db5999a0de8cd09996e889479ff7acb3579ba2c2f573a0627d94ea.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_124",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_103",
+            "turn_id": 2
+          }
+        ],
+        "start_time_ms": 216174.727558011,
+        "finish_time_ms": 224691.4082220735
+      },
+      {
+        "batch_index": 11,
+        "members": [
+          {
+            "program_id": "multi_turn_base_103",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_138",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1588,
+          1325
+        ],
+        "padded_input_tokens": 1588,
+        "teacher_forced_output_tokens": [
+          128,
+          128
+        ],
+        "gpu_time_ms": 21235.775390625,
+        "wall_time_ms": 21235.900386003777,
+        "peak_allocated_gib": 10.075357913970947,
+        "peak_reserved_gib": 13.01953125,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/1898c95c106667b6124590f16011c24e7ad4129c3a6dcdc0d86dce07b981a789.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_103",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_138",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 224691.4082220735,
+        "finish_time_ms": 245927.1836126985
+      },
+      {
+        "batch_index": 12,
+        "members": [
+          {
+            "program_id": "multi_turn_base_103",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_138",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1800,
+          1471
+        ],
+        "padded_input_tokens": 1800,
+        "teacher_forced_output_tokens": [
+          71,
+          128
+        ],
+        "gpu_time_ms": 21760.923828125,
+        "wall_time_ms": 21761.056573013775,
+        "peak_allocated_gib": 10.724709510803223,
+        "peak_reserved_gib": 13.927734375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/9ba5a8ad4c95cdc1ab3e4b5de8bd8913173ae58ca341e42419aa84f937d47ce0.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_103",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_138",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 245927.1836126985,
+        "finish_time_ms": 267688.1074408235
+      },
+      {
+        "batch_index": 13,
+        "members": [
+          {
+            "program_id": "multi_turn_base_138",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1612
+        ],
+        "padded_input_tokens": 1612,
+        "teacher_forced_output_tokens": [
+          31
+        ],
+        "gpu_time_ms": 5220.81884765625,
+        "wall_time_ms": 5220.890399999917,
+        "peak_allocated_gib": 7.44085693359375,
+        "peak_reserved_gib": 8.990234375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/bc0662945475b86ce1b39f0fd92ed884a2f2047825ecd5de9a96f20b057cb1c8.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_138",
+            "turn_id": 2
+          }
+        ],
+        "start_time_ms": 267688.1074408235,
+        "finish_time_ms": 272908.92628847976
+      },
+      {
+        "batch_index": 14,
+        "members": [
+          {
+            "program_id": "multi_turn_base_138",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1771
+        ],
+        "padded_input_tokens": 1771,
+        "teacher_forced_output_tokens": [
+          36
+        ],
+        "gpu_time_ms": 6087.37939453125,
+        "wall_time_ms": 6087.445379933342,
+        "peak_allocated_gib": 7.685868263244629,
+        "peak_reserved_gib": 9.634765625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/068958fc2ab376f0919381dfde4a2e02372a858153f593985e3bdc7b97cc31c8.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_138",
+            "turn_id": 3
+          }
+        ],
+        "start_time_ms": 272908.92628847976,
+        "finish_time_ms": 278996.305683011
+      },
+      {
+        "batch_index": 15,
+        "members": [
+          {
+            "program_id": "multi_turn_base_138",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_22",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1899,
+          1527
+        ],
+        "padded_input_tokens": 1899,
+        "teacher_forced_output_tokens": [
+          39,
+          128
+        ],
+        "gpu_time_ms": 21296.912109375,
+        "wall_time_ms": 21297.03731799964,
+        "peak_allocated_gib": 10.957518577575684,
+        "peak_reserved_gib": 14.341796875,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/23ca97e8e8cdce932691145a6cdf809c168f49471f11c1a3873de2df64e969b7.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_138",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_22",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 278996.305683011,
+        "finish_time_ms": 300293.217792386
+      },
+      {
+        "batch_index": 16,
+        "members": [
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_2",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_22",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          1411,
+          1327,
+          1650
+        ],
+        "padded_input_tokens": 1650,
+        "teacher_forced_output_tokens": [
+          128,
+          128,
+          43
+        ],
+        "gpu_time_ms": 22052.423828125,
+        "wall_time_ms": 22052.55779402796,
+        "peak_allocated_gib": 12.827712535858154,
+        "peak_reserved_gib": 16.9609375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/72f5108584e1c8df23990605a7e3256bf819b44c5ad67a1288eec871d77cc479.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_22",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_2",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 300293.217792386,
+        "finish_time_ms": 322345.641620511
+      },
+      {
+        "batch_index": 17,
+        "members": [
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_148",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_2",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_22",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1536,
+          1362,
+          1429,
+          1769
+        ],
+        "padded_input_tokens": 1769,
+        "teacher_forced_output_tokens": [
+          128,
+          128,
+          30,
+          41
+        ],
+        "gpu_time_ms": 23067.154296875,
+        "wall_time_ms": 23067.290299921297,
+        "peak_allocated_gib": 16.14538335800171,
+        "peak_reserved_gib": 22.248046875,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/4d1ab7e6b6eabafb644326f7e5664ee9ff0e9e4f5fd89cd9ea705ca5429e545e.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_22",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_2",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_148",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 322345.641620511,
+        "finish_time_ms": 345412.795917386
+      },
+      {
+        "batch_index": 18,
+        "members": [
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_2",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_22",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_90",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1678,
+          1533,
+          1941,
+          1431
+        ],
+        "padded_input_tokens": 1941,
+        "teacher_forced_output_tokens": [
+          31,
+          37,
+          53,
+          128
+        ],
+        "gpu_time_ms": 23254.025390625,
+        "wall_time_ms": 23254.226531949826,
+        "peak_allocated_gib": 17.158466815948486,
+        "peak_reserved_gib": 23.677734375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_22",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_2",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_148",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_90",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 345412.795917386,
+        "finish_time_ms": 368666.821308011
+      },
+      {
+        "batch_index": 19,
+        "members": [
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_148",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_2",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_90",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1816,
+          1588,
+          1654,
+          1697
+        ],
+        "padded_input_tokens": 1816,
+        "teacher_forced_output_tokens": [
+          29,
+          128,
+          43,
+          37
+        ],
+        "gpu_time_ms": 22873.72265625,
+        "wall_time_ms": 22873.889127979055,
+        "peak_allocated_gib": 16.42221450805664,
+        "peak_reserved_gib": 22.74609375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_2",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_148",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_90",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 368666.821308011,
+        "finish_time_ms": 391540.543964261
+      },
+      {
+        "batch_index": 20,
+        "members": [
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_148",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_2",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_90",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1909,
+          1725,
+          1832,
+          1881
+        ],
+        "padded_input_tokens": 1909,
+        "teacher_forced_output_tokens": [
+          21,
+          29,
+          28,
+          50
+        ],
+        "gpu_time_ms": 10979.1806640625,
+        "wall_time_ms": 10979.280650964938,
+        "peak_allocated_gib": 16.65693235397339,
+        "peak_reserved_gib": 23.5390625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_2",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_148",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_90",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_84",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_87",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 391540.543964261,
+        "finish_time_ms": 402519.7246283235
+      },
+      {
+        "batch_index": 21,
+        "members": [
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 5
+          },
+          {
+            "program_id": "multi_turn_base_148",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_84",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_90",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          2071,
+          1829,
+          841,
+          2048
+        ],
+        "padded_input_tokens": 2071,
+        "teacher_forced_output_tokens": [
+          68,
+          20,
+          128,
+          37
+        ],
+        "gpu_time_ms": 23387.47265625,
+        "wall_time_ms": 23387.904621078633,
+        "peak_allocated_gib": 17.924168586730957,
+        "peak_reserved_gib": 24.990234375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 5
+          },
+          {
+            "program_id": "multi_turn_base_148",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_90",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_84",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_87",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 402519.7246283235,
+        "finish_time_ms": 425907.1972845735
+      },
+      {
+        "batch_index": 22,
+        "members": [
+          {
+            "program_id": "multi_turn_base_148",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_84",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_87",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          1985,
+          1144,
+          973
+        ],
+        "padded_input_tokens": 1985,
+        "teacher_forced_output_tokens": [
+          51,
+          128,
+          128
+        ],
+        "gpu_time_ms": 22762.087890625,
+        "wall_time_ms": 22762.261185911484,
+        "peak_allocated_gib": 14.307578563690186,
+        "peak_reserved_gib": 19.234375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_148",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_84",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_87",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 425907.1972845735,
+        "finish_time_ms": 448669.2851751985
+      },
+      {
+        "batch_index": 23,
+        "members": [
+          {
+            "program_id": "multi_turn_base_49",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_87",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1198,
+          1076
+        ],
+        "padded_input_tokens": 1198,
+        "teacher_forced_output_tokens": [
+          128,
+          29
+        ],
+        "gpu_time_ms": 20557.037109375,
+        "wall_time_ms": 20557.169666979462,
+        "peak_allocated_gib": 8.87980842590332,
+        "peak_reserved_gib": 10.779296875,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/695147f743fe1f1a076f1ca6ed0ad28a87b54bb9dbc9608acf4eac41006df694.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_87",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_49",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 448669.2851751985,
+        "finish_time_ms": 469226.3222845735
+      },
+      {
+        "batch_index": 24,
+        "members": [
+          {
+            "program_id": "multi_turn_base_49",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_87",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1302,
+          1179
+        ],
+        "padded_input_tokens": 1302,
+        "teacher_forced_output_tokens": [
+          128,
+          39
+        ],
+        "gpu_time_ms": 20683.203125,
+        "wall_time_ms": 20683.345658006147,
+        "peak_allocated_gib": 9.252090454101562,
+        "peak_reserved_gib": 11.341796875,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/91caa841cb6ec403bd431ae06ed1ebb71b61b304bf857631ab4f593bf3ae03fe.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_87",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_49",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 469226.3222845735,
+        "finish_time_ms": 489909.5254095735
+      },
+      {
+        "batch_index": 25,
+        "members": [
+          {
+            "program_id": "multi_turn_base_165",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_43",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_49",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_87",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1986,
+          1541,
+          1512,
+          1459
+        ],
+        "padded_input_tokens": 1986,
+        "teacher_forced_output_tokens": [
+          128,
+          128,
+          27,
+          33
+        ],
+        "gpu_time_ms": 23475.072265625,
+        "wall_time_ms": 23475.243133027107,
+        "peak_allocated_gib": 17.42351770401001,
+        "peak_reserved_gib": 24.095703125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_87",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_49",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_165",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_43",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_13",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_37",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 489909.5254095735,
+        "finish_time_ms": 513384.5976751985
+      },
+      {
+        "batch_index": 26,
+        "members": [
+          {
+            "program_id": "multi_turn_base_13",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_37",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_49",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_53",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1189,
+          1214,
+          1605,
+          1189
+        ],
+        "padded_input_tokens": 1605,
+        "teacher_forced_output_tokens": [
+          128,
+          128,
+          33,
+          128
+        ],
+        "gpu_time_ms": 23097.130859375,
+        "wall_time_ms": 23097.291590063833,
+        "peak_allocated_gib": 15.179421424865723,
+        "peak_reserved_gib": 20.546875,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_49",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_165",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_43",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_13",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_37",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_53",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 513384.5976751985,
+        "finish_time_ms": 536481.7285345735
+      },
+      {
+        "batch_index": 27,
+        "members": [
+          {
+            "program_id": "multi_turn_base_13",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_165",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_43",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_53",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1297,
+          2088,
+          1624,
+          1288
+        ],
+        "padded_input_tokens": 2088,
+        "teacher_forced_output_tokens": [
+          128,
+          128,
+          128,
+          24
+        ],
+        "gpu_time_ms": 24204.677734375,
+        "wall_time_ms": 24204.913452034816,
+        "peak_allocated_gib": 18.024298667907715,
+        "peak_reserved_gib": 24.990234375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_165",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_43",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_13",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_37",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_53",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 536481.7285345735,
+        "finish_time_ms": 560686.4062689485
+      },
+      {
+        "batch_index": 28,
+        "members": [
+          {
+            "program_id": "multi_turn_base_165",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_37",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_43",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_53",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          2234,
+          1305,
+          1692,
+          1477
+        ],
+        "padded_input_tokens": 2234,
+        "teacher_forced_output_tokens": [
+          128,
+          128,
+          128,
+          22
+        ],
+        "gpu_time_ms": 24546.7109375,
+        "wall_time_ms": 24547.37413302064,
+        "peak_allocated_gib": 18.88424062728882,
+        "peak_reserved_gib": 26.28515625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_165",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_43",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_37",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_53",
+            "turn_id": 2
+          }
+        ],
+        "start_time_ms": 560686.4062689485,
+        "finish_time_ms": 585233.1172064485
+      },
+      {
+        "batch_index": 29,
+        "members": [
+          {
+            "program_id": "multi_turn_base_165",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_37",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_43",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_53",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          2434,
+          1500,
+          1823,
+          1642
+        ],
+        "padded_input_tokens": 2434,
+        "teacher_forced_output_tokens": [
+          42,
+          39,
+          128,
+          43
+        ],
+        "gpu_time_ms": 25061.275390625,
+        "wall_time_ms": 25062.155170016922,
+        "peak_allocated_gib": 20.06224489212036,
+        "peak_reserved_gib": 28.525390625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_165",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_43",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_37",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_53",
+            "turn_id": 3
+          }
+        ],
+        "start_time_ms": 585233.1172064485,
+        "finish_time_ms": 610294.3925970735
+      },
+      {
+        "batch_index": 30,
+        "members": [
+          {
+            "program_id": "multi_turn_base_165",
+            "turn_id": 4
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          2619
+        ],
+        "padded_input_tokens": 2619,
+        "teacher_forced_output_tokens": [
+          60
+        ],
+        "gpu_time_ms": 9505.951171875,
+        "wall_time_ms": 9506.043820059858,
+        "peak_allocated_gib": 8.977564811706543,
+        "peak_reserved_gib": 11.720703125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_165",
+            "turn_id": 4
+          }
+        ],
+        "start_time_ms": 610294.3925970735,
+        "finish_time_ms": 619800.3437689485
+      },
+      {
+        "batch_index": 31,
+        "members": [
+          {
+            "program_id": "multi_turn_base_168",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1767
+        ],
+        "padded_input_tokens": 1767,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 20101.75,
+        "wall_time_ms": 20101.894435938448,
+        "peak_allocated_gib": 7.766472816467285,
+        "peak_reserved_gib": 9.634765625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/109034bfdc1e5a5b33b5a7f64ebd6ff2b6126b02f0250a5afc384b0c1d0f6c26.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_168",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 737458.2705413457,
+        "finish_time_ms": 757560.0205413457
+      },
+      {
+        "batch_index": 32,
+        "members": [
+          {
+            "program_id": "multi_turn_base_168",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1915
+        ],
+        "padded_input_tokens": 1915,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 19121.919921875,
+        "wall_time_ms": 19122.063643997535,
+        "peak_allocated_gib": 7.984585762023926,
+        "peak_reserved_gib": 10.02734375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/0baa5709c4e707108a27088cc0b783014cfdba3c70315c923e89ba262f68e3e1.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_168",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 757560.0205413457,
+        "finish_time_ms": 776681.9404632207
+      },
+      {
+        "batch_index": 33,
+        "members": [
+          {
+            "program_id": "multi_turn_base_168",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          2085,
+          1842
+        ],
+        "padded_input_tokens": 2085,
+        "teacher_forced_output_tokens": [
+          45,
+          128
+        ],
+        "gpu_time_ms": 21508.0703125,
+        "wall_time_ms": 21508.218526025303,
+        "peak_allocated_gib": 11.548182964324951,
+        "peak_reserved_gib": 15.28515625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/53260df1e5bc2cffde98b8a28af7075d0b45627b2d903ac947a76be30b56e18f.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_168",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 776681.9404632207,
+        "finish_time_ms": 798190.0107757207
+      },
+      {
+        "batch_index": 34,
+        "members": [
+          {
+            "program_id": "multi_turn_base_168",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          2282,
+          2054
+        ],
+        "padded_input_tokens": 2282,
+        "teacher_forced_output_tokens": [
+          44,
+          128
+        ],
+        "gpu_time_ms": 22253.763671875,
+        "wall_time_ms": 22253.915146924555,
+        "peak_allocated_gib": 12.072196960449219,
+        "peak_reserved_gib": 16.0234375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/631f7ca9b9f6e47fe7db99b3aaf03396db55ff5f6b088bfcdbea5c6d290ffb90.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_168",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 798190.0107757207,
+        "finish_time_ms": 820443.7744475957
+      },
+      {
+        "batch_index": 35,
+        "members": [
+          {
+            "program_id": "multi_turn_base_168",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          2444,
+          2289
+        ],
+        "padded_input_tokens": 2444,
+        "teacher_forced_output_tokens": [
+          40,
+          128
+        ],
+        "gpu_time_ms": 21794.9453125,
+        "wall_time_ms": 21795.091937994584,
+        "peak_allocated_gib": 12.549288272857666,
+        "peak_reserved_gib": 16.966796875,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/4a9e045f6f8717fba2ca8f014b62922303c8345e7c59698db191648e8c743f1b.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_168",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 2
+          }
+        ],
+        "start_time_ms": 820443.7744475957,
+        "finish_time_ms": 842238.7197600957
+      },
+      {
+        "batch_index": 36,
+        "members": [
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          2405
+        ],
+        "padded_input_tokens": 2405,
+        "teacher_forced_output_tokens": [
+          36
+        ],
+        "gpu_time_ms": 6536.81103515625,
+        "wall_time_ms": 6536.885414039716,
+        "peak_allocated_gib": 8.651195049285889,
+        "peak_reserved_gib": 10.7734375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/4f7a5398b036e237229774fa08b56794ebc82d1e9d99f8f8f6a6902f7c9fe987.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 3
+          }
+        ],
+        "start_time_ms": 842238.7197600957,
+        "finish_time_ms": 848775.530795252
+      },
+      {
+        "batch_index": 37,
+        "members": [
+          {
+            "program_id": "multi_turn_base_115",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_27",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          757,
+          2559,
+          1103
+        ],
+        "padded_input_tokens": 2559,
+        "teacher_forced_output_tokens": [
+          128,
+          28,
+          128
+        ],
+        "gpu_time_ms": 24357.94921875,
+        "wall_time_ms": 24358.112304005772,
+        "peak_allocated_gib": 16.84578514099121,
+        "peak_reserved_gib": 23.66796875,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/7dc47c76ca5e28f6f614837b0bf670755c5f6cc85202600beab4d7cb982cf18d.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_115",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_27",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 848775.530795252,
+        "finish_time_ms": 873133.480014002
+      },
+      {
+        "batch_index": 38,
+        "members": [
+          {
+            "program_id": "multi_turn_base_115",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_27",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          863,
+          1292
+        ],
+        "padded_input_tokens": 1292,
+        "teacher_forced_output_tokens": [
+          128,
+          128
+        ],
+        "gpu_time_ms": 21475.421875,
+        "wall_time_ms": 21475.563531043008,
+        "peak_allocated_gib": 9.22882080078125,
+        "peak_reserved_gib": 11.341796875,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/49bdb54dd830ce8354a85777c368038cba2c9a768e67faa4747a47a4d7ff885c.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_115",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_27",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 873133.480014002,
+        "finish_time_ms": 894608.901889002
+      },
+      {
+        "batch_index": 39,
+        "members": [
+          {
+            "program_id": "multi_turn_base_115",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_27",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_64",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          1009,
+          1470,
+          1695
+        ],
+        "padded_input_tokens": 1695,
+        "teacher_forced_output_tokens": [
+          128,
+          34,
+          128
+        ],
+        "gpu_time_ms": 22178.900390625,
+        "wall_time_ms": 22179.046288947575,
+        "peak_allocated_gib": 13.026500225067139,
+        "peak_reserved_gib": 17.33984375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/77eb6254c232220357abddf6e6de9a309152fc1bc6916ed9d5c40901c5f417fc.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_115",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_27",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_64",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 894608.901889002,
+        "finish_time_ms": 916787.802279627
+      },
+      {
+        "batch_index": 40,
+        "members": [
+          {
+            "program_id": "multi_turn_base_115",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_64",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_7",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_8",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1095,
+          1916,
+          1388,
+          1311
+        ],
+        "padded_input_tokens": 1916,
+        "teacher_forced_output_tokens": [
+          36,
+          128,
+          128,
+          128
+        ],
+        "gpu_time_ms": 22760.150390625,
+        "wall_time_ms": 22760.303971008398,
+        "peak_allocated_gib": 17.011215209960938,
+        "peak_reserved_gib": 23.541015625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/1bb5bf73a83c6b7badb12596cf87480fd7975898d8bbecd5e029e4a339ea561d.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_115",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_64",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_7",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_8",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 916787.802279627,
+        "finish_time_ms": 939547.952670252
+      },
+      {
+        "batch_index": 41,
+        "members": [
+          {
+            "program_id": "multi_turn_base_7",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_8",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1482,
+          1440
+        ],
+        "padded_input_tokens": 1482,
+        "teacher_forced_output_tokens": [
+          128,
+          128
+        ],
+        "gpu_time_ms": 20894.939453125,
+        "wall_time_ms": 20895.0768338982,
+        "peak_allocated_gib": 9.716190814971924,
+        "peak_reserved_gib": 12.095703125,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/ff175d6d8e9734302e16536b8de9c9974ee4f18d5b7a02ec597a423a9060b15c.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_7",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_8",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 939547.952670252,
+        "finish_time_ms": 960442.892123377
+      },
+      {
+        "batch_index": 42,
+        "members": [
+          {
+            "program_id": "multi_turn_base_118",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_139",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_7",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_8",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1175,
+          645,
+          1556,
+          1599
+        ],
+        "padded_input_tokens": 1599,
+        "teacher_forced_output_tokens": [
+          44,
+          128,
+          128,
+          112
+        ],
+        "gpu_time_ms": 22788.458984375,
+        "wall_time_ms": 22788.611339055933,
+        "peak_allocated_gib": 15.14408016204834,
+        "peak_reserved_gib": 20.5390625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/ce653571fd429945e96e243eb6a85e47546424ddd9b99309f26dd27ec9b4b08c.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_7",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_8",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_139",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_118",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 960442.892123377,
+        "finish_time_ms": 983231.351107752
+      },
+      {
+        "batch_index": 43,
+        "members": [
+          {
+            "program_id": "multi_turn_base_118",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_139",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_187",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_8",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1247,
+          748,
+          1840,
+          1796
+        ],
+        "padded_input_tokens": 1840,
+        "teacher_forced_output_tokens": [
+          29,
+          19,
+          128,
+          30
+        ],
+        "gpu_time_ms": 23630.548828125,
+        "wall_time_ms": 23630.71920000948,
+        "peak_allocated_gib": 16.563573837280273,
+        "peak_reserved_gib": 22.74609375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_8",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_139",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_118",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_187",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_155",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 983231.351107752,
+        "finish_time_ms": 1006861.899935877
+      },
+      {
+        "batch_index": 44,
+        "members": [
+          {
+            "program_id": "multi_turn_base_118",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_155",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_187",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          1353,
+          1156,
+          2011
+        ],
+        "padded_input_tokens": 2011,
+        "teacher_forced_output_tokens": [
+          45,
+          128,
+          128
+        ],
+        "gpu_time_ms": 22505.490234375,
+        "wall_time_ms": 22505.65216492396,
+        "peak_allocated_gib": 14.422434329986572,
+        "peak_reserved_gib": 19.61328125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_118",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_187",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_155",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1006861.899935877,
+        "finish_time_ms": 1029367.390170252
+      },
+      {
+        "batch_index": 45,
+        "members": [
+          {
+            "program_id": "multi_turn_base_11",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_118",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_155",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_187",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          893,
+          1587,
+          1413,
+          2223
+        ],
+        "padded_input_tokens": 2223,
+        "teacher_forced_output_tokens": [
+          128,
+          31,
+          128,
+          58
+        ],
+        "gpu_time_ms": 23712.037109375,
+        "wall_time_ms": 23713.05049501825,
+        "peak_allocated_gib": 18.81944990158081,
+        "peak_reserved_gib": 26.28125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_118",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_187",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_155",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_11",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1029367.390170252,
+        "finish_time_ms": 1053079.427279627
+      },
+      {
+        "batch_index": 46,
+        "members": [
+          {
+            "program_id": "multi_turn_base_11",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_118",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_187",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          999,
+          1721,
+          2397
+        ],
+        "padded_input_tokens": 2397,
+        "teacher_forced_output_tokens": [
+          128,
+          29,
+          65
+        ],
+        "gpu_time_ms": 23913.38671875,
+        "wall_time_ms": 23913.54387102183,
+        "peak_allocated_gib": 16.160552501678467,
+        "peak_reserved_gib": 22.36328125,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/901bd93d1f91504ca680f8a82ffd9b01a12d6ff05c30466c2f2cca6f2fc5ac2d.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_118",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_187",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_11",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 1053079.427279627,
+        "finish_time_ms": 1076992.813998377
+      },
+      {
+        "batch_index": 47,
+        "members": [
+          {
+            "program_id": "multi_turn_base_21",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1538
+        ],
+        "padded_input_tokens": 1538,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 18976.033203125,
+        "wall_time_ms": 18976.17481602356,
+        "peak_allocated_gib": 7.433150291442871,
+        "peak_reserved_gib": 8.990234375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/dbaf6f924d6dd3843f5306ee370bfbb43f94d4b06f3b123af5a7cb51d9226ed4.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_21",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1086958.9690670888,
+        "finish_time_ms": 1105935.0022702138
+      },
+      {
+        "batch_index": 48,
+        "members": [
+          {
+            "program_id": "multi_turn_base_21",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1613
+        ],
+        "padded_input_tokens": 1613,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 19245.796875,
+        "wall_time_ms": 19245.943202986382,
+        "peak_allocated_gib": 7.541298866271973,
+        "peak_reserved_gib": 8.990234375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/3b675f9284c1e68b7af4356689984ad7f261016b388f8d697c26921c67bdecbf.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_21",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 1105935.0022702138,
+        "finish_time_ms": 1125180.7991452138
+      },
+      {
+        "batch_index": 49,
+        "members": [
+          {
+            "program_id": "multi_turn_base_121",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_21",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1429,
+          1763
+        ],
+        "padded_input_tokens": 1763,
+        "teacher_forced_output_tokens": [
+          128,
+          46
+        ],
+        "gpu_time_ms": 21357.0390625,
+        "wall_time_ms": 21357.18888998963,
+        "peak_allocated_gib": 10.54373836517334,
+        "peak_reserved_gib": 13.396484375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/7ce4db9bb949ac7bff8c00ac1ee0d7051b6bf25a4c4bec74d2685561ee2b017e.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_21",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_121",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1125180.7991452138,
+        "finish_time_ms": 1146537.8382077138
+      },
+      {
+        "batch_index": 50,
+        "members": [
+          {
+            "program_id": "multi_turn_base_121",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_65",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1526,
+          1565
+        ],
+        "padded_input_tokens": 1565,
+        "teacher_forced_output_tokens": [
+          128,
+          128
+        ],
+        "gpu_time_ms": 21166.365234375,
+        "wall_time_ms": 21166.50325502269,
+        "peak_allocated_gib": 10.021660327911377,
+        "peak_reserved_gib": 12.642578125,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/731b0aae0716c9107a7dbaae0c630383956bb1ee7c33bd060bb08694adfb5ff8.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_121",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_65",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1146537.8382077138,
+        "finish_time_ms": 1167704.2034420888
+      },
+      {
+        "batch_index": 51,
+        "members": [
+          {
+            "program_id": "multi_turn_base_121",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_65",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1746,
+          2041
+        ],
+        "padded_input_tokens": 2041,
+        "teacher_forced_output_tokens": [
+          31,
+          44
+        ],
+        "gpu_time_ms": 8720.3388671875,
+        "wall_time_ms": 8720.427506952547,
+        "peak_allocated_gib": 11.22085189819336,
+        "peak_reserved_gib": 14.728515625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/f3a595d579f5e6c2c4624e6493278542fdba1407d8cfbbd1716dbb84a886f69b.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_121",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_65",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 1167704.2034420888,
+        "finish_time_ms": 1176424.5423092763
+      },
+      {
+        "batch_index": 52,
+        "members": [
+          {
+            "program_id": "multi_turn_base_121",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1876
+        ],
+        "padded_input_tokens": 1876,
+        "teacher_forced_output_tokens": [
+          51
+        ],
+        "gpu_time_ms": 7852.8408203125,
+        "wall_time_ms": 7852.921619080007,
+        "peak_allocated_gib": 7.844680309295654,
+        "peak_reserved_gib": 9.072265625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/e970f993aea546bd45b941222f975266c67d03ab13233a129fbdd0609aab9dae.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_121",
+            "turn_id": 3
+          }
+        ],
+        "start_time_ms": 1176424.5423092763,
+        "finish_time_ms": 1184277.3831295888
+      },
+      {
+        "batch_index": 53,
+        "members": [
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1704
+        ],
+        "padded_input_tokens": 1704,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 18642.166015625,
+        "wall_time_ms": 18642.291374970227,
+        "peak_allocated_gib": 7.673705101013184,
+        "peak_reserved_gib": 8.798828125,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/5dd448ac6ea4342b986cbe3e2e3ac2470048bbd95a6f7927659166cc09aa90eb.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1253275.2727182505,
+        "finish_time_ms": 1271917.4387338755
+      },
+      {
+        "batch_index": 54,
+        "members": [
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_59",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1958,
+          1082
+        ],
+        "padded_input_tokens": 1958,
+        "teacher_forced_output_tokens": [
+          43,
+          128
+        ],
+        "gpu_time_ms": 21645.775390625,
+        "wall_time_ms": 21645.911904983222,
+        "peak_allocated_gib": 11.118014812469482,
+        "peak_reserved_gib": 14.728515625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/039364a62c3418b8b743d4dd63962c25c148765983c7cb892260978a56612931.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_59",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1271917.4387338755,
+        "finish_time_ms": 1293563.2141245005
+      },
+      {
+        "batch_index": 55,
+        "members": [
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_59",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_71",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          2111,
+          1237,
+          1042
+        ],
+        "padded_input_tokens": 2111,
+        "teacher_forced_output_tokens": [
+          62,
+          30,
+          128
+        ],
+        "gpu_time_ms": 22861.7421875,
+        "wall_time_ms": 22861.883122008294,
+        "peak_allocated_gib": 14.864184379577637,
+        "peak_reserved_gib": 20.552734375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/b152ecfef1bf867d0b37a59cf31d6a55999e5d9488f7499a560d1602a75b5a8e.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_59",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_71",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1293563.2141245005,
+        "finish_time_ms": 1316424.9563120005
+      },
+      {
+        "batch_index": 56,
+        "members": [
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_59",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_71",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1551,
+          2261,
+          1350,
+          1200
+        ],
+        "padded_input_tokens": 2261,
+        "teacher_forced_output_tokens": [
+          128,
+          39,
+          27,
+          36
+        ],
+        "gpu_time_ms": 24462.744140625,
+        "wall_time_ms": 24463.268933002837,
+        "peak_allocated_gib": 19.04327154159546,
+        "peak_reserved_gib": 26.669921875,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/c23dc0e22f5da6f6440590ab9138a3f4c039cd68cfef054554e7ac06c14c7071.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_59",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_71",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1316424.9563120005,
+        "finish_time_ms": 1340887.7004526255
+      },
+      {
+        "batch_index": 57,
+        "members": [
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_59",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_71",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1658,
+          2489,
+          1444,
+          1269
+        ],
+        "padded_input_tokens": 2489,
+        "teacher_forced_output_tokens": [
+          26,
+          37,
+          24,
+          29
+        ],
+        "gpu_time_ms": 10376.30859375,
+        "wall_time_ms": 10377.13062693365,
+        "peak_allocated_gib": 20.20798349380493,
+        "peak_reserved_gib": 28.904296875,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/0747629f5a32f7cbad3064d415b5a2be04f196837f9bffe7debcb1c8f269829b.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_59",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_71",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 1340887.7004526255,
+        "finish_time_ms": 1351264.0090463755
+      },
+      {
+        "batch_index": 58,
+        "members": [
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 5
+          },
+          {
+            "program_id": "multi_turn_base_59",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_71",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1793,
+          2699,
+          1668,
+          1340
+        ],
+        "padded_input_tokens": 2699,
+        "teacher_forced_output_tokens": [
+          45,
+          52,
+          37,
+          24
+        ],
+        "gpu_time_ms": 13557.4150390625,
+        "wall_time_ms": 13558.259210083634,
+        "peak_allocated_gib": 21.494088172912598,
+        "peak_reserved_gib": 30.798828125,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/7923c63142b139fa38757a0082b28e7af2ef55092eed6a968665f4bbdf15ced2.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 5
+          },
+          {
+            "program_id": "multi_turn_base_59",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_71",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 2
+          }
+        ],
+        "start_time_ms": 1351264.0090463755,
+        "finish_time_ms": 1364821.424085438
+      },
+      {
+        "batch_index": 59,
+        "members": [
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_71",
+            "turn_id": 4
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1929,
+          1533
+        ],
+        "padded_input_tokens": 1929,
+        "teacher_forced_output_tokens": [
+          31,
+          30
+        ],
+        "gpu_time_ms": 6363.5849609375,
+        "wall_time_ms": 6363.662207964808,
+        "peak_allocated_gib": 10.883042812347412,
+        "peak_reserved_gib": 14.349609375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/451cb5f50f5a1ae6d7862b914c1f85fcfb2bbe131366c60adf50a801465c03e6.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_71",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 3
+          }
+        ],
+        "start_time_ms": 1364821.424085438,
+        "finish_time_ms": 1371185.0090463755
+      },
+      {
+        "batch_index": 60,
+        "members": [
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 4
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          2057
+        ],
+        "padded_input_tokens": 2057,
+        "teacher_forced_output_tokens": [
+          29
+        ],
+        "gpu_time_ms": 4766.1572265625,
+        "wall_time_ms": 4766.220849007368,
+        "peak_allocated_gib": 8.119194984436035,
+        "peak_reserved_gib": 10.412109375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/909fb5bc1fa6bacc1bab30ae35cfe8a9ae2a3fa0d07285c232d25e16c3353d11.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 4
+          }
+        ],
+        "start_time_ms": 1371185.0090463755,
+        "finish_time_ms": 1375951.166272938
+      },
+      {
+        "batch_index": 61,
+        "members": [
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 5
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          2153
+        ],
+        "padded_input_tokens": 2153,
+        "teacher_forced_output_tokens": [
+          21
+        ],
+        "gpu_time_ms": 3759.02099609375,
+        "wall_time_ms": 3759.0877059847116,
+        "peak_allocated_gib": 8.268373489379883,
+        "peak_reserved_gib": 10.412109375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/35d15a0c7d2752c0cfd4a20a16e99776f15e8be8fac77e1b036bc5f00c636a7c.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 5
+          }
+        ],
+        "start_time_ms": 1375951.166272938,
+        "finish_time_ms": 1379710.1872690318
+      },
+      {
+        "batch_index": 62,
+        "members": [
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 6
+          },
+          {
+            "program_id": "multi_turn_base_48",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          2297,
+          1371
+        ],
+        "padded_input_tokens": 2297,
+        "teacher_forced_output_tokens": [
+          57,
+          128
+        ],
+        "gpu_time_ms": 21894.796875,
+        "wall_time_ms": 21894.9508049991,
+        "peak_allocated_gib": 12.116371154785156,
+        "peak_reserved_gib": 16.037109375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/2b30c5450b91eda3902de564ccfc4e6625828fb7bcded67daf0d5da7b6d89ccb.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 6
+          },
+          {
+            "program_id": "multi_turn_base_48",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1379710.1872690318,
+        "finish_time_ms": 1401604.9841440318
+      },
+      {
+        "batch_index": 63,
+        "members": [
+          {
+            "program_id": "multi_turn_base_136",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_48",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_56",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          1327,
+          1479,
+          777
+        ],
+        "padded_input_tokens": 1479,
+        "teacher_forced_output_tokens": [
+          128,
+          128,
+          128
+        ],
+        "gpu_time_ms": 22246.318359375,
+        "wall_time_ms": 22246.47883803118,
+        "peak_allocated_gib": 12.072318077087402,
+        "peak_reserved_gib": 15.654296875,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/72161dc59c6277a831177d5f5c4148ebb552c3f93c461e20078179b2cfbdf4a0.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_48",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_56",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_136",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1401604.9841440318,
+        "finish_time_ms": 1423851.3025034068
+      },
+      {
+        "batch_index": 64,
+        "members": [
+          {
+            "program_id": "multi_turn_base_136",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_48",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_56",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          1534,
+          1625,
+          926
+        ],
+        "padded_input_tokens": 1625,
+        "teacher_forced_output_tokens": [
+          128,
+          128,
+          29
+        ],
+        "gpu_time_ms": 22103.666015625,
+        "wall_time_ms": 22103.817644994706,
+        "peak_allocated_gib": 12.717275142669678,
+        "peak_reserved_gib": 16.9609375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/bc1c4ead30b1764ae0eea87df338f0e78e0aaaa9613758fd3a96a024f734afec.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_48",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_56",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_136",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 1423851.3025034068,
+        "finish_time_ms": 1445954.9685190318
+      },
+      {
+        "batch_index": 65,
+        "members": [
+          {
+            "program_id": "multi_turn_base_136",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_56",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1660,
+          1027
+        ],
+        "padded_input_tokens": 1660,
+        "teacher_forced_output_tokens": [
+          29,
+          30
+        ],
+        "gpu_time_ms": 5891.865234375,
+        "wall_time_ms": 5891.937662032433,
+        "peak_allocated_gib": 10.055373191833496,
+        "peak_reserved_gib": 12.99609375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/201e218c321e48bd54f463e8c464a8f00914fcdbd979e8e61462a9a1e195406c.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_56",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_136",
+            "turn_id": 2
+          }
+        ],
+        "start_time_ms": 1445954.9685190318,
+        "finish_time_ms": 1451846.8337534068
+      },
+      {
+        "batch_index": 66,
+        "members": [
+          {
+            "program_id": "multi_turn_base_136",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1760
+        ],
+        "padded_input_tokens": 1760,
+        "teacher_forced_output_tokens": [
+          21
+        ],
+        "gpu_time_ms": 3470.43310546875,
+        "wall_time_ms": 3470.4930569278076,
+        "peak_allocated_gib": 7.6665449142456055,
+        "peak_reserved_gib": 9.634765625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/32e2613735c0898544d793bca054ade0a1a284717d1f4ce827fd3fb9e9fcc0b9.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_136",
+            "turn_id": 3
+          }
+        ],
+        "start_time_ms": 1451846.8337534068,
+        "finish_time_ms": 1455317.2668588755
+      },
+      {
+        "batch_index": 67,
+        "members": [
+          {
+            "program_id": "multi_turn_base_92",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1191
+        ],
+        "padded_input_tokens": 1191,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 18437.5625,
+        "wall_time_ms": 18437.693889951333,
+        "peak_allocated_gib": 6.919142723083496,
+        "peak_reserved_gib": 7.625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/0b8eaa240ff6d319d26766d08215abad5fd92c7161fcd25406309ccb43e3343b.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_92",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1497345.4554806962,
+        "finish_time_ms": 1515783.0179806962
+      },
+      {
+        "batch_index": 68,
+        "members": [
+          {
+            "program_id": "multi_turn_base_92",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1289
+        ],
+        "padded_input_tokens": 1289,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 18546.654296875,
+        "wall_time_ms": 18546.788410050794,
+        "peak_allocated_gib": 7.068446159362793,
+        "peak_reserved_gib": 8.220703125,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/239f76748148eb733c00075a399fb7118dc1fa7fb722e24b1194cd892148785d.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_92",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 1515783.0179806962,
+        "finish_time_ms": 1534329.6722775712
+      },
+      {
+        "batch_index": 69,
+        "members": [
+          {
+            "program_id": "multi_turn_base_92",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1362
+        ],
+        "padded_input_tokens": 1362,
+        "teacher_forced_output_tokens": [
+          29
+        ],
+        "gpu_time_ms": 4422.1396484375,
+        "wall_time_ms": 4422.208659001626,
+        "peak_allocated_gib": 7.0631537437438965,
+        "peak_reserved_gib": 7.853515625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/b944a7d96867e270b896907e06e0d0d43cc321ab814cf86b12e7644a6009ec2c.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_92",
+            "turn_id": 2
+          }
+        ],
+        "start_time_ms": 1534329.6722775712,
+        "finish_time_ms": 1538751.8119260087
+      },
+      {
+        "batch_index": 70,
+        "members": [
+          {
+            "program_id": "multi_turn_base_92",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1456
+        ],
+        "padded_input_tokens": 1456,
+        "teacher_forced_output_tokens": [
+          24
+        ],
+        "gpu_time_ms": 3899.00341796875,
+        "wall_time_ms": 3899.0655350498855,
+        "peak_allocated_gib": 7.205541133880615,
+        "peak_reserved_gib": 8.59765625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/b64f5bcdb78fb9a4a17c28d16c38a745b2acfd5e9c5810ff3bb2ddd7a5e4c997.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_92",
+            "turn_id": 3
+          }
+        ],
+        "start_time_ms": 1538751.8119260087,
+        "finish_time_ms": 1542650.8153439774
+      },
+      {
+        "batch_index": 71,
+        "members": [
+          {
+            "program_id": "multi_turn_base_92",
+            "turn_id": 4
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1670
+        ],
+        "padded_input_tokens": 1670,
+        "teacher_forced_output_tokens": [
+          33
+        ],
+        "gpu_time_ms": 5137.45703125,
+        "wall_time_ms": 5137.52755895257,
+        "peak_allocated_gib": 7.531858444213867,
+        "peak_reserved_gib": 8.990234375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/9bbed839528e0505711f9d87103283d6f51697cf8fe9f32210387fa08d952751.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_92",
+            "turn_id": 4
+          }
+        ],
+        "start_time_ms": 1542650.8153439774,
+        "finish_time_ms": 1547788.2723752274
+      },
+      {
+        "batch_index": 72,
+        "members": [
+          {
+            "program_id": "multi_turn_base_193",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1582
+        ],
+        "padded_input_tokens": 1582,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 18643.86328125,
+        "wall_time_ms": 18643.990552052855,
+        "peak_allocated_gib": 7.496596336364746,
+        "peak_reserved_gib": 8.990234375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/e1c6200350dc4745be6a6f6fcf86c5161f37b91b40137d46b31025e93896fe4e.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_193",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1666024.1217321884,
+        "finish_time_ms": 1684667.9850134384
+      },
+      {
+        "batch_index": 73,
+        "members": [
+          {
+            "program_id": "multi_turn_base_193",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_197",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1816,
+          2131
+        ],
+        "padded_input_tokens": 2131,
+        "teacher_forced_output_tokens": [
+          128,
+          128
+        ],
+        "gpu_time_ms": 21419.751953125,
+        "wall_time_ms": 21419.890986057,
+        "peak_allocated_gib": 11.655576229095459,
+        "peak_reserved_gib": 15.28515625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/a4f9c9ade01762446db52933dd9490150e0235e1de24bf838219f2990d4942dc.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_193",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_197",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1684667.9850134384,
+        "finish_time_ms": 1706087.7369665634
+      },
+      {
+        "batch_index": 74,
+        "members": [
+          {
+            "program_id": "multi_turn_base_193",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_197",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_72",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          1987,
+          2395,
+          1875
+        ],
+        "padded_input_tokens": 2395,
+        "teacher_forced_output_tokens": [
+          43,
+          128,
+          128
+        ],
+        "gpu_time_ms": 22880.666015625,
+        "wall_time_ms": 22880.807243054733,
+        "peak_allocated_gib": 16.15354871749878,
+        "peak_reserved_gib": 22.36328125,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/027935267d8e912865094889fdad3301fd4900f0ec7aee9a4505e8eaf0ff0b52.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_193",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_197",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_72",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1706087.7369665634,
+        "finish_time_ms": 1728968.4029821884
+      },
+      {
+        "batch_index": 75,
+        "members": [
+          {
+            "program_id": "multi_turn_base_193",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_197",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_72",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          2139,
+          2597,
+          1956
+        ],
+        "padded_input_tokens": 2597,
+        "teacher_forced_output_tokens": [
+          56,
+          62,
+          32
+        ],
+        "gpu_time_ms": 12794.5654296875,
+        "wall_time_ms": 12794.664670014754,
+        "peak_allocated_gib": 16.89790153503418,
+        "peak_reserved_gib": 23.681640625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/7df945240ddbb9881e88642a6b9e20fd863178064eaa4870ea723ee1a1694b7f.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_193",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_197",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_72",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 1728968.4029821884,
+        "finish_time_ms": 1741762.968411876
+      },
+      {
+        "batch_index": 76,
+        "members": [
+          {
+            "program_id": "multi_turn_base_105",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_72",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          528,
+          2147
+        ],
+        "padded_input_tokens": 2147,
+        "teacher_forced_output_tokens": [
+          128,
+          20
+        ],
+        "gpu_time_ms": 21430.724609375,
+        "wall_time_ms": 21430.863971007057,
+        "peak_allocated_gib": 11.692931652069092,
+        "peak_reserved_gib": 15.6640625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/98331c493720acabcde8719f7bf2481d4d90f4d0ef9d0980838f85e2000ee49f.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_72",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_105",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1741762.968411876,
+        "finish_time_ms": 1763193.693021251
+      },
+      {
+        "batch_index": 77,
+        "members": [
+          {
+            "program_id": "multi_turn_base_105",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_72",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          672,
+          2307
+        ],
+        "padded_input_tokens": 2307,
+        "teacher_forced_output_tokens": [
+          128,
+          37
+        ],
+        "gpu_time_ms": 22262.8984375,
+        "wall_time_ms": 22263.041455997154,
+        "peak_allocated_gib": 12.222726821899414,
+        "peak_reserved_gib": 16.201171875,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/9c4cc6354b90a5d493f8676849762e0f443f66cf0602e6fc147f25f66a6dd31c.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_72",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_105",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 1763193.693021251,
+        "finish_time_ms": 1785456.591458751
+      },
+      {
+        "batch_index": 78,
+        "members": [
+          {
+            "program_id": "multi_turn_base_72",
+            "turn_id": 4
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          2483
+        ],
+        "padded_input_tokens": 2483,
+        "teacher_forced_output_tokens": [
+          29
+        ],
+        "gpu_time_ms": 4952.748046875,
+        "wall_time_ms": 4952.812189003453,
+        "peak_allocated_gib": 8.773956775665283,
+        "peak_reserved_gib": 11.150390625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/9c2b2db7f82533f43e6b57c5e9d771835f98ca08576528f28e435a6fe1528554.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_72",
+            "turn_id": 4
+          }
+        ],
+        "start_time_ms": 1785456.591458751,
+        "finish_time_ms": 1790409.339505626
+      },
+      {
+        "batch_index": 79,
+        "members": [
+          {
+            "program_id": "multi_turn_base_89",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          917
+        ],
+        "padded_input_tokens": 917,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 18509.580078125,
+        "wall_time_ms": 18509.71249199938,
+        "peak_allocated_gib": 6.514845848083496,
+        "peak_reserved_gib": 6.927734375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/8bbeaa8e29409b8ad6d741debcf865d203c206a71b8bb551ac991250fdde239f.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_89",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1790409.339505626,
+        "finish_time_ms": 1808918.919583751
+      },
+      {
+        "batch_index": 80,
+        "members": [
+          {
+            "program_id": "multi_turn_base_89",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1076
+        ],
+        "padded_input_tokens": 1076,
+        "teacher_forced_output_tokens": [
+          36
+        ],
+        "gpu_time_ms": 5430.0947265625,
+        "wall_time_ms": 5430.160513962619,
+        "peak_allocated_gib": 6.621722221374512,
+        "peak_reserved_gib": 7.716796875,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/c11cfd4435197ddb52e1d33cf51a4e35a814901f4b3cf4f1109fa1cb072c43ab.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_89",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 1808918.919583751,
+        "finish_time_ms": 1814349.0143103134
+      },
+      {
+        "batch_index": 81,
+        "members": [
+          {
+            "program_id": "multi_turn_base_89",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1174
+        ],
+        "padded_input_tokens": 1174,
+        "teacher_forced_output_tokens": [
+          29
+        ],
+        "gpu_time_ms": 4397.5068359375,
+        "wall_time_ms": 4397.567581967451,
+        "peak_allocated_gib": 6.8005781173706055,
+        "peak_reserved_gib": 7.41015625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/fdbff4c4335c00b98a511e7593c4b37cdb7ce455300c207f9b0d5d6a7f9fa598.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_89",
+            "turn_id": 2
+          }
+        ],
+        "start_time_ms": 1814349.0143103134,
+        "finish_time_ms": 1818746.521146251
+      },
+      {
+        "batch_index": 82,
+        "members": [
+          {
+            "program_id": "multi_turn_base_89",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1251
+        ],
+        "padded_input_tokens": 1251,
+        "teacher_forced_output_tokens": [
+          24
+        ],
+        "gpu_time_ms": 3835.60302734375,
+        "wall_time_ms": 3835.665389080532,
+        "peak_allocated_gib": 6.890128135681152,
+        "peak_reserved_gib": 7.98046875,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/e33f42fe6a8fa73bc884e0629065eb01aa8f62329e3973e703db7daa53b6053e.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_89",
+            "turn_id": 3
+          }
+        ],
+        "start_time_ms": 1818746.521146251,
+        "finish_time_ms": 1822582.1241735946
+      },
+      {
+        "batch_index": 83,
+        "members": [
+          {
+            "program_id": "multi_turn_base_24",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1272
+        ],
+        "padded_input_tokens": 1272,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 18637.375,
+        "wall_time_ms": 18637.50033103861,
+        "peak_allocated_gib": 7.039036750793457,
+        "peak_reserved_gib": 7.978515625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/0b0d63561d5b2fa3a09624501b2dd1712201d5196976b329257eacc0078cd193.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_24",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1822582.1241735946,
+        "finish_time_ms": 1841219.4991735946
+      },
+      {
+        "batch_index": 84,
+        "members": [
+          {
+            "program_id": "multi_turn_base_24",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_3",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          1385,
+          737,
+          1307
+        ],
+        "padded_input_tokens": 1385,
+        "teacher_forced_output_tokens": [
+          128,
+          128,
+          128
+        ],
+        "gpu_time_ms": 21900.80859375,
+        "wall_time_ms": 21900.947413989343,
+        "peak_allocated_gib": 11.679043292999268,
+        "peak_reserved_gib": 15.25390625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/2d5b9d4d6fb1d3221af0f5880ebf70e7a40bb87f623d9a1a69b2fe61f5b06e3d.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_24",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_3",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1841219.4991735946,
+        "finish_time_ms": 1863120.3077673446
+      },
+      {
+        "batch_index": 85,
+        "members": [
+          {
+            "program_id": "multi_turn_base_24",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_3",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1580,
+          866,
+          1373,
+          2151
+        ],
+        "padded_input_tokens": 2151,
+        "teacher_forced_output_tokens": [
+          32,
+          50,
+          128,
+          128
+        ],
+        "gpu_time_ms": 24038.943359375,
+        "wall_time_ms": 24039.088282035664,
+        "peak_allocated_gib": 18.39616298675537,
+        "peak_reserved_gib": 25.732421875,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/8a76c3a65b9446f715499126c18a299b18effbb041201de3bafa2bf7a7166c9b.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_24",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_3",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1863120.3077673446,
+        "finish_time_ms": 1887159.2511267196
+      },
+      {
+        "batch_index": 86,
+        "members": [
+          {
+            "program_id": "multi_turn_base_24",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_74",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1708,
+          1483,
+          2352,
+          695
+        ],
+        "padded_input_tokens": 2352,
+        "teacher_forced_output_tokens": [
+          40,
+          30,
+          20,
+          128
+        ],
+        "gpu_time_ms": 24414.140625,
+        "wall_time_ms": 24414.525091997348,
+        "peak_allocated_gib": 19.579261779785156,
+        "peak_reserved_gib": 27.548828125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_24",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_74",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_85",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_158",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_152",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1887159.2511267196,
+        "finish_time_ms": 1911573.3917517196
+      },
+      {
+        "batch_index": 87,
+        "members": [
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_74",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_85",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1607,
+          2517,
+          834,
+          1070
+        ],
+        "padded_input_tokens": 2517,
+        "teacher_forced_output_tokens": [
+          35,
+          31,
+          24,
+          128
+        ],
+        "gpu_time_ms": 25849.22265625,
+        "wall_time_ms": 25850.17304494977,
+        "peak_allocated_gib": 20.5511155128479,
+        "peak_reserved_gib": 29.294921875,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_74",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_85",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_158",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_152",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1911573.3917517196,
+        "finish_time_ms": 1937422.6144079696
+      },
+      {
+        "batch_index": 88,
+        "members": [
+          {
+            "program_id": "multi_turn_base_152",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_158",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_85",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1754,
+          1240,
+          2644,
+          1252
+        ],
+        "padded_input_tokens": 2644,
+        "teacher_forced_output_tokens": [
+          128,
+          128,
+          27,
+          39
+        ],
+        "gpu_time_ms": 26173.615234375,
+        "wall_time_ms": 26174.23368198797,
+        "peak_allocated_gib": 21.299147605895996,
+        "peak_reserved_gib": 30.25390625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_85",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_158",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_152",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1937422.6144079696,
+        "finish_time_ms": 1963596.2296423446
+      },
+      {
+        "batch_index": 89,
+        "members": [
+          {
+            "program_id": "multi_turn_base_152",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_158",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 4
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1996,
+          1443,
+          1716,
+          2763
+        ],
+        "padded_input_tokens": 2763,
+        "teacher_forced_output_tokens": [
+          128,
+          71,
+          128,
+          27
+        ],
+        "gpu_time_ms": 27063.98046875,
+        "wall_time_ms": 27064.367559039965,
+        "peak_allocated_gib": 22.00005865097046,
+        "peak_reserved_gib": 31.568359375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_158",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_152",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 1963596.2296423446,
+        "finish_time_ms": 1990660.2101110946
+      },
+      {
+        "batch_index": 90,
+        "members": [
+          {
+            "program_id": "multi_turn_base_152",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_158",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          2129,
+          1678
+        ],
+        "padded_input_tokens": 2129,
+        "teacher_forced_output_tokens": [
+          54,
+          42
+        ],
+        "gpu_time_ms": 11032.8779296875,
+        "wall_time_ms": 11032.975679961964,
+        "peak_allocated_gib": 11.493956089019775,
+        "peak_reserved_gib": 15.28515625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_158",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_152",
+            "turn_id": 2
+          }
+        ],
+        "start_time_ms": 1990660.2101110946,
+        "finish_time_ms": 2001693.0880407821
+      },
+      {
+        "batch_index": 91,
+        "members": [
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1919
+        ],
+        "padded_input_tokens": 1919,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 19288.919921875,
+        "wall_time_ms": 19289.064335054718,
+        "peak_allocated_gib": 7.990353584289551,
+        "peak_reserved_gib": 10.02734375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/9abd4169cd68cdf47b6edc44723d03bcb21d10bb85f6bb36708e3e4b5ea794f3.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 2001693.0880407821,
+        "finish_time_ms": 2020982.0079626571
+      },
+      {
+        "batch_index": 92,
+        "members": [
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          2154
+        ],
+        "padded_input_tokens": 2154,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 19057.0390625,
+        "wall_time_ms": 19057.173968059942,
+        "peak_allocated_gib": 8.33703327178955,
+        "peak_reserved_gib": 10.412109375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/e12faa18339d06134ed6ca9c88368e3fb75d1a0ff1997e3869090c7a124630b4.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 2020982.0079626571,
+        "finish_time_ms": 2040039.0470251571
+      },
+      {
+        "batch_index": 93,
+        "members": [
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_75",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          2327,
+          1351
+        ],
+        "padded_input_tokens": 2327,
+        "teacher_forced_output_tokens": [
+          71,
+          128
+        ],
+        "gpu_time_ms": 22364.19140625,
+        "wall_time_ms": 22364.339063991793,
+        "peak_allocated_gib": 12.269418716430664,
+        "peak_reserved_gib": 16.201171875,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/66aa9764178c63d9c7c6d1bf2cc21c1802c5be0ca3ed7c2307afacd4619ec7ca.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_75",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 2040039.0470251571,
+        "finish_time_ms": 2062403.2384314071
+      },
+      {
+        "batch_index": 94,
+        "members": [
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_23",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_75",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_83",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          2463,
+          1067,
+          1500,
+          867
+        ],
+        "padded_input_tokens": 2463,
+        "teacher_forced_output_tokens": [
+          56,
+          128,
+          128,
+          128
+        ],
+        "gpu_time_ms": 25351.74609375,
+        "wall_time_ms": 25351.904112962075,
+        "peak_allocated_gib": 20.23305368423462,
+        "peak_reserved_gib": 28.529296875,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/bf2e49fb62ef6454119c8cb44838ce0735ec4685ccc19c91d6e9c118b175d022.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_75",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_23",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_83",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 2062403.2384314071,
+        "finish_time_ms": 2087754.9845251571
+      },
+      {
+        "batch_index": 95,
+        "members": [
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_23",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_75",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_83",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          2651,
+          1161,
+          1782,
+          1000
+        ],
+        "padded_input_tokens": 2651,
+        "teacher_forced_output_tokens": [
+          44,
+          21,
+          24,
+          24
+        ],
+        "gpu_time_ms": 12677.279296875,
+        "wall_time_ms": 12677.863522898406,
+        "peak_allocated_gib": 21.20324420928955,
+        "peak_reserved_gib": 30.25390625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/9ea8e556e82e9f7491e8311dd585ea599b00b69b1a28329d952452b8645a243b.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_75",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_23",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_83",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 2087754.9845251571,
+        "finish_time_ms": 2100432.263822032
+      },
+      {
+        "batch_index": 96,
+        "members": [
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 5
+          },
+          {
+            "program_id": "multi_turn_base_23",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_75",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_83",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          2770,
+          1264,
+          1877,
+          1206
+        ],
+        "padded_input_tokens": 2770,
+        "teacher_forced_output_tokens": [
+          42,
+          32,
+          40,
+          21
+        ],
+        "gpu_time_ms": 12295.5185546875,
+        "wall_time_ms": 12295.631509041414,
+        "peak_allocated_gib": 21.936800479888916,
+        "peak_reserved_gib": 31.568359375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 5
+          },
+          {
+            "program_id": "multi_turn_base_75",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_23",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_83",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_42",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 2100432.263822032,
+        "finish_time_ms": 2112727.7823767196
+      },
+      {
+        "batch_index": 97,
+        "members": [
+          {
+            "program_id": "multi_turn_base_147",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_42",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          973,
+          1239
+        ],
+        "padded_input_tokens": 1239,
+        "teacher_forced_output_tokens": [
+          128,
+          128
+        ],
+        "gpu_time_ms": 21015.0078125,
+        "wall_time_ms": 21015.158685971983,
+        "peak_allocated_gib": 9.000553131103516,
+        "peak_reserved_gib": 11.158203125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_42",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_147",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 2112727.7823767196,
+        "finish_time_ms": 2133742.7901892196
+      },
+      {
+        "batch_index": 98,
+        "members": [
+          {
+            "program_id": "multi_turn_base_147",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_42",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1263,
+          1315
+        ],
+        "padded_input_tokens": 1315,
+        "teacher_forced_output_tokens": [
+          128,
+          40
+        ],
+        "gpu_time_ms": 21007.04296875,
+        "wall_time_ms": 21007.1918820031,
+        "peak_allocated_gib": 9.282342910766602,
+        "peak_reserved_gib": 11.720703125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_42",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_147",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 2133742.7901892196,
+        "finish_time_ms": 2154749.8331579696
+      },
+      {
+        "batch_index": 99,
+        "members": [
+          {
+            "program_id": "multi_turn_base_42",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1400
+        ],
+        "padded_input_tokens": 1400,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 18771.1953125,
+        "wall_time_ms": 18771.339143975638,
+        "peak_allocated_gib": 7.226441383361816,
+        "peak_reserved_gib": 8.59765625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_42",
+            "turn_id": 2
+          }
+        ],
+        "start_time_ms": 2154749.8331579696,
+        "finish_time_ms": 2173521.0284704696
+      },
+      {
+        "batch_index": 100,
+        "members": [
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_91",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1469,
+          395
+        ],
+        "padded_input_tokens": 1469,
+        "teacher_forced_output_tokens": [
+          128,
+          128
+        ],
+        "gpu_time_ms": 21561.5078125,
+        "wall_time_ms": 21561.649412033148,
+        "peak_allocated_gib": 9.677904605865479,
+        "peak_reserved_gib": 12.095703125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_91",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 2173521.0284704696,
+        "finish_time_ms": 2195082.5362829696
+      },
+      {
+        "batch_index": 101,
+        "members": [
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_91",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1577,
+          544
+        ],
+        "padded_input_tokens": 1577,
+        "teacher_forced_output_tokens": [
+          128,
+          128
+        ],
+        "gpu_time_ms": 21879.51171875,
+        "wall_time_ms": 21879.660420003347,
+        "peak_allocated_gib": 10.04900598526001,
+        "peak_reserved_gib": 12.62109375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_91",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 2195082.5362829696,
+        "finish_time_ms": 2216962.0480017196
+      },
+      {
+        "batch_index": 102,
+        "members": [
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1806
+        ],
+        "padded_input_tokens": 1806,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 21160.369140625,
+        "wall_time_ms": 21160.50763404928,
+        "peak_allocated_gib": 7.8282880783081055,
+        "peak_reserved_gib": 9.64453125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 2
+          }
+        ],
+        "start_time_ms": 2216962.0480017196,
+        "finish_time_ms": 2238122.4171423446
+      },
+      {
+        "batch_index": 103,
+        "members": [
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1946
+        ],
+        "padded_input_tokens": 1946,
+        "teacher_forced_output_tokens": [
+          29
+        ],
+        "gpu_time_ms": 4809.4560546875,
+        "wall_time_ms": 4809.521126910113,
+        "peak_allocated_gib": 7.951991558074951,
+        "peak_reserved_gib": 10.02734375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/4031b0d636795308d1ee6f5cea3f7ec66ac152193eecc5743d10b40646b0feeb.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 3
+          }
+        ],
+        "start_time_ms": 2238122.4171423446,
+        "finish_time_ms": 2242931.873197032
+      },
+      {
+        "batch_index": 104,
+        "members": [
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 4
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          2052
+        ],
+        "padded_input_tokens": 2052,
+        "teacher_forced_output_tokens": [
+          21
+        ],
+        "gpu_time_ms": 3722.23583984375,
+        "wall_time_ms": 3722.3006800049916,
+        "peak_allocated_gib": 8.111557960510254,
+        "peak_reserved_gib": 10.412109375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/42f86385a2b3f96cf8d265df0cd5849d93f5ee9f45d4a7dcc8c03ccf30670c06.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 4
+          }
+        ],
+        "start_time_ms": 2242931.873197032,
+        "finish_time_ms": 2246654.109036876
+      },
+      {
+        "batch_index": 105,
+        "members": [
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 5
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          2242
+        ],
+        "padded_input_tokens": 2242,
+        "teacher_forced_output_tokens": [
+          91
+        ],
+        "gpu_time_ms": 13742.65234375,
+        "wall_time_ms": 13742.757300031371,
+        "peak_allocated_gib": 8.411430358886719,
+        "peak_reserved_gib": 10.791015625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/cb43a8551813d0655553922ded0d3793b2f6366c0dbacb3cf624d95b7855f478.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 5
+          }
+        ],
+        "start_time_ms": 2246654.109036876,
+        "finish_time_ms": 2260396.761380626
+      }
+    ]
+  },
+  "shared_gpu_verification": {
+    "verified": true,
+    "execution_model": "one_shared_static_gpu_batch",
+    "maximum_overlapping_gpu_batches": 1,
+    "configured_batch_size": 4,
+    "observed_maximum_batch_size": 4,
+    "batches_checked": 106
+  }
+}

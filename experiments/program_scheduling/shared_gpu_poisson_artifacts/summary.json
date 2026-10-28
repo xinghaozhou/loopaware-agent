@@ -1,0 +1,513 @@
+{
+  "configuration": {
+    "programs": 64,
+    "batch_size": 4,
+    "arrival_seeds": 2,
+    "execution_model": "one_shared_static_gpu_batch",
+    "teacher_forced": true,
+    "physical_ut": 4
+  },
+  "aggregates": [
+    {
+      "load": "MEDIUM",
+      "policy": "FCFS",
+      "mean_ttlt_ms": {
+        "mean": 104329.8191978574,
+        "std": 22126.24319056797,
+        "n": 2
+      },
+      "p95_ttlt_ms": {
+        "mean": 181606.83309843228,
+        "std": 52863.78380043438,
+        "n": 2
+      },
+      "mean_queueing_time_ms": {
+        "mean": 27256.663134777584,
+        "std": 17871.044857352692,
+        "n": 2
+      },
+      "makespan_ms": {
+        "mean": 1972068.1836515074,
+        "std": 393716.1948807199,
+        "n": 2
+      },
+      "throughput_programs_per_s": {
+        "mean": 0.033113162107266086,
+        "std": 0.006610921616919663,
+        "n": 2
+      },
+      "physical_gpu_utilization": {
+        "mean": 0.9000708621012368,
+        "std": 0.09234855637510286,
+        "n": 2
+      },
+      "time_weighted_batch_fill": {
+        "mean": 0.707232115488295,
+        "std": 0.10809710172418978,
+        "n": 2
+      },
+      "mean_ready_queue_length": {
+        "mean": 0.9616263432672404,
+        "std": 0.7719584689105419,
+        "n": 2
+      }
+    },
+    {
+      "load": "MEDIUM",
+      "policy": "AUTELLIX_PLAS",
+      "mean_ttlt_ms": {
+        "mean": 102853.24817963841,
+        "std": 23171.04062647785,
+        "n": 2
+      },
+      "p95_ttlt_ms": {
+        "mean": 223449.56732576562,
+        "std": 110573.50103854206,
+        "n": 2
+      },
+      "mean_queueing_time_ms": {
+        "mean": 28100.895556652584,
+        "std": 19231.85951445156,
+        "n": 2
+      },
+      "makespan_ms": {
+        "mean": 1961791.488583148,
+        "std": 404908.15637195966,
+        "n": 2
+      },
+      "throughput_programs_per_s": {
+        "mean": 0.03333323705814788,
+        "std": 0.006879884861194869,
+        "n": 2
+      },
+      "physical_gpu_utilization": {
+        "mean": 0.8935449751284572,
+        "std": 0.09396898104602089,
+        "n": 2
+      },
+      "time_weighted_batch_fill": {
+        "mean": 0.6952878053083131,
+        "std": 0.107507540547219,
+        "n": 2
+      },
+      "mean_ready_queue_length": {
+        "mean": 1.0028503026992057,
+        "std": 0.8343910581904427,
+        "n": 2
+      }
+    },
+    {
+      "load": "MEDIUM",
+      "policy": "UT_LAS",
+      "mean_ttlt_ms": {
+        "mean": 101774.0354339719,
+        "std": 22810.04988296212,
+        "n": 2
+      },
+      "p95_ttlt_ms": {
+        "mean": 215021.54036291895,
+        "std": 108504.53554649319,
+        "n": 2
+      },
+      "mean_queueing_time_ms": {
+        "mean": 26987.65065308813,
+        "std": 17902.127776447618,
+        "n": 2
+      },
+      "makespan_ms": {
+        "mean": 1962801.2000089292,
+        "std": 403480.20877953677,
+        "n": 2
+      },
+      "throughput_programs_per_s": {
+        "mean": 0.03331024506839078,
+        "std": 0.00684736927745444,
+        "n": 2
+      },
+      "physical_gpu_utilization": {
+        "mean": 0.8945188537384381,
+        "std": 0.09828379016386697,
+        "n": 2
+      },
+      "time_weighted_batch_fill": {
+        "mean": 0.6947441465605222,
+        "std": 0.11247547447173216,
+        "n": 2
+      },
+      "mean_ready_queue_length": {
+        "mean": 0.9602564969432377,
+        "std": 0.7811186734317447,
+        "n": 2
+      }
+    },
+    {
+      "load": "MEDIUM",
+      "policy": "ORACLE_TOKEN_SUF",
+      "mean_ttlt_ms": {
+        "mean": 106866.7581082036,
+        "std": 26114.040470334072,
+        "n": 2
+      },
+      "p95_ttlt_ms": {
+        "mean": 174077.2786170101,
+        "std": 58445.089990348875,
+        "n": 2
+      },
+      "mean_queueing_time_ms": {
+        "mean": 28346.239622180656,
+        "std": 19728.097812180098,
+        "n": 2
+      },
+      "makespan_ms": {
+        "mean": 1983298.9536423185,
+        "std": 391875.4778073667,
+        "n": 2
+      },
+      "throughput_programs_per_s": {
+        "mean": 0.0329119224520988,
+        "std": 0.006502991045696489,
+        "n": 2
+      },
+      "physical_gpu_utilization": {
+        "mean": 0.9070562079804128,
+        "std": 0.09789624606069271,
+        "n": 2
+      },
+      "time_weighted_batch_fill": {
+        "mean": 0.7114116964733161,
+        "std": 0.12188157038187898,
+        "n": 2
+      },
+      "mean_ready_queue_length": {
+        "mean": 0.9970750619644356,
+        "std": 0.8336249677640988,
+        "n": 2
+      }
+    },
+    {
+      "load": "MEDIUM",
+      "policy": "ORACLE_UT_SUF",
+      "mean_ttlt_ms": {
+        "mean": 107642.55190474291,
+        "std": 27396.885626396026,
+        "n": 2
+      },
+      "p95_ttlt_ms": {
+        "mean": 227369.077613219,
+        "std": 141888.8721060925,
+        "n": 2
+      },
+      "mean_queueing_time_ms": {
+        "mean": 29967.797018115714,
+        "std": 21152.82327601131,
+        "n": 2
+      },
+      "makespan_ms": {
+        "mean": 1978921.3662399747,
+        "std": 398503.4044234916,
+        "n": 2
+      },
+      "throughput_programs_per_s": {
+        "mean": 0.033010156260098324,
+        "std": 0.006647388761684335,
+        "n": 2
+      },
+      "physical_gpu_utilization": {
+        "mean": 0.9081507602411698,
+        "std": 0.09131048529265959,
+        "n": 2
+      },
+      "time_weighted_batch_fill": {
+        "mean": 0.7051243351671102,
+        "std": 0.12798282124363186,
+        "n": 2
+      },
+      "mean_ready_queue_length": {
+        "mean": 1.0595471822003346,
+        "std": 0.897465598794038,
+        "n": 2
+      }
+    },
+    {
+      "load": "MEDIUM",
+      "policy": "ORACLE_RUNTIME_SJF",
+      "mean_ttlt_ms": {
+        "mean": 113510.05029889909,
+        "std": 35730.695629443726,
+        "n": 2
+      },
+      "p95_ttlt_ms": {
+        "mean": 208998.77798105776,
+        "std": 98952.54314234915,
+        "n": 2
+      },
+      "mean_queueing_time_ms": {
+        "mean": 32430.024202555098,
+        "std": 25940.9377773912,
+        "n": 2
+      },
+      "makespan_ms": {
+        "mean": 1988573.126493881,
+        "std": 383721.8239892329,
+        "n": 2
+      },
+      "throughput_programs_per_s": {
+        "mean": 0.032794428748654195,
+        "std": 0.0063281243462772144,
+        "n": 2
+      },
+      "physical_gpu_utilization": {
+        "mean": 0.9203999725048355,
+        "std": 0.10490080991961326,
+        "n": 2
+      },
+      "time_weighted_batch_fill": {
+        "mean": 0.7224273974808761,
+        "std": 0.14423107967458734,
+        "n": 2
+      },
+      "mean_ready_queue_length": {
+        "mean": 1.1456028579850097,
+        "std": 1.0559394613204756,
+        "n": 2
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "load": "MEDIUM",
+      "autellix_improvement_over_fcfs": {
+        "mean": 0.015564874294849715,
+        "std": 0.013315365065032858,
+        "n": 2
+      },
+      "ut_las_improvement_over_autellix": {
+        "mean": 0.010360303251682756,
+        "std": 0.0011757697312305164,
+        "n": 2
+      },
+      "token_improvement_over_fcfs": {
+        "mean": -0.020729551562196174,
+        "std": 0.033826668231607626,
+        "n": 2
+      },
+      "ut_improvement_over_token": {
+        "mean": -0.005971049160343181,
+        "std": 0.010545065243743814,
+        "n": 2
+      },
+      "ut_runtime_headroom_recovery_from_fcfs": {
+        "mean": 0.9422271706986821,
+        "std": 0.0,
+        "n": 1
+      },
+      "ut_runtime_headroom_recovery_from_autellix": null
+    }
+  ],
+  "runs": [
+    {
+      "load": "MEDIUM",
+      "seed": 2026102701,
+      "policy": "AUTELLIX_PLAS",
+      "summary": {
+        "policy": "AUTELLIX_PLAS",
+        "mean_ttlt_ms": 86468.84822550694,
+        "p95_ttlt_ms": 145262.29492187477,
+        "mean_queueing_time_ms": 14501.91727915686,
+        "makespan_ms": 2248104.7917115036,
+        "throughput_programs_per_s": 0.028468423819014318,
+        "physical_gpu_utilization": 0.8270988714096257,
+        "time_weighted_batch_fill": 0.6192684943586868,
+        "mean_ready_queue_length": 0.4128467272913245
+      },
+      "path": "/root/loopaware-agent/results/program_scheduling/shared_gpu_poisson_b4/medium/seed2026102701/autellix_plas/results.json"
+    },
+    {
+      "load": "MEDIUM",
+      "seed": 2026102701,
+      "policy": "FCFS",
+      "summary": {
+        "policy": "FCFS",
+        "mean_ttlt_ms": 88684.20259562413,
+        "p95_ttlt_ms": 144226.49309396558,
+        "mean_queueing_time_ms": 14619.926129254516,
+        "makespan_ms": 2250467.5749146286,
+        "throughput_programs_per_s": 0.02843853460204946,
+        "physical_gpu_utilization": 0.8347705716556133,
+        "time_weighted_batch_fill": 0.6307959218325083,
+        "mean_ready_queue_length": 0.4157692751062116
+      },
+      "path": "/root/loopaware-agent/results/program_scheduling/shared_gpu_poisson_b4/medium/seed2026102701/fcfs/results.json"
+    },
+    {
+      "load": "MEDIUM",
+      "seed": 2026102701,
+      "policy": "ORACLE_RUNTIME_SJF",
+      "summary": {
+        "policy": "ORACLE_RUNTIME_SJF",
+        "mean_ttlt_ms": 88244.63312280689,
+        "p95_ttlt_ms": 139028.76370944828,
+        "mean_queueing_time_ms": 14087.011189823494,
+        "makespan_ms": 2259905.4303259384,
+        "throughput_programs_per_s": 0.028319769111209887,
+        "physical_gpu_utilization": 0.8462238984587159,
+        "time_weighted_batch_fill": 0.6204406229851182,
+        "mean_ready_queue_length": 0.3989409043628314
+      },
+      "path": "/root/loopaware-agent/results/program_scheduling/shared_gpu_poisson_b4/medium/seed2026102701/oracle_runtime_sjf/results.json"
+    },
+    {
+      "load": "MEDIUM",
+      "seed": 2026102701,
+      "policy": "ORACLE_TOKEN_SUF",
+      "summary": {
+        "policy": "ORACLE_TOKEN_SUF",
+        "mean_ttlt_ms": 88401.34300745044,
+        "p95_ttlt_ms": 132750.3591577764,
+        "mean_queueing_time_ms": 14396.367879276619,
+        "makespan_ms": 2260396.761380626,
+        "throughput_programs_per_s": 0.02831361338569141,
+        "physical_gpu_utilization": 0.8378331085381902,
+        "time_weighted_batch_fill": 0.625228411554624,
+        "mean_ready_queue_length": 0.4076131942920243
+      },
+      "path": "/root/loopaware-agent/results/program_scheduling/shared_gpu_poisson_b4/medium/seed2026102701/oracle_token_suf/results.json"
+    },
+    {
+      "load": "MEDIUM",
+      "seed": 2026102701,
+      "policy": "ORACLE_UT_SUF",
+      "summary": {
+        "policy": "ORACLE_UT_SUF",
+        "mean_ttlt_ms": 88270.02829492603,
+        "p95_ttlt_ms": 127038.49397209025,
+        "mean_queueing_time_ms": 15010.492238407478,
+        "makespan_ms": 2260705.825833751,
+        "throughput_programs_per_s": 0.02830974258952808,
+        "physical_gpu_utilization": 0.8435844968972956,
+        "time_weighted_batch_fill": 0.6146268143903524,
+        "mean_ready_queue_length": 0.42494317141142496
+      },
+      "path": "/root/loopaware-agent/results/program_scheduling/shared_gpu_poisson_b4/medium/seed2026102701/oracle_ut_suf/results.json"
+    },
+    {
+      "load": "MEDIUM",
+      "seed": 2026102701,
+      "policy": "UT_LAS",
+      "summary": {
+        "policy": "UT_LAS",
+        "mean_ttlt_ms": 85644.89448252598,
+        "p95_ttlt_ms": 138297.24748849683,
+        "mean_queueing_time_ms": 14328.93470469397,
+        "makespan_ms": 2248104.7917115036,
+        "throughput_programs_per_s": 0.028468423819014318,
+        "physical_gpu_utilization": 0.8250217192328521,
+        "time_weighted_batch_fill": 0.615211975844386,
+        "mean_ready_queue_length": 0.40792218604821073
+      },
+      "path": "/root/loopaware-agent/results/program_scheduling/shared_gpu_poisson_b4/medium/seed2026102701/ut_las/results.json"
+    },
+    {
+      "load": "MEDIUM",
+      "seed": 2026102702,
+      "policy": "AUTELLIX_PLAS",
+      "summary": {
+        "policy": "AUTELLIX_PLAS",
+        "mean_ttlt_ms": 119237.6481337699,
+        "p95_ttlt_ms": 301636.83972965647,
+        "mean_queueing_time_ms": 41699.873834148304,
+        "makespan_ms": 1675478.1854547923,
+        "throughput_programs_per_s": 0.03819805029728144,
+        "physical_gpu_utilization": 0.9599910788472887,
+        "time_weighted_batch_fill": 0.7713071162579394,
+        "mean_ready_queue_length": 1.592853878107087
+      },
+      "path": "/root/loopaware-agent/results/program_scheduling/shared_gpu_poisson_b4/medium/seed2026102702/autellix_plas/results.json"
+    },
+    {
+      "load": "MEDIUM",
+      "seed": 2026102702,
+      "policy": "FCFS",
+      "summary": {
+        "policy": "FCFS",
+        "mean_ttlt_ms": 119975.4358000907,
+        "p95_ttlt_ms": 218987.173102899,
+        "mean_queueing_time_ms": 39893.40014030065,
+        "makespan_ms": 1693668.792388386,
+        "throughput_programs_per_s": 0.03778778961248272,
+        "physical_gpu_utilization": 0.9653711525468601,
+        "time_weighted_batch_fill": 0.7836683091440816,
+        "mean_ready_queue_length": 1.5074834114282691
+      },
+      "path": "/root/loopaware-agent/results/program_scheduling/shared_gpu_poisson_b4/medium/seed2026102702/fcfs/results.json"
+    },
+    {
+      "load": "MEDIUM",
+      "seed": 2026102702,
+      "policy": "ORACLE_RUNTIME_SJF",
+      "summary": {
+        "policy": "ORACLE_RUNTIME_SJF",
+        "mean_ttlt_ms": 138775.46747499128,
+        "p95_ttlt_ms": 278968.79225266725,
+        "mean_queueing_time_ms": 50773.0372152867,
+        "makespan_ms": 1717240.8226618236,
+        "throughput_programs_per_s": 0.0372690883860985,
+        "physical_gpu_utilization": 0.9945760465509551,
+        "time_weighted_batch_fill": 0.824414171976634,
+        "mean_ready_queue_length": 1.892264811607188
+      },
+      "path": "/root/loopaware-agent/results/program_scheduling/shared_gpu_poisson_b4/medium/seed2026102702/oracle_runtime_sjf/results.json"
+    },
+    {
+      "load": "MEDIUM",
+      "seed": 2026102702,
+      "policy": "ORACLE_TOKEN_SUF",
+      "summary": {
+        "policy": "ORACLE_TOKEN_SUF",
+        "mean_ttlt_ms": 125332.17320895677,
+        "p95_ttlt_ms": 215404.1980762438,
+        "mean_queueing_time_ms": 42296.1113650847,
+        "makespan_ms": 1706201.145904011,
+        "throughput_programs_per_s": 0.03751023151850618,
+        "physical_gpu_utilization": 0.9762793074226355,
+        "time_weighted_batch_fill": 0.7975949813920082,
+        "mean_ready_queue_length": 1.586536929636847
+      },
+      "path": "/root/loopaware-agent/results/program_scheduling/shared_gpu_poisson_b4/medium/seed2026102702/oracle_token_suf/results.json"
+    },
+    {
+      "load": "MEDIUM",
+      "seed": 2026102702,
+      "policy": "ORACLE_UT_SUF",
+      "summary": {
+        "policy": "ORACLE_UT_SUF",
+        "mean_ttlt_ms": 127015.0755145598,
+        "p95_ttlt_ms": 327699.66125434777,
+        "mean_queueing_time_ms": 44925.101797823954,
+        "makespan_ms": 1697136.9066461986,
+        "throughput_programs_per_s": 0.03771056993066856,
+        "physical_gpu_utilization": 0.9727170235850439,
+        "time_weighted_batch_fill": 0.795621855943868,
+        "mean_ready_queue_length": 1.6941511929892443
+      },
+      "path": "/root/loopaware-agent/results/program_scheduling/shared_gpu_poisson_b4/medium/seed2026102702/oracle_ut_suf/results.json"
+    },
+    {
+      "load": "MEDIUM",
+      "seed": 2026102702,
+      "policy": "UT_LAS",
+      "summary": {
+        "policy": "UT_LAS",
+        "mean_ttlt_ms": 117903.17638541784,
+        "p95_ttlt_ms": 291745.8332373411,
+        "mean_queueing_time_ms": 39646.36660148229,
+        "makespan_ms": 1677497.6083063548,
+        "throughput_programs_per_s": 0.03815206631776725,
+        "physical_gpu_utilization": 0.9640159882440241,
+        "time_weighted_batch_fill": 0.7742763172766585,
+        "mean_ready_queue_length": 1.5125908078382646
+      },
+      "path": "/root/loopaware-agent/results/program_scheduling/shared_gpu_poisson_b4/medium/seed2026102702/ut_las/results.json"
+    }
+  ]
+}

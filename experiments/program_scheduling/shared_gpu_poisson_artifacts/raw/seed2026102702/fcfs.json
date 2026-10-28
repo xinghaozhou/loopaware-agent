@@ -1,0 +1,4930 @@
+{
+  "configuration": {
+    "dataset": "BFCL_v3_multi_turn_base",
+    "model": "ByteDance/Ouro-2.6B-Thinking",
+    "model_revision": "f1edd81e7ac41355db670500ceaf204e0f73af68",
+    "program_count": 64,
+    "seed": 20261026,
+    "batch_size": 4,
+    "policy": "FCFS",
+    "arrival_trace": "/root/loopaware-agent/results/program_scheduling/shared_gpu_arrivals/poisson/medium_seed2026102702.json",
+    "arrival_seed": 2026102702,
+    "arrival_lambda_programs_per_second": 0.03481916732304454,
+    "max_new_tokens": 128,
+    "physical_ut": 4,
+    "selected_ut_threshold": 0.2,
+    "runtime_num_hidden_layers": 48,
+    "generated_at": "2026-10-27T22:54:57.944665+00:00",
+    "teacher_forcing": "recorded BFCL calls and official tool results",
+    "teacher_forced_token_ids": true,
+    "execution_model": "one_shared_static_gpu_batch",
+    "refill_boundary": "after the active physical batch completes",
+    "maximum_overlapping_gpu_batches": 1,
+    "autellix_note": null
+  },
+  "summary": {
+    "policy": "FCFS",
+    "mean_ttlt_ms": 119975.4358000907,
+    "p95_ttlt_ms": 218987.173102899,
+    "mean_queueing_time_ms": 39893.40014030065,
+    "makespan_ms": 1693668.792388386,
+    "throughput_programs_per_s": 0.03778778961248272,
+    "physical_gpu_utilization": 0.9653711525468601,
+    "time_weighted_batch_fill": 0.7836683091440816,
+    "mean_ready_queue_length": 1.5074834114282691
+  },
+  "latency": {
+    "batch_count": 85,
+    "total_gpu_time_ms": 1635018.994140625,
+    "mean_batch_gpu_time_ms": 19235.517578125,
+    "p50_batch_gpu_time_ms": 22545.443359375,
+    "p95_batch_gpu_time_ms": 26401.083984375,
+    "generated_token_count_including_eos": 19425,
+    "throughput_tokens_per_second": 11.880595925559806,
+    "max_peak_allocated_gib": 22.00005865097046,
+    "max_peak_reserved_gib": 31.568359375,
+    "batch_size_histogram": {
+      "1": 21,
+      "2": 13,
+      "3": 11,
+      "4": 40
+    }
+  },
+  "simulation": {
+    "policy": "FCFS_B4",
+    "programs": [
+      {
+        "program_id": "multi_turn_base_29",
+        "completion_time_ms": 63827.21484375,
+        "queue_time_ms": 0.0,
+        "execution_time_ms": 63827.21484375,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0
+      },
+      {
+        "program_id": "multi_turn_base_58",
+        "completion_time_ms": 92345.58664712918,
+        "queue_time_ms": 2598.623756504174,
+        "execution_time_ms": 89746.962890625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.028955004969596
+      },
+      {
+        "program_id": "multi_turn_base_172",
+        "completion_time_ms": 107342.65067075635,
+        "queue_time_ms": 18450.111608256353,
+        "execution_time_ms": 88892.5390625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.2075552324507701
+      },
+      {
+        "program_id": "multi_turn_base_34",
+        "completion_time_ms": 56953.835317029574,
+        "queue_time_ms": 11015.515004529574,
+        "execution_time_ms": 45938.3203125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.2397892419573775
+      },
+      {
+        "program_id": "multi_turn_base_124",
+        "completion_time_ms": 106854.09418007772,
+        "queue_time_ms": 17889.080508202722,
+        "execution_time_ms": 88965.013671875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.2010799500821985
+      },
+      {
+        "program_id": "multi_turn_base_103",
+        "completion_time_ms": 124565.70829575713,
+        "queue_time_ms": 9790.079389507126,
+        "execution_time_ms": 114775.62890625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0852975451565923
+      },
+      {
+        "program_id": "multi_turn_base_138",
+        "completion_time_ms": 125171.6511684474,
+        "queue_time_ms": 7859.377730947395,
+        "execution_time_ms": 117312.2734375,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.066995357780144
+      },
+      {
+        "program_id": "multi_turn_base_22",
+        "completion_time_ms": 132400.4370980889,
+        "queue_time_ms": 50099.80623871391,
+        "execution_time_ms": 82300.630859375,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.6087414606130805
+      },
+      {
+        "program_id": "multi_turn_base_2",
+        "completion_time_ms": 133041.99937058077,
+        "queue_time_ms": 49769.65269089327,
+        "execution_time_ms": 83272.3466796875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.597673233376447
+      },
+      {
+        "program_id": "multi_turn_base_102",
+        "completion_time_ms": 125977.3878879431,
+        "queue_time_ms": 17889.8576145056,
+        "execution_time_ms": 108087.5302734375,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.165512687441819
+      },
+      {
+        "program_id": "multi_turn_base_148",
+        "completion_time_ms": 123027.5171892104,
+        "queue_time_ms": 38545.0904313979,
+        "execution_time_ms": 84482.4267578125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.4562498014160494
+      },
+      {
+        "program_id": "multi_turn_base_90",
+        "completion_time_ms": 94436.57911518306,
+        "queue_time_ms": 22864.398451120564,
+        "execution_time_ms": 71572.1806640625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.3194592960418368
+      },
+      {
+        "program_id": "multi_turn_base_84",
+        "completion_time_ms": 59343.32892105484,
+        "queue_time_ms": 13336.76837417984,
+        "execution_time_ms": 46006.560546875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.289888403211349
+      },
+      {
+        "program_id": "multi_turn_base_87",
+        "completion_time_ms": 127804.27363501221,
+        "queue_time_ms": 35430.078322512214,
+        "execution_time_ms": 92374.1953125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.3835495205414563
+      },
+      {
+        "program_id": "multi_turn_base_49",
+        "completion_time_ms": 98746.43097924528,
+        "queue_time_ms": 4910.358713620284,
+        "execution_time_ms": 93836.072265625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0523291160324824
+      },
+      {
+        "program_id": "multi_turn_base_165",
+        "completion_time_ms": 152355.73059028527,
+        "queue_time_ms": 30322.205199660268,
+        "execution_time_ms": 122033.525390625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.2484743852363518
+      },
+      {
+        "program_id": "multi_turn_base_43",
+        "completion_time_ms": 182683.66624515358,
+        "queue_time_ms": 83740.31663577858,
+        "execution_time_ms": 98943.349609375,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.8463460855770755
+      },
+      {
+        "program_id": "multi_turn_base_13",
+        "completion_time_ms": 54564.79247455753,
+        "queue_time_ms": 8061.517083932529,
+        "execution_time_ms": 46503.275390625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.1733537480148704
+      },
+      {
+        "program_id": "multi_turn_base_37",
+        "completion_time_ms": 140987.22492226202,
+        "queue_time_ms": 68275.03937538702,
+        "execution_time_ms": 72712.185546875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.9389765809112214
+      },
+      {
+        "program_id": "multi_turn_base_53",
+        "completion_time_ms": 173221.8240083736,
+        "queue_time_ms": 77718.1326021236,
+        "execution_time_ms": 95503.69140625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.8137709805532976
+      },
+      {
+        "program_id": "multi_turn_base_168",
+        "completion_time_ms": 218468.9155275476,
+        "queue_time_ms": 92335.9291994226,
+        "execution_time_ms": 126132.986328125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.732052192589954
+      },
+      {
+        "program_id": "multi_turn_base_196",
+        "completion_time_ms": 229150.0633106188,
+        "queue_time_ms": 101857.7019824938,
+        "execution_time_ms": 127292.361328125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.8001870726549916
+      },
+      {
+        "program_id": "multi_turn_base_115",
+        "completion_time_ms": 134951.7395355819,
+        "queue_time_ms": 35986.2610199569,
+        "execution_time_ms": 98965.478515625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.3636243825595737
+      },
+      {
+        "program_id": "multi_turn_base_27",
+        "completion_time_ms": 137346.98409580044,
+        "queue_time_ms": 65406.954798925435,
+        "execution_time_ms": 71940.029296875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.9091872138251498
+      },
+      {
+        "program_id": "multi_turn_base_64",
+        "completion_time_ms": 74014.11920665827,
+        "queue_time_ms": 27315.798894158273,
+        "execution_time_ms": 46698.3203125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.5849417861577026
+      },
+      {
+        "program_id": "multi_turn_base_7",
+        "completion_time_ms": 115961.67762652086,
+        "queue_time_ms": 38920.60145464586,
+        "execution_time_ms": 77041.076171875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.5051928579997487
+      },
+      {
+        "program_id": "multi_turn_base_8",
+        "completion_time_ms": 186220.84082248493,
+        "queue_time_ms": 86051.09668185993,
+        "execution_time_ms": 100169.744140625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.8590527750680448
+      },
+      {
+        "program_id": "multi_turn_base_139",
+        "completion_time_ms": 105404.60842671653,
+        "queue_time_ms": 55453.41116109153,
+        "execution_time_ms": 49951.197265625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 2.110151792082329
+      },
+      {
+        "program_id": "multi_turn_base_118",
+        "completion_time_ms": 145593.69433561456,
+        "queue_time_ms": 22627.963866864564,
+        "execution_time_ms": 122965.73046875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.1840184560414182
+      },
+      {
+        "program_id": "multi_turn_base_187",
+        "completion_time_ms": 131539.91161165596,
+        "queue_time_ms": 32267.27489290596,
+        "execution_time_ms": 99272.63671875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.3250369483417934
+      },
+      {
+        "program_id": "multi_turn_base_155",
+        "completion_time_ms": 78604.42044000037,
+        "queue_time_ms": 30766.264190000365,
+        "execution_time_ms": 47838.15625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.643132315326228
+      },
+      {
+        "program_id": "multi_turn_base_11",
+        "completion_time_ms": 50707.869593182346,
+        "queue_time_ms": 4094.420374432346,
+        "execution_time_ms": 46613.44921875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0878377473251946
+      },
+      {
+        "program_id": "multi_turn_base_21",
+        "completion_time_ms": 88175.7027089477,
+        "queue_time_ms": 29109.871654260205,
+        "execution_time_ms": 59065.8310546875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.4928377563554154
+      },
+      {
+        "program_id": "multi_turn_base_121",
+        "completion_time_ms": 84437.53415385832,
+        "queue_time_ms": 16294.155247608316,
+        "execution_time_ms": 68143.37890625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.2391157513633924
+      },
+      {
+        "program_id": "multi_turn_base_65",
+        "completion_time_ms": 58800.54638504295,
+        "queue_time_ms": 23802.72118973045,
+        "execution_time_ms": 34997.8251953125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.6801200090832649
+      },
+      {
+        "program_id": "multi_turn_base_188",
+        "completion_time_ms": 110337.4482421875,
+        "queue_time_ms": 0.0,
+        "execution_time_ms": 110337.4482421875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0
+      },
+      {
+        "program_id": "multi_turn_base_59",
+        "completion_time_ms": 106483.44650958292,
+        "queue_time_ms": 14788.164283020422,
+        "execution_time_ms": 91695.2822265625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.1612750833405097
+      },
+      {
+        "program_id": "multi_turn_base_71",
+        "completion_time_ms": 83294.06368618424,
+        "queue_time_ms": 10090.586147121736,
+        "execution_time_ms": 73203.4775390625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.1378429889719002
+      },
+      {
+        "program_id": "multi_turn_base_109",
+        "completion_time_ms": 123403.52994147188,
+        "queue_time_ms": 3451.5484961593756,
+        "execution_time_ms": 119951.9814453125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0287744183511713
+      },
+      {
+        "program_id": "multi_turn_base_48",
+        "completion_time_ms": 72270.42825235799,
+        "queue_time_ms": 3009.6802054829895,
+        "execution_time_ms": 69260.748046875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0434543416055233
+      },
+      {
+        "program_id": "multi_turn_base_56",
+        "completion_time_ms": 71860.6789981469,
+        "queue_time_ms": 2599.9309512719046,
+        "execution_time_ms": 69260.748046875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0375383030733698
+      },
+      {
+        "program_id": "multi_turn_base_136",
+        "completion_time_ms": 46347.08935546875,
+        "queue_time_ms": 0.0,
+        "execution_time_ms": 46347.08935546875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0
+      },
+      {
+        "program_id": "multi_turn_base_92",
+        "completion_time_ms": 50442.81689453125,
+        "queue_time_ms": 0.0,
+        "execution_time_ms": 50442.81689453125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0
+      },
+      {
+        "program_id": "multi_turn_base_193",
+        "completion_time_ms": 86347.25,
+        "queue_time_ms": 0.0,
+        "execution_time_ms": 86347.25,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.0
+      },
+      {
+        "program_id": "multi_turn_base_197",
+        "completion_time_ms": 78606.86300747935,
+        "queue_time_ms": 10903.476288729347,
+        "execution_time_ms": 67703.38671875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.161047723270093
+      },
+      {
+        "program_id": "multi_turn_base_72",
+        "completion_time_ms": 68539.83746565692,
+        "queue_time_ms": 8037.220766438171,
+        "execution_time_ms": 60502.61669921875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.13284087870768
+      },
+      {
+        "program_id": "multi_turn_base_105",
+        "completion_time_ms": 46312.88774357247,
+        "queue_time_ms": 5082.688524822472,
+        "execution_time_ms": 41230.19921875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.1232758662614235
+      },
+      {
+        "program_id": "multi_turn_base_89",
+        "completion_time_ms": 129410.21875,
+        "queue_time_ms": 49830.03125,
+        "execution_time_ms": 79580.1875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.6261612697255834
+      },
+      {
+        "program_id": "multi_turn_base_24",
+        "completion_time_ms": 168867.08191715647,
+        "queue_time_ms": 84615.80652653147,
+        "execution_time_ms": 84251.275390625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 2.004326713562689
+      },
+      {
+        "program_id": "multi_turn_base_3",
+        "completion_time_ms": 94679.10911272117,
+        "queue_time_ms": 44849.07786272117,
+        "execution_time_ms": 49830.03125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.9000411345863077
+      },
+      {
+        "program_id": "multi_turn_base_33",
+        "completion_time_ms": 218987.173102899,
+        "queue_time_ms": 91717.63599352399,
+        "execution_time_ms": 127269.537109375,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.7206566321892267
+      },
+      {
+        "program_id": "multi_turn_base_60",
+        "completion_time_ms": 245507.81559010362,
+        "queue_time_ms": 115399.77652760362,
+        "execution_time_ms": 130108.0390625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.8869534685106508
+      },
+      {
+        "program_id": "multi_turn_base_74",
+        "completion_time_ms": 77604.75860099937,
+        "queue_time_ms": 27774.72735099937,
+        "execution_time_ms": 49830.03125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.557389322347643
+      },
+      {
+        "program_id": "multi_turn_base_85",
+        "completion_time_ms": 85700.31394217256,
+        "queue_time_ms": 45964.612770297565,
+        "execution_time_ms": 39735.701171875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 2.1567585676034677
+      },
+      {
+        "program_id": "multi_turn_base_158",
+        "completion_time_ms": 133037.6572035465,
+        "queue_time_ms": 70121.28806292149,
+        "execution_time_ms": 62916.369140625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 2.114515809171898
+      },
+      {
+        "program_id": "multi_turn_base_152",
+        "completion_time_ms": 162605.98365891725,
+        "queue_time_ms": 85166.47779954225,
+        "execution_time_ms": 77439.505859375,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 2.0997807495595198
+      },
+      {
+        "program_id": "multi_turn_base_194",
+        "completion_time_ms": 239434.00878225663,
+        "queue_time_ms": 101093.92870413163,
+        "execution_time_ms": 138340.080078125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.730763844050406
+      },
+      {
+        "program_id": "multi_turn_base_75",
+        "completion_time_ms": 202026.1128700187,
+        "queue_time_ms": 108355.2906043937,
+        "execution_time_ms": 93670.822265625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 2.156766728246791
+      },
+      {
+        "program_id": "multi_turn_base_23",
+        "completion_time_ms": 128639.6975003921,
+        "queue_time_ms": 56193.078359767096,
+        "execution_time_ms": 72446.619140625,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.7756480430189792
+      },
+      {
+        "program_id": "multi_turn_base_83",
+        "completion_time_ms": 191011.8665671032,
+        "queue_time_ms": 118890.49937960319,
+        "execution_time_ms": 72121.3671875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 2.6484781697290005
+      },
+      {
+        "program_id": "multi_turn_base_42",
+        "completion_time_ms": 147368.62575130002,
+        "queue_time_ms": 72971.04567317502,
+        "execution_time_ms": 74397.580078125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.9808255268054151
+      },
+      {
+        "program_id": "multi_turn_base_147",
+        "completion_time_ms": 111747.47922194004,
+        "queue_time_ms": 64302.89914381504,
+        "execution_time_ms": 47444.580078125,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 2.3553265523254745
+      },
+      {
+        "program_id": "multi_turn_base_110",
+        "completion_time_ms": 170310.48143050866,
+        "queue_time_ms": 64849.76512191491,
+        "execution_time_ms": 105460.71630859375,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 1.6149186862353073
+      },
+      {
+        "program_id": "multi_turn_base_91",
+        "completion_time_ms": 112212.6057669993,
+        "queue_time_ms": 62261.9358451243,
+        "execution_time_ms": 49950.669921875,
+        "tool_wait_time_ms": 0.0,
+        "slowdown": 2.2464684846570555
+      }
+    ],
+    "schedule": [
+      {
+        "batch_index": 0,
+        "members": [
+          {
+            "program_id": "multi_turn_base_29",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1116
+        ],
+        "padded_input_tokens": 1116,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 20018.572265625,
+        "wall_time_ms": 20018.615507055074,
+        "peak_allocated_gib": 6.807873725891113,
+        "peak_reserved_gib": 7.716796875,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/390f570dcc218a65faa11128d643aca5d234aaebfaf5d3f4c9901639a2e24638.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_29",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 0.0,
+        "finish_time_ms": 20018.572265625
+      },
+      {
+        "batch_index": 1,
+        "members": [
+          {
+            "program_id": "multi_turn_base_29",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_58",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1219,
+          1418
+        ],
+        "padded_input_tokens": 1418,
+        "teacher_forced_output_tokens": [
+          128,
+          128
+        ],
+        "gpu_time_ms": 22025.640625,
+        "wall_time_ms": 22025.84672893863,
+        "peak_allocated_gib": 9.527710437774658,
+        "peak_reserved_gib": 12.107421875,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_29",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_58",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 20018.572265625,
+        "finish_time_ms": 42044.212890625
+      },
+      {
+        "batch_index": 2,
+        "members": [
+          {
+            "program_id": "multi_turn_base_172",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_29",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_58",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          1104,
+          1276,
+          1590
+        ],
+        "padded_input_tokens": 1590,
+        "teacher_forced_output_tokens": [
+          128,
+          128,
+          41
+        ],
+        "gpu_time_ms": 21783.001953125,
+        "wall_time_ms": 21783.157258061692,
+        "peak_allocated_gib": 12.56266164779663,
+        "peak_reserved_gib": 16.57421875,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_29",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_58",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_172",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 42044.212890625,
+        "finish_time_ms": 63827.21484375
+      },
+      {
+        "batch_index": 3,
+        "members": [
+          {
+            "program_id": "multi_turn_base_172",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_34",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_58",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          1367,
+          1363,
+          1727
+        ],
+        "padded_input_tokens": 1727,
+        "teacher_forced_output_tokens": [
+          128,
+          128,
+          24
+        ],
+        "gpu_time_ms": 22565.5390625,
+        "wall_time_ms": 22565.693294047378,
+        "peak_allocated_gib": 13.189488887786865,
+        "peak_reserved_gib": 17.537109375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_58",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_172",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_34",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 63827.21484375,
+        "finish_time_ms": 86392.75390625
+      },
+      {
+        "batch_index": 4,
+        "members": [
+          {
+            "program_id": "multi_turn_base_124",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_172",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_34",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_58",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1372,
+          1675,
+          1532,
+          1948
+        ],
+        "padded_input_tokens": 1948,
+        "teacher_forced_output_tokens": [
+          128,
+          46,
+          128,
+          27
+        ],
+        "gpu_time_ms": 23372.78125,
+        "wall_time_ms": 23372.934691025876,
+        "peak_allocated_gib": 17.19969606399536,
+        "peak_reserved_gib": 23.677734375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_58",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_172",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_34",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_124",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 86392.75390625,
+        "finish_time_ms": 109765.53515625
+      },
+      {
+        "batch_index": 5,
+        "members": [
+          {
+            "program_id": "multi_turn_base_124",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_172",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1532,
+          1823
+        ],
+        "padded_input_tokens": 1823,
+        "teacher_forced_output_tokens": [
+          128,
+          29
+        ],
+        "gpu_time_ms": 21171.216796875,
+        "wall_time_ms": 21171.360831009224,
+        "peak_allocated_gib": 10.77950382232666,
+        "peak_reserved_gib": 13.962890625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_172",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_124",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 109765.53515625,
+        "finish_time_ms": 130936.751953125
+      },
+      {
+        "batch_index": 6,
+        "members": [
+          {
+            "program_id": "multi_turn_base_103",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_124",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1214,
+          1777
+        ],
+        "padded_input_tokens": 1777,
+        "teacher_forced_output_tokens": [
+          128,
+          31
+        ],
+        "gpu_time_ms": 21471.060546875,
+        "wall_time_ms": 21471.21256007813,
+        "peak_allocated_gib": 10.584967613220215,
+        "peak_reserved_gib": 13.80078125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_124",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_103",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 130936.751953125,
+        "finish_time_ms": 152407.8125
+      },
+      {
+        "batch_index": 7,
+        "members": [
+          {
+            "program_id": "multi_turn_base_103",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_124",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1299,
+          1935
+        ],
+        "padded_input_tokens": 1935,
+        "teacher_forced_output_tokens": [
+          128,
+          29
+        ],
+        "gpu_time_ms": 22949.955078125,
+        "wall_time_ms": 22950.10719203856,
+        "peak_allocated_gib": 11.050279140472412,
+        "peak_reserved_gib": 14.349609375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_124",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_103",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 152407.8125,
+        "finish_time_ms": 175357.767578125
+      },
+      {
+        "batch_index": 8,
+        "members": [
+          {
+            "program_id": "multi_turn_base_103",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_138",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_22",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          1384,
+          1325,
+          1527
+        ],
+        "padded_input_tokens": 1527,
+        "teacher_forced_output_tokens": [
+          45,
+          128,
+          128
+        ],
+        "gpu_time_ms": 24089.216796875,
+        "wall_time_ms": 24089.376818970777,
+        "peak_allocated_gib": 12.284960746765137,
+        "peak_reserved_gib": 16.033203125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_103",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_138",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_22",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 175357.767578125,
+        "finish_time_ms": 199446.984375
+      },
+      {
+        "batch_index": 9,
+        "members": [
+          {
+            "program_id": "multi_turn_base_103",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_138",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_2",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_22",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1588,
+          1471,
+          1327,
+          1650
+        ],
+        "padded_input_tokens": 1650,
+        "teacher_forced_output_tokens": [
+          128,
+          128,
+          128,
+          43
+        ],
+        "gpu_time_ms": 22401.384765625,
+        "wall_time_ms": 22401.528123067692,
+        "peak_allocated_gib": 15.444472312927246,
+        "peak_reserved_gib": 20.92578125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_103",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_138",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_22",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_2",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 199446.984375,
+        "finish_time_ms": 221848.369140625
+      },
+      {
+        "batch_index": 10,
+        "members": [
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_103",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_138",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_148",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1411,
+          1800,
+          1612,
+          1362
+        ],
+        "padded_input_tokens": 1800,
+        "teacher_forced_output_tokens": [
+          128,
+          71,
+          31,
+          128
+        ],
+        "gpu_time_ms": 23864.01171875,
+        "wall_time_ms": 23864.156118012033,
+        "peak_allocated_gib": 16.327974319458008,
+        "peak_reserved_gib": 22.369140625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_103",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_138",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_22",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_2",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_148",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 221848.369140625,
+        "finish_time_ms": 245712.380859375
+      },
+      {
+        "batch_index": 11,
+        "members": [
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_138",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_2",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_22",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1536,
+          1771,
+          1429,
+          1769
+        ],
+        "padded_input_tokens": 1771,
+        "teacher_forced_output_tokens": [
+          128,
+          36,
+          30,
+          41
+        ],
+        "gpu_time_ms": 23605.103515625,
+        "wall_time_ms": 23605.24531500414,
+        "peak_allocated_gib": 16.15716314315796,
+        "peak_reserved_gib": 22.248046875,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_138",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_22",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_2",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_148",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 245712.380859375,
+        "finish_time_ms": 269317.484375
+      },
+      {
+        "batch_index": 12,
+        "members": [
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_138",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_148",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_90",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1678,
+          1899,
+          1588,
+          1431
+        ],
+        "padded_input_tokens": 1899,
+        "teacher_forced_output_tokens": [
+          31,
+          39,
+          128,
+          128
+        ],
+        "gpu_time_ms": 23352.556640625,
+        "wall_time_ms": 23352.695566951297,
+        "peak_allocated_gib": 16.91108512878418,
+        "peak_reserved_gib": 23.162109375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_138",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_22",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_2",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_148",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_90",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 269317.484375,
+        "finish_time_ms": 292670.041015625
+      },
+      {
+        "batch_index": 13,
+        "members": [
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_148",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_2",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_22",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1816,
+          1725,
+          1533,
+          1941
+        ],
+        "padded_input_tokens": 1941,
+        "teacher_forced_output_tokens": [
+          29,
+          29,
+          37,
+          53
+        ],
+        "gpu_time_ms": 12204.92578125,
+        "wall_time_ms": 12205.027288990095,
+        "peak_allocated_gib": 16.85204553604126,
+        "peak_reserved_gib": 23.677734375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_22",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_2",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_148",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_90",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 292670.041015625,
+        "finish_time_ms": 304874.966796875
+      },
+      {
+        "batch_index": 14,
+        "members": [
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_148",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_2",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_90",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1909,
+          1829,
+          1654,
+          1697
+        ],
+        "padded_input_tokens": 1909,
+        "teacher_forced_output_tokens": [
+          21,
+          20,
+          43,
+          37
+        ],
+        "gpu_time_ms": 10024.5947265625,
+        "wall_time_ms": 10024.70115001779,
+        "peak_allocated_gib": 16.65693235397339,
+        "peak_reserved_gib": 23.5390625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_2",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_148",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_90",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 304874.966796875,
+        "finish_time_ms": 314899.5615234375
+      },
+      {
+        "batch_index": 15,
+        "members": [
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 5
+          },
+          {
+            "program_id": "multi_turn_base_148",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_2",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_90",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          2071,
+          1985,
+          1832,
+          1881
+        ],
+        "padded_input_tokens": 2071,
+        "teacher_forced_output_tokens": [
+          68,
+          51,
+          28,
+          50
+        ],
+        "gpu_time_ms": 15036.337890625,
+        "wall_time_ms": 15037.493807962164,
+        "peak_allocated_gib": 17.645947456359863,
+        "peak_reserved_gib": 24.990234375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_2",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_102",
+            "turn_id": 5
+          },
+          {
+            "program_id": "multi_turn_base_148",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_90",
+            "turn_id": 2
+          }
+        ],
+        "start_time_ms": 314899.5615234375,
+        "finish_time_ms": 329935.8994140625
+      },
+      {
+        "batch_index": 16,
+        "members": [
+          {
+            "program_id": "multi_turn_base_49",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_84",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_87",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_90",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1198,
+          841,
+          973,
+          2048
+        ],
+        "padded_input_tokens": 2048,
+        "teacher_forced_output_tokens": [
+          128,
+          128,
+          128,
+          37
+        ],
+        "gpu_time_ms": 23158.69140625,
+        "wall_time_ms": 23158.845828962512,
+        "peak_allocated_gib": 17.789963245391846,
+        "peak_reserved_gib": 24.884765625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_90",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_84",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_87",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_49",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 329935.8994140625,
+        "finish_time_ms": 353094.5908203125
+      },
+      {
+        "batch_index": 17,
+        "members": [
+          {
+            "program_id": "multi_turn_base_165",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_49",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_84",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_87",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1986,
+          1302,
+          1144,
+          1076
+        ],
+        "padded_input_tokens": 1986,
+        "teacher_forced_output_tokens": [
+          128,
+          128,
+          128,
+          29
+        ],
+        "gpu_time_ms": 22847.869140625,
+        "wall_time_ms": 22848.02061098162,
+        "peak_allocated_gib": 17.42351770401001,
+        "peak_reserved_gib": 24.095703125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_84",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_87",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_49",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_165",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 353094.5908203125,
+        "finish_time_ms": 375942.4599609375
+      },
+      {
+        "batch_index": 18,
+        "members": [
+          {
+            "program_id": "multi_turn_base_165",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_49",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_87",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          2088,
+          1512,
+          1179
+        ],
+        "padded_input_tokens": 2088,
+        "teacher_forced_output_tokens": [
+          128,
+          27,
+          39
+        ],
+        "gpu_time_ms": 23846.935546875,
+        "wall_time_ms": 23847.0914659556,
+        "peak_allocated_gib": 14.765980243682861,
+        "peak_reserved_gib": 20.173828125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_87",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_49",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_165",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 375942.4599609375,
+        "finish_time_ms": 399789.3955078125
+      },
+      {
+        "batch_index": 19,
+        "members": [
+          {
+            "program_id": "multi_turn_base_13",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_165",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_43",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_49",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1189,
+          2234,
+          1541,
+          1605
+        ],
+        "padded_input_tokens": 2234,
+        "teacher_forced_output_tokens": [
+          128,
+          128,
+          128,
+          33
+        ],
+        "gpu_time_ms": 23982.576171875,
+        "wall_time_ms": 23983.066983986646,
+        "peak_allocated_gib": 18.88424062728882,
+        "peak_reserved_gib": 26.28515625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_87",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_49",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_165",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_43",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_13",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 399789.3955078125,
+        "finish_time_ms": 423771.9716796875
+      },
+      {
+        "batch_index": 20,
+        "members": [
+          {
+            "program_id": "multi_turn_base_13",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_37",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_53",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_87",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1297,
+          1214,
+          1189,
+          1459
+        ],
+        "padded_input_tokens": 1459,
+        "teacher_forced_output_tokens": [
+          128,
+          128,
+          128,
+          33
+        ],
+        "gpu_time_ms": 22520.69921875,
+        "wall_time_ms": 22520.850847940892,
+        "peak_allocated_gib": 14.31947946548462,
+        "peak_reserved_gib": 19.2265625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_87",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_165",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_43",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_13",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_37",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_53",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 423771.9716796875,
+        "finish_time_ms": 446292.6708984375
+      },
+      {
+        "batch_index": 21,
+        "members": [
+          {
+            "program_id": "multi_turn_base_165",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_168",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_43",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          2434,
+          1767,
+          1842,
+          1624
+        ],
+        "padded_input_tokens": 2434,
+        "teacher_forced_output_tokens": [
+          42,
+          128,
+          128,
+          128
+        ],
+        "gpu_time_ms": 25071.47265625,
+        "wall_time_ms": 25072.208574973047,
+        "peak_allocated_gib": 20.06224489212036,
+        "peak_reserved_gib": 28.525390625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_165",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_43",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_37",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_53",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_168",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 446292.6708984375,
+        "finish_time_ms": 471364.1435546875
+      },
+      {
+        "batch_index": 22,
+        "members": [
+          {
+            "program_id": "multi_turn_base_115",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_165",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_37",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_53",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          757,
+          2619,
+          1305,
+          1288
+        ],
+        "padded_input_tokens": 2619,
+        "teacher_forced_output_tokens": [
+          128,
+          60,
+          128,
+          24
+        ],
+        "gpu_time_ms": 26284.671875,
+        "wall_time_ms": 26285.342309973203,
+        "peak_allocated_gib": 21.151896476745605,
+        "peak_reserved_gib": 30.244140625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_165",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_43",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_37",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_53",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_168",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_115",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 471364.1435546875,
+        "finish_time_ms": 497648.8154296875
+      },
+      {
+        "batch_index": 23,
+        "members": [
+          {
+            "program_id": "multi_turn_base_115",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_168",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_43",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          863,
+          1915,
+          2054,
+          1692
+        ],
+        "padded_input_tokens": 2054,
+        "teacher_forced_output_tokens": [
+          128,
+          128,
+          128,
+          128
+        ],
+        "gpu_time_ms": 23924.978515625,
+        "wall_time_ms": 23925.896216998808,
+        "peak_allocated_gib": 17.8240385055542,
+        "peak_reserved_gib": 24.990234375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_43",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_37",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_53",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_168",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_115",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 497648.8154296875,
+        "finish_time_ms": 521573.7939453125
+      },
+      {
+        "batch_index": 24,
+        "members": [
+          {
+            "program_id": "multi_turn_base_27",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_37",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_53",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_64",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1103,
+          1500,
+          1477,
+          1695
+        ],
+        "padded_input_tokens": 1695,
+        "teacher_forced_output_tokens": [
+          128,
+          39,
+          22,
+          128
+        ],
+        "gpu_time_ms": 23906.814453125,
+        "wall_time_ms": 23906.982781016268,
+        "peak_allocated_gib": 15.709521770477295,
+        "peak_reserved_gib": 21.470703125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_43",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_37",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_53",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_168",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_115",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_27",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_64",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 521573.7939453125,
+        "finish_time_ms": 545480.6083984375
+      },
+      {
+        "batch_index": 25,
+        "members": [
+          {
+            "program_id": "multi_turn_base_115",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_168",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_43",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1009,
+          2085,
+          2289,
+          1823
+        ],
+        "padded_input_tokens": 2289,
+        "teacher_forced_output_tokens": [
+          128,
+          45,
+          128,
+          128
+        ],
+        "gpu_time_ms": 25964.322265625,
+        "wall_time_ms": 25965.500267921016,
+        "peak_allocated_gib": 19.208191394805908,
+        "peak_reserved_gib": 27.046875,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_43",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_53",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_168",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_115",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_27",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_64",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 545480.6083984375,
+        "finish_time_ms": 571444.9306640625
+      },
+      {
+        "batch_index": 26,
+        "members": [
+          {
+            "program_id": "multi_turn_base_115",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_27",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_53",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_64",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1095,
+          1292,
+          1642,
+          1916
+        ],
+        "padded_input_tokens": 1916,
+        "teacher_forced_output_tokens": [
+          36,
+          128,
+          43,
+          128
+        ],
+        "gpu_time_ms": 22791.505859375,
+        "wall_time_ms": 22791.666880017146,
+        "peak_allocated_gib": 17.011215209960938,
+        "peak_reserved_gib": 23.541015625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_53",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_168",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_115",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_27",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_64",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 571444.9306640625,
+        "finish_time_ms": 594236.4365234375
+      },
+      {
+        "batch_index": 27,
+        "members": [
+          {
+            "program_id": "multi_turn_base_168",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_7",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_8",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          2282,
+          2405,
+          1388,
+          1311
+        ],
+        "padded_input_tokens": 2405,
+        "teacher_forced_output_tokens": [
+          44,
+          36,
+          128,
+          128
+        ],
+        "gpu_time_ms": 25930.50390625,
+        "wall_time_ms": 25931.130988057703,
+        "peak_allocated_gib": 19.891433715820312,
+        "peak_reserved_gib": 27.984375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_168",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_27",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_7",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_8",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_139",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 594236.4365234375,
+        "finish_time_ms": 620166.9404296875
+      },
+      {
+        "batch_index": 28,
+        "members": [
+          {
+            "program_id": "multi_turn_base_118",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_139",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_168",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_27",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1175,
+          645,
+          2444,
+          1470
+        ],
+        "padded_input_tokens": 2444,
+        "teacher_forced_output_tokens": [
+          44,
+          128,
+          40,
+          34
+        ],
+        "gpu_time_ms": 25241.708984375,
+        "wall_time_ms": 25242.54678597208,
+        "peak_allocated_gib": 20.12114381790161,
+        "peak_reserved_gib": 28.525390625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_168",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_27",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_7",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_8",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_139",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_118",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 620166.9404296875,
+        "finish_time_ms": 645408.6494140625
+      },
+      {
+        "batch_index": 29,
+        "members": [
+          {
+            "program_id": "multi_turn_base_118",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_7",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_8",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1247,
+          2559,
+          1482,
+          1440
+        ],
+        "padded_input_tokens": 2559,
+        "teacher_forced_output_tokens": [
+          29,
+          28,
+          128,
+          128
+        ],
+        "gpu_time_ms": 26401.083984375,
+        "wall_time_ms": 26401.50612697471,
+        "peak_allocated_gib": 20.79864740371704,
+        "peak_reserved_gib": 29.501953125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_196",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_7",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_8",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_139",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_118",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 645408.6494140625,
+        "finish_time_ms": 671809.7333984375
+      },
+      {
+        "batch_index": 30,
+        "members": [
+          {
+            "program_id": "multi_turn_base_118",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_139",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_187",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_7",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1353,
+          748,
+          1840,
+          1556
+        ],
+        "padded_input_tokens": 1840,
+        "teacher_forced_output_tokens": [
+          45,
+          19,
+          128,
+          128
+        ],
+        "gpu_time_ms": 24709.48828125,
+        "wall_time_ms": 24709.650268079713,
+        "peak_allocated_gib": 16.563573837280273,
+        "peak_reserved_gib": 22.74609375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_7",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_8",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_139",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_118",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_187",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 671809.7333984375,
+        "finish_time_ms": 696519.2216796875
+      },
+      {
+        "batch_index": 31,
+        "members": [
+          {
+            "program_id": "multi_turn_base_11",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_118",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_155",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_8",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          893,
+          1587,
+          1156,
+          1599
+        ],
+        "padded_input_tokens": 1599,
+        "teacher_forced_output_tokens": [
+          128,
+          31,
+          128,
+          112
+        ],
+        "gpu_time_ms": 22545.443359375,
+        "wall_time_ms": 22545.605775085278,
+        "peak_allocated_gib": 15.14408016204834,
+        "peak_reserved_gib": 20.5390625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_8",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_118",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_187",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_155",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_11",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 696519.2216796875,
+        "finish_time_ms": 719064.6650390625
+      },
+      {
+        "batch_index": 32,
+        "members": [
+          {
+            "program_id": "multi_turn_base_11",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_118",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_187",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_21",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          999,
+          1721,
+          2011,
+          1538
+        ],
+        "padded_input_tokens": 2011,
+        "teacher_forced_output_tokens": [
+          128,
+          29,
+          128,
+          128
+        ],
+        "gpu_time_ms": 24068.005859375,
+        "wall_time_ms": 24068.176914937794,
+        "peak_allocated_gib": 17.570766925811768,
+        "peak_reserved_gib": 24.47265625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_8",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_118",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_187",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_155",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_11",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_21",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 719064.6650390625,
+        "finish_time_ms": 743132.6708984375
+      },
+      {
+        "batch_index": 33,
+        "members": [
+          {
+            "program_id": "multi_turn_base_121",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_155",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_187",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_8",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1429,
+          1413,
+          2223,
+          1796
+        ],
+        "padded_input_tokens": 2223,
+        "teacher_forced_output_tokens": [
+          128,
+          128,
+          58,
+          30
+        ],
+        "gpu_time_ms": 25292.712890625,
+        "wall_time_ms": 25293.475031037815,
+        "peak_allocated_gib": 18.81944990158081,
+        "peak_reserved_gib": 26.28125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_8",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_187",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_155",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_21",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_121",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 743132.6708984375,
+        "finish_time_ms": 768425.3837890625
+      },
+      {
+        "batch_index": 34,
+        "members": [
+          {
+            "program_id": "multi_turn_base_121",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_187",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_21",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_65",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1526,
+          2397,
+          1613,
+          1565
+        ],
+        "padded_input_tokens": 2397,
+        "teacher_forced_output_tokens": [
+          128,
+          65,
+          128,
+          128
+        ],
+        "gpu_time_ms": 25202.4296875,
+        "wall_time_ms": 25203.579159919173,
+        "peak_allocated_gib": 19.84431266784668,
+        "peak_reserved_gib": 27.978515625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_187",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_21",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_121",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_65",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 768425.3837890625,
+        "finish_time_ms": 793627.8134765625
+      },
+      {
+        "batch_index": 35,
+        "members": [
+          {
+            "program_id": "multi_turn_base_121",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_21",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_65",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          1746,
+          1763,
+          2041
+        ],
+        "padded_input_tokens": 2041,
+        "teacher_forced_output_tokens": [
+          31,
+          46,
+          44
+        ],
+        "gpu_time_ms": 9795.3955078125,
+        "wall_time_ms": 9795.502396067604,
+        "peak_allocated_gib": 14.342716693878174,
+        "peak_reserved_gib": 19.625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_21",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_121",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_65",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 793627.8134765625,
+        "finish_time_ms": 803423.208984375
+      },
+      {
+        "batch_index": 36,
+        "members": [
+          {
+            "program_id": "multi_turn_base_121",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1876
+        ],
+        "padded_input_tokens": 1876,
+        "teacher_forced_output_tokens": [
+          51
+        ],
+        "gpu_time_ms": 7852.8408203125,
+        "wall_time_ms": 7852.921619080007,
+        "peak_allocated_gib": 7.844680309295654,
+        "peak_reserved_gib": 9.072265625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/e970f993aea546bd45b941222f975266c67d03ab13233a129fbdd0609aab9dae.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_121",
+            "turn_id": 3
+          }
+        ],
+        "start_time_ms": 803423.208984375,
+        "finish_time_ms": 811276.0498046875
+      },
+      {
+        "batch_index": 37,
+        "members": [
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1704
+        ],
+        "padded_input_tokens": 1704,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 18642.166015625,
+        "wall_time_ms": 18642.291374970227,
+        "peak_allocated_gib": 7.673705101013184,
+        "peak_reserved_gib": 8.798828125,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/5dd448ac6ea4342b986cbe3e2e3ac2470048bbd95a6f7927659166cc09aa90eb.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 824858.3616817306,
+        "finish_time_ms": 843500.5276973556
+      },
+      {
+        "batch_index": 38,
+        "members": [
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_59",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1958,
+          1082
+        ],
+        "padded_input_tokens": 1958,
+        "teacher_forced_output_tokens": [
+          43,
+          128
+        ],
+        "gpu_time_ms": 21645.775390625,
+        "wall_time_ms": 21645.911904983222,
+        "peak_allocated_gib": 11.118014812469482,
+        "peak_reserved_gib": 14.728515625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/039364a62c3418b8b743d4dd63962c25c148765983c7cb892260978a56612931.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_59",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 843500.5276973556,
+        "finish_time_ms": 865146.3030879806
+      },
+      {
+        "batch_index": 39,
+        "members": [
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_59",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          2111,
+          1237
+        ],
+        "padded_input_tokens": 2111,
+        "teacher_forced_output_tokens": [
+          62,
+          30
+        ],
+        "gpu_time_ms": 11465.9345703125,
+        "wall_time_ms": 11466.036867932416,
+        "peak_allocated_gib": 11.43786096572876,
+        "peak_reserved_gib": 15.28515625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_59",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 865146.3030879806,
+        "finish_time_ms": 876612.2376582931
+      },
+      {
+        "batch_index": 40,
+        "members": [
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_59",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_71",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          2261,
+          1350,
+          1042
+        ],
+        "padded_input_tokens": 2261,
+        "teacher_forced_output_tokens": [
+          39,
+          27,
+          128
+        ],
+        "gpu_time_ms": 22937.734375,
+        "wall_time_ms": 22937.90382798761,
+        "peak_allocated_gib": 15.528031349182129,
+        "peak_reserved_gib": 21.42578125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_59",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_71",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 876612.2376582931,
+        "finish_time_ms": 899549.9720332931
+      },
+      {
+        "batch_index": 41,
+        "members": [
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_59",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_71",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          2489,
+          1444,
+          1200
+        ],
+        "padded_input_tokens": 2489,
+        "teacher_forced_output_tokens": [
+          37,
+          24,
+          36
+        ],
+        "gpu_time_ms": 8999.501953125,
+        "wall_time_ms": 8999.601764022373,
+        "peak_allocated_gib": 16.40544891357422,
+        "peak_reserved_gib": 23.126953125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_59",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_71",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 899549.9720332931,
+        "finish_time_ms": 908549.4739864181
+      },
+      {
+        "batch_index": 42,
+        "members": [
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 5
+          },
+          {
+            "program_id": "multi_turn_base_59",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_71",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1551,
+          2699,
+          1668,
+          1269
+        ],
+        "padded_input_tokens": 2699,
+        "teacher_forced_output_tokens": [
+          128,
+          52,
+          37,
+          29
+        ],
+        "gpu_time_ms": 26646.3359375,
+        "wall_time_ms": 26646.86598908156,
+        "peak_allocated_gib": 21.623097896575928,
+        "peak_reserved_gib": 30.798828125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_188",
+            "turn_id": 5
+          },
+          {
+            "program_id": "multi_turn_base_59",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_71",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 908549.4739864181,
+        "finish_time_ms": 935195.8099239181
+      },
+      {
+        "batch_index": 43,
+        "members": [
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_71",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1658,
+          1340
+        ],
+        "padded_input_tokens": 1658,
+        "teacher_forced_output_tokens": [
+          26,
+          24
+        ],
+        "gpu_time_ms": 6275.1220703125,
+        "wall_time_ms": 6275.202447082847,
+        "peak_allocated_gib": 10.049542427062988,
+        "peak_reserved_gib": 12.99609375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_71",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 935195.8099239181,
+        "finish_time_ms": 941470.9319942306
+      },
+      {
+        "batch_index": 44,
+        "members": [
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_71",
+            "turn_id": 4
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1793,
+          1533
+        ],
+        "padded_input_tokens": 1793,
+        "teacher_forced_output_tokens": [
+          45,
+          30
+        ],
+        "gpu_time_ms": 8344.783203125,
+        "wall_time_ms": 8344.87839997746,
+        "peak_allocated_gib": 10.46049165725708,
+        "peak_reserved_gib": 13.962890625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_71",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 2
+          }
+        ],
+        "start_time_ms": 941470.9319942306,
+        "finish_time_ms": 949815.7151973556
+      },
+      {
+        "batch_index": 45,
+        "members": [
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_48",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_56",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          1929,
+          1371,
+          777
+        ],
+        "padded_input_tokens": 1929,
+        "teacher_forced_output_tokens": [
+          31,
+          128,
+          128
+        ],
+        "gpu_time_ms": 23289.814453125,
+        "wall_time_ms": 23289.987204014324,
+        "peak_allocated_gib": 14.060198307037354,
+        "peak_reserved_gib": 19.2265625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_48",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_56",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 949815.7151973556,
+        "finish_time_ms": 973105.5296504806
+      },
+      {
+        "batch_index": 46,
+        "members": [
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_48",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_56",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          2057,
+          1479,
+          926
+        ],
+        "padded_input_tokens": 2057,
+        "teacher_forced_output_tokens": [
+          29,
+          128,
+          29
+        ],
+        "gpu_time_ms": 22778.701171875,
+        "wall_time_ms": 22778.866527951322,
+        "peak_allocated_gib": 14.657774448394775,
+        "peak_reserved_gib": 20.173828125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_48",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_56",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 973105.5296504806,
+        "finish_time_ms": 995884.2308223556
+      },
+      {
+        "batch_index": 47,
+        "members": [
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 5
+          },
+          {
+            "program_id": "multi_turn_base_48",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_56",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          2153,
+          1625,
+          1027
+        ],
+        "padded_input_tokens": 2153,
+        "teacher_forced_output_tokens": [
+          21,
+          128,
+          30
+        ],
+        "gpu_time_ms": 23192.232421875,
+        "wall_time_ms": 23192.395707941614,
+        "peak_allocated_gib": 15.04971981048584,
+        "peak_reserved_gib": 20.521484375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 5
+          },
+          {
+            "program_id": "multi_turn_base_48",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_56",
+            "turn_id": 2
+          }
+        ],
+        "start_time_ms": 995884.2308223556,
+        "finish_time_ms": 1019076.4632442306
+      },
+      {
+        "batch_index": 48,
+        "members": [
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 6
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          2297
+        ],
+        "padded_input_tokens": 2297,
+        "teacher_forced_output_tokens": [
+          57
+        ],
+        "gpu_time_ms": 9424.9921875,
+        "wall_time_ms": 9425.084469025023,
+        "peak_allocated_gib": 8.485916137695312,
+        "peak_reserved_gib": 10.791015625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_109",
+            "turn_id": 6
+          }
+        ],
+        "start_time_ms": 1019076.4632442306,
+        "finish_time_ms": 1028501.4554317306
+      },
+      {
+        "batch_index": 49,
+        "members": [
+          {
+            "program_id": "multi_turn_base_136",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1327
+        ],
+        "padded_input_tokens": 1327,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 19362.5546875,
+        "wall_time_ms": 19362.69533401355,
+        "peak_allocated_gib": 7.121890068054199,
+        "peak_reserved_gib": 7.85546875,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_136",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1061349.8515441031,
+        "finish_time_ms": 1080712.4062316031
+      },
+      {
+        "batch_index": 50,
+        "members": [
+          {
+            "program_id": "multi_turn_base_136",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1534
+        ],
+        "padded_input_tokens": 1534,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 18718.9765625,
+        "wall_time_ms": 18719.101638998836,
+        "peak_allocated_gib": 7.444817543029785,
+        "peak_reserved_gib": 8.162109375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_136",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 1080712.4062316031,
+        "finish_time_ms": 1099431.3827941031
+      },
+      {
+        "batch_index": 51,
+        "members": [
+          {
+            "program_id": "multi_turn_base_136",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1660
+        ],
+        "padded_input_tokens": 1660,
+        "teacher_forced_output_tokens": [
+          29
+        ],
+        "gpu_time_ms": 4795.125,
+        "wall_time_ms": 4795.189448050223,
+        "peak_allocated_gib": 7.514228820800781,
+        "peak_reserved_gib": 8.990234375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_136",
+            "turn_id": 2
+          }
+        ],
+        "start_time_ms": 1099431.3827941031,
+        "finish_time_ms": 1104226.5077941031
+      },
+      {
+        "batch_index": 52,
+        "members": [
+          {
+            "program_id": "multi_turn_base_136",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1760
+        ],
+        "padded_input_tokens": 1760,
+        "teacher_forced_output_tokens": [
+          21
+        ],
+        "gpu_time_ms": 3470.43310546875,
+        "wall_time_ms": 3470.4930569278076,
+        "peak_allocated_gib": 7.6665449142456055,
+        "peak_reserved_gib": 9.634765625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/32e2613735c0898544d793bca054ade0a1a284717d1f4ce827fd3fb9e9fcc0b9.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_136",
+            "turn_id": 3
+          }
+        ],
+        "start_time_ms": 1104226.5077941031,
+        "finish_time_ms": 1107696.9408995719
+      },
+      {
+        "batch_index": 53,
+        "members": [
+          {
+            "program_id": "multi_turn_base_92",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1191
+        ],
+        "padded_input_tokens": 1191,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 18437.5625,
+        "wall_time_ms": 18437.693889951333,
+        "peak_allocated_gib": 6.919142723083496,
+        "peak_reserved_gib": 7.625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/0b8eaa240ff6d319d26766d08215abad5fd92c7161fcd25406309ccb43e3343b.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_92",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1110944.9549207164,
+        "finish_time_ms": 1129382.5174207164
+      },
+      {
+        "batch_index": 54,
+        "members": [
+          {
+            "program_id": "multi_turn_base_92",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1289
+        ],
+        "padded_input_tokens": 1289,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 18546.654296875,
+        "wall_time_ms": 18546.788410050794,
+        "peak_allocated_gib": 7.068446159362793,
+        "peak_reserved_gib": 8.220703125,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/239f76748148eb733c00075a399fb7118dc1fa7fb722e24b1194cd892148785d.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_92",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 1129382.5174207164,
+        "finish_time_ms": 1147929.1717175914
+      },
+      {
+        "batch_index": 55,
+        "members": [
+          {
+            "program_id": "multi_turn_base_92",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1362
+        ],
+        "padded_input_tokens": 1362,
+        "teacher_forced_output_tokens": [
+          29
+        ],
+        "gpu_time_ms": 4422.1396484375,
+        "wall_time_ms": 4422.208659001626,
+        "peak_allocated_gib": 7.0631537437438965,
+        "peak_reserved_gib": 7.853515625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/b944a7d96867e270b896907e06e0d0d43cc321ab814cf86b12e7644a6009ec2c.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_92",
+            "turn_id": 2
+          }
+        ],
+        "start_time_ms": 1147929.1717175914,
+        "finish_time_ms": 1152351.3113660289
+      },
+      {
+        "batch_index": 56,
+        "members": [
+          {
+            "program_id": "multi_turn_base_92",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1456
+        ],
+        "padded_input_tokens": 1456,
+        "teacher_forced_output_tokens": [
+          24
+        ],
+        "gpu_time_ms": 3899.00341796875,
+        "wall_time_ms": 3899.0655350498855,
+        "peak_allocated_gib": 7.205541133880615,
+        "peak_reserved_gib": 8.59765625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/b64f5bcdb78fb9a4a17c28d16c38a745b2acfd5e9c5810ff3bb2ddd7a5e4c997.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_92",
+            "turn_id": 3
+          }
+        ],
+        "start_time_ms": 1152351.3113660289,
+        "finish_time_ms": 1156250.3147839976
+      },
+      {
+        "batch_index": 57,
+        "members": [
+          {
+            "program_id": "multi_turn_base_92",
+            "turn_id": 4
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1670
+        ],
+        "padded_input_tokens": 1670,
+        "teacher_forced_output_tokens": [
+          33
+        ],
+        "gpu_time_ms": 5137.45703125,
+        "wall_time_ms": 5137.52755895257,
+        "peak_allocated_gib": 7.531858444213867,
+        "peak_reserved_gib": 8.990234375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/9bbed839528e0505711f9d87103283d6f51697cf8fe9f32210387fa08d952751.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_92",
+            "turn_id": 4
+          }
+        ],
+        "start_time_ms": 1156250.3147839976,
+        "finish_time_ms": 1161387.7718152476
+      },
+      {
+        "batch_index": 58,
+        "members": [
+          {
+            "program_id": "multi_turn_base_193",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1582
+        ],
+        "padded_input_tokens": 1582,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 18643.86328125,
+        "wall_time_ms": 18643.990552052855,
+        "peak_allocated_gib": 7.496596336364746,
+        "peak_reserved_gib": 8.990234375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/e1c6200350dc4745be6a6f6fcf86c5161f37b91b40137d46b31025e93896fe4e.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_193",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1161510.665854081,
+        "finish_time_ms": 1180154.529135331
+      },
+      {
+        "batch_index": 59,
+        "members": [
+          {
+            "program_id": "multi_turn_base_193",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_197",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1816,
+          2131
+        ],
+        "padded_input_tokens": 2131,
+        "teacher_forced_output_tokens": [
+          128,
+          128
+        ],
+        "gpu_time_ms": 21419.751953125,
+        "wall_time_ms": 21419.890986057,
+        "peak_allocated_gib": 11.655576229095459,
+        "peak_reserved_gib": 15.28515625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/a4f9c9ade01762446db52933dd9490150e0235e1de24bf838219f2990d4942dc.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_193",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_197",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1180154.529135331,
+        "finish_time_ms": 1201574.281088456
+      },
+      {
+        "batch_index": 60,
+        "members": [
+          {
+            "program_id": "multi_turn_base_193",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_197",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1987,
+          2395
+        ],
+        "padded_input_tokens": 2395,
+        "teacher_forced_output_tokens": [
+          43,
+          128
+        ],
+        "gpu_time_ms": 22736.21484375,
+        "wall_time_ms": 22736.35843594093,
+        "peak_allocated_gib": 12.42817497253418,
+        "peak_reserved_gib": 16.578125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_193",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_197",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 1201574.281088456,
+        "finish_time_ms": 1224310.495932206
+      },
+      {
+        "batch_index": 61,
+        "members": [
+          {
+            "program_id": "multi_turn_base_193",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_197",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_72",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 3,
+        "unpadded_input_tokens": [
+          2139,
+          2597,
+          1875
+        ],
+        "padded_input_tokens": 2597,
+        "teacher_forced_output_tokens": [
+          56,
+          62,
+          128
+        ],
+        "gpu_time_ms": 23547.419921875,
+        "wall_time_ms": 23547.569521935657,
+        "peak_allocated_gib": 17.01719856262207,
+        "peak_reserved_gib": 23.681640625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_193",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_197",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_72",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1224310.495932206,
+        "finish_time_ms": 1247857.915854081
+      },
+      {
+        "batch_index": 62,
+        "members": [
+          {
+            "program_id": "multi_turn_base_72",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          1956
+        ],
+        "padded_input_tokens": 1956,
+        "teacher_forced_output_tokens": [
+          32
+        ],
+        "gpu_time_ms": 5268.404296875,
+        "wall_time_ms": 5268.472007010132,
+        "peak_allocated_gib": 7.969931125640869,
+        "peak_reserved_gib": 10.02734375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_72",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 1247857.915854081,
+        "finish_time_ms": 1253126.320150956
+      },
+      {
+        "batch_index": 63,
+        "members": [
+          {
+            "program_id": "multi_turn_base_72",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          2147
+        ],
+        "padded_input_tokens": 2147,
+        "teacher_forced_output_tokens": [
+          20
+        ],
+        "gpu_time_ms": 3581.02783203125,
+        "wall_time_ms": 3581.089581013657,
+        "peak_allocated_gib": 8.259398460388184,
+        "peak_reserved_gib": 10.412109375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_72",
+            "turn_id": 2
+          }
+        ],
+        "start_time_ms": 1253126.320150956,
+        "finish_time_ms": 1256707.3479829873
+      },
+      {
+        "batch_index": 64,
+        "members": [
+          {
+            "program_id": "multi_turn_base_72",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          2307
+        ],
+        "padded_input_tokens": 2307,
+        "teacher_forced_output_tokens": [
+          37
+        ],
+        "gpu_time_ms": 6033.4287109375,
+        "wall_time_ms": 6033.501571975648,
+        "peak_allocated_gib": 8.501033306121826,
+        "peak_reserved_gib": 10.7734375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_72",
+            "turn_id": 3
+          }
+        ],
+        "start_time_ms": 1256707.3479829873,
+        "finish_time_ms": 1262740.7766939248
+      },
+      {
+        "batch_index": 65,
+        "members": [
+          {
+            "program_id": "multi_turn_base_105",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_72",
+            "turn_id": 4
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          528,
+          2483
+        ],
+        "padded_input_tokens": 2483,
+        "teacher_forced_output_tokens": [
+          128,
+          29
+        ],
+        "gpu_time_ms": 22072.3359375,
+        "wall_time_ms": 22072.470391984098,
+        "peak_allocated_gib": 12.664143085479736,
+        "peak_reserved_gib": 16.966796875,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_72",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_105",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1262740.7766939248,
+        "finish_time_ms": 1284813.1126314248
+      },
+      {
+        "batch_index": 66,
+        "members": [
+          {
+            "program_id": "multi_turn_base_105",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          672
+        ],
+        "padded_input_tokens": 672,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 19157.86328125,
+        "wall_time_ms": 19157.986736041494,
+        "peak_allocated_gib": 6.157515525817871,
+        "peak_reserved_gib": 6.400390625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_105",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 1284813.1126314248,
+        "finish_time_ms": 1303970.9759126748
+      },
+      {
+        "batch_index": 67,
+        "members": [
+          {
+            "program_id": "multi_turn_base_89",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          917
+        ],
+        "padded_input_tokens": 917,
+        "teacher_forced_output_tokens": [
+          128
+        ],
+        "gpu_time_ms": 18509.580078125,
+        "wall_time_ms": 18509.71249199938,
+        "peak_allocated_gib": 6.514845848083496,
+        "peak_reserved_gib": 6.927734375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/8bbeaa8e29409b8ad6d741debcf865d203c206a71b8bb551ac991250fdde239f.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_89",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1312819.1581110423,
+        "finish_time_ms": 1331328.7381891673
+      },
+      {
+        "batch_index": 68,
+        "members": [
+          {
+            "program_id": "multi_turn_base_24",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_89",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1272,
+          1076
+        ],
+        "padded_input_tokens": 1272,
+        "teacher_forced_output_tokens": [
+          128,
+          36
+        ],
+        "gpu_time_ms": 21334.90625,
+        "wall_time_ms": 21335.038283956237,
+        "peak_allocated_gib": 9.098661422729492,
+        "peak_reserved_gib": 11.158203125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_89",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_24",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1331328.7381891673,
+        "finish_time_ms": 1352663.6444391673
+      },
+      {
+        "batch_index": 69,
+        "members": [
+          {
+            "program_id": "multi_turn_base_3",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_74",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          737,
+          1307,
+          2151,
+          695
+        ],
+        "padded_input_tokens": 2151,
+        "teacher_forced_output_tokens": [
+          128,
+          128,
+          128,
+          128
+        ],
+        "gpu_time_ms": 23478.74609375,
+        "wall_time_ms": 23478.872454026714,
+        "peak_allocated_gib": 18.39616298675537,
+        "peak_reserved_gib": 25.732421875,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_89",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_24",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_3",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_74",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1352663.6444391673,
+        "finish_time_ms": 1376142.3905329173
+      },
+      {
+        "batch_index": 70,
+        "members": [
+          {
+            "program_id": "multi_turn_base_158",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_24",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_85",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_89",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1240,
+          1385,
+          1070,
+          1174
+        ],
+        "padded_input_tokens": 1385,
+        "teacher_forced_output_tokens": [
+          128,
+          128,
+          128,
+          29
+        ],
+        "gpu_time_ms": 24356.009765625,
+        "wall_time_ms": 24356.14640498534,
+        "peak_allocated_gib": 13.883617401123047,
+        "peak_reserved_gib": 18.302734375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_89",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_24",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_3",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_74",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_85",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_158",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1376142.3905329173,
+        "finish_time_ms": 1400498.4002985423
+      },
+      {
+        "batch_index": 71,
+        "members": [
+          {
+            "program_id": "multi_turn_base_3",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_74",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          866,
+          1373,
+          2352,
+          834
+        ],
+        "padded_input_tokens": 2352,
+        "teacher_forced_output_tokens": [
+          50,
+          128,
+          20,
+          24
+        ],
+        "gpu_time_ms": 26351.28515625,
+        "wall_time_ms": 26351.42940899823,
+        "peak_allocated_gib": 19.579261779785156,
+        "peak_reserved_gib": 27.548828125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_89",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_24",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_3",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_74",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_85",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_158",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 1400498.4002985423,
+        "finish_time_ms": 1426849.6854547923
+      },
+      {
+        "batch_index": 72,
+        "members": [
+          {
+            "program_id": "multi_turn_base_158",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_24",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_85",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_89",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1443,
+          1580,
+          1252,
+          1251
+        ],
+        "padded_input_tokens": 1580,
+        "teacher_forced_output_tokens": [
+          71,
+          32,
+          39,
+          24
+        ],
+        "gpu_time_ms": 15379.69140625,
+        "wall_time_ms": 15379.793469095603,
+        "peak_allocated_gib": 14.713761806488037,
+        "peak_reserved_gib": 20.16015625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_89",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_24",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_85",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_158",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_152",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1426849.6854547923,
+        "finish_time_ms": 1442229.3768610423
+      },
+      {
+        "batch_index": 73,
+        "members": [
+          {
+            "program_id": "multi_turn_base_152",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 2
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1754,
+          1919,
+          1483,
+          2517
+        ],
+        "padded_input_tokens": 2517,
+        "teacher_forced_output_tokens": [
+          128,
+          128,
+          30,
+          31
+        ],
+        "gpu_time_ms": 26953.09375,
+        "wall_time_ms": 26953.79671896808,
+        "peak_allocated_gib": 20.5511155128479,
+        "peak_reserved_gib": 29.294921875,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_24",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_158",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_152",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_75",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1442229.3768610423,
+        "finish_time_ms": 1469182.4706110423
+      },
+      {
+        "batch_index": 74,
+        "members": [
+          {
+            "program_id": "multi_turn_base_158",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_23",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_24",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_75",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1678,
+          1067,
+          1708,
+          1351
+        ],
+        "padded_input_tokens": 1708,
+        "teacher_forced_output_tokens": [
+          42,
+          128,
+          40,
+          128
+        ],
+        "gpu_time_ms": 23180.66796875,
+        "wall_time_ms": 23180.81423593685,
+        "peak_allocated_gib": 15.786092281341553,
+        "peak_reserved_gib": 21.470703125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_24",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_158",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_152",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_75",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_23",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1469182.4706110423,
+        "finish_time_ms": 1492363.1385797923
+      },
+      {
+        "batch_index": 75,
+        "members": [
+          {
+            "program_id": "multi_turn_base_152",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1996,
+          2154,
+          1607,
+          2644
+        ],
+        "padded_input_tokens": 2644,
+        "teacher_forced_output_tokens": [
+          128,
+          128,
+          35,
+          27
+        ],
+        "gpu_time_ms": 26229.66015625,
+        "wall_time_ms": 26229.926344007254,
+        "peak_allocated_gib": 21.299147605895996,
+        "peak_reserved_gib": 30.25390625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_152",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_75",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_23",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_83",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1492363.1385797923,
+        "finish_time_ms": 1518592.7987360423
+      },
+      {
+        "batch_index": 76,
+        "members": [
+          {
+            "program_id": "multi_turn_base_23",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_42",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_75",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_83",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1161,
+          1239,
+          1500,
+          867
+        ],
+        "padded_input_tokens": 1500,
+        "teacher_forced_output_tokens": [
+          21,
+          128,
+          128,
+          128
+        ],
+        "gpu_time_ms": 22170.697265625,
+        "wall_time_ms": 22170.838152989745,
+        "peak_allocated_gib": 14.56096887588501,
+        "peak_reserved_gib": 19.61328125,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_152",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_75",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_23",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_83",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_42",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_147",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1518592.7987360423,
+        "finish_time_ms": 1540763.4960016673
+      },
+      {
+        "batch_index": 77,
+        "members": [
+          {
+            "program_id": "multi_turn_base_147",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_152",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 4
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          973,
+          2129,
+          2327,
+          1716
+        ],
+        "padded_input_tokens": 2327,
+        "teacher_forced_output_tokens": [
+          128,
+          54,
+          71,
+          128
+        ],
+        "gpu_time_ms": 24256.751953125,
+        "wall_time_ms": 24257.46324309148,
+        "peak_allocated_gib": 19.4320125579834,
+        "peak_reserved_gib": 27.21484375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_33",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_152",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_75",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_23",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_83",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_42",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_147",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1540763.4960016673,
+        "finish_time_ms": 1565020.2479547923
+      },
+      {
+        "batch_index": 78,
+        "members": [
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_23",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_42",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 4
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1469,
+          1264,
+          1315,
+          2763
+        ],
+        "padded_input_tokens": 2763,
+        "teacher_forced_output_tokens": [
+          128,
+          32,
+          40,
+          27
+        ],
+        "gpu_time_ms": 27095.25390625,
+        "wall_time_ms": 27095.972103066742,
+        "peak_allocated_gib": 22.00005865097046,
+        "peak_reserved_gib": 31.568359375,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_60",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_75",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_23",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_83",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_42",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_147",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 0
+          },
+          {
+            "program_id": "multi_turn_base_91",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1565020.2479547923,
+        "finish_time_ms": 1592115.5018610423
+      },
+      {
+        "batch_index": 79,
+        "members": [
+          {
+            "program_id": "multi_turn_base_147",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_75",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_83",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_91",
+            "turn_id": 0
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1263,
+          1782,
+          1000,
+          395
+        ],
+        "padded_input_tokens": 1782,
+        "teacher_forced_output_tokens": [
+          128,
+          24,
+          24,
+          128
+        ],
+        "gpu_time_ms": 23187.828125,
+        "wall_time_ms": 23187.978423084132,
+        "peak_allocated_gib": 16.221953868865967,
+        "peak_reserved_gib": 22.228515625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_75",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_83",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_42",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_147",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_91",
+            "turn_id": 0
+          }
+        ],
+        "start_time_ms": 1592115.5018610423,
+        "finish_time_ms": 1615303.3299860423
+      },
+      {
+        "batch_index": 80,
+        "members": [
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_42",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_75",
+            "turn_id": 3
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1577,
+          2463,
+          1400,
+          1877
+        ],
+        "padded_input_tokens": 2463,
+        "teacher_forced_output_tokens": [
+          128,
+          56,
+          128,
+          40
+        ],
+        "gpu_time_ms": 25131.62890625,
+        "wall_time_ms": 25131.937123951502,
+        "peak_allocated_gib": 20.23305368423462,
+        "peak_reserved_gib": 28.529296875,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_75",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_83",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_42",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 1
+          },
+          {
+            "program_id": "multi_turn_base_91",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 1615303.3299860423,
+        "finish_time_ms": 1640434.9588922923
+      },
+      {
+        "batch_index": 81,
+        "members": [
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_83",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_91",
+            "turn_id": 1
+          }
+        ],
+        "batch_size": 4,
+        "unpadded_input_tokens": [
+          1806,
+          2651,
+          1206,
+          544
+        ],
+        "padded_input_tokens": 2651,
+        "teacher_forced_output_tokens": [
+          128,
+          44,
+          21,
+          128
+        ],
+        "gpu_time_ms": 26762.841796875,
+        "wall_time_ms": 26763.386874925345,
+        "peak_allocated_gib": 21.34037685394287,
+        "peak_reserved_gib": 30.25390625,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 4
+          },
+          {
+            "program_id": "multi_turn_base_83",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 2
+          },
+          {
+            "program_id": "multi_turn_base_91",
+            "turn_id": 1
+          }
+        ],
+        "start_time_ms": 1640434.9588922923,
+        "finish_time_ms": 1667197.8006891673
+      },
+      {
+        "batch_index": 82,
+        "members": [
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 3
+          },
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 5
+          }
+        ],
+        "batch_size": 2,
+        "unpadded_input_tokens": [
+          1946,
+          2770
+        ],
+        "padded_input_tokens": 2770,
+        "teacher_forced_output_tokens": [
+          29,
+          42
+        ],
+        "gpu_time_ms": 9006.103515625,
+        "wall_time_ms": 9006.190125946887,
+        "peak_allocated_gib": 13.458874225616455,
+        "peak_reserved_gib": 18.3046875,
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_194",
+            "turn_id": 5
+          },
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 3
+          }
+        ],
+        "start_time_ms": 1667197.8006891673,
+        "finish_time_ms": 1676203.9042047923
+      },
+      {
+        "batch_index": 83,
+        "members": [
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 4
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          2052
+        ],
+        "padded_input_tokens": 2052,
+        "teacher_forced_output_tokens": [
+          21
+        ],
+        "gpu_time_ms": 3722.23583984375,
+        "wall_time_ms": 3722.3006800049916,
+        "peak_allocated_gib": 8.111557960510254,
+        "peak_reserved_gib": 10.412109375,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/42f86385a2b3f96cf8d265df0cd5849d93f5ee9f45d4a7dcc8c03ccf30670c06.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 4
+          }
+        ],
+        "start_time_ms": 1676203.9042047923,
+        "finish_time_ms": 1679926.140044636
+      },
+      {
+        "batch_index": 84,
+        "members": [
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 5
+          }
+        ],
+        "batch_size": 1,
+        "unpadded_input_tokens": [
+          2242
+        ],
+        "padded_input_tokens": 2242,
+        "teacher_forced_output_tokens": [
+          91
+        ],
+        "gpu_time_ms": 13742.65234375,
+        "wall_time_ms": 13742.757300031371,
+        "peak_allocated_gib": 8.411430358886719,
+        "peak_reserved_gib": 10.791015625,
+        "reused_measurement_from": "/root/loopaware-agent/results/program_scheduling/shared_gpu_measurements/cb43a8551813d0655553922ded0d3793b2f6366c0dbacb3cf624d95b7855f478.json",
+        "ready_candidates": [
+          {
+            "program_id": "multi_turn_base_110",
+            "turn_id": 5
+          }
+        ],
+        "start_time_ms": 1679926.140044636,
+        "finish_time_ms": 1693668.792388386
+      }
+    ]
+  },
+  "shared_gpu_verification": {
+    "verified": true,
+    "execution_model": "one_shared_static_gpu_batch",
+    "maximum_overlapping_gpu_batches": 1,
+    "configured_batch_size": 4,
+    "observed_maximum_batch_size": 4,
+    "batches_checked": 85
+  }
+}

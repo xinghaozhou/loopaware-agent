@@ -1,0 +1,331 @@
+{
+  "kind": "poisson_initial_program_arrivals",
+  "load": "MEDIUM",
+  "offered_load": 0.65,
+  "seed": 2026102702,
+  "rng": "python_random.Random.expovariate",
+  "capacity_programs_per_second": 0.053567949727760834,
+  "lambda_programs_per_second": 0.03481916732304454,
+  "programs": [
+    {
+      "program_id": "multi_turn_base_29",
+      "inter_arrival_ms": 0.0,
+      "arrival_time_ms": 0.0
+    },
+    {
+      "program_id": "multi_turn_base_58",
+      "inter_arrival_ms": 17419.948509120826,
+      "arrival_time_ms": 17419.948509120826
+    },
+    {
+      "program_id": "multi_turn_base_172",
+      "inter_arrival_ms": 6174.152773247819,
+      "arrival_time_ms": 23594.101282368647
+    },
+    {
+      "program_id": "multi_turn_base_34",
+      "inter_arrival_ms": 29217.59855685178,
+      "arrival_time_ms": 52811.699839220426
+    },
+    {
+      "program_id": "multi_turn_base_124",
+      "inter_arrival_ms": 15691.973558826852,
+      "arrival_time_ms": 68503.67339804728
+    },
+    {
+      "program_id": "multi_turn_base_103",
+      "inter_arrival_ms": 52642.99916557059,
+      "arrival_time_ms": 121146.67256361787
+    },
+    {
+      "program_id": "multi_turn_base_138",
+      "inter_arrival_ms": 46351.71728355972,
+      "arrival_time_ms": 167498.3898471776
+    },
+    {
+      "program_id": "multi_turn_base_22",
+      "inter_arrival_ms": 4976.139851608488,
+      "arrival_time_ms": 172474.5296987861
+    },
+    {
+      "program_id": "multi_turn_base_2",
+      "inter_arrival_ms": 24419.37034469562,
+      "arrival_time_ms": 196893.90004348173
+    },
+    {
+      "program_id": "multi_turn_base_102",
+      "inter_arrival_ms": 7064.611482637684,
+      "arrival_time_ms": 203958.5115261194
+    },
+    {
+      "program_id": "multi_turn_base_148",
+      "inter_arrival_ms": 2949.8706987327023,
+      "arrival_time_ms": 206908.3822248521
+    },
+    {
+      "program_id": "multi_turn_base_90",
+      "inter_arrival_ms": 51749.629480277334,
+      "arrival_time_ms": 258658.01170512944
+    },
+    {
+      "program_id": "multi_turn_base_84",
+      "inter_arrival_ms": 57941.11933475323,
+      "arrival_time_ms": 316599.13103988266
+    },
+    {
+      "program_id": "multi_turn_base_87",
+      "inter_arrival_ms": 1889.266223542634,
+      "arrival_time_ms": 318488.3972634253
+    },
+    {
+      "program_id": "multi_turn_base_49",
+      "inter_arrival_ms": 6537.143437016933,
+      "arrival_time_ms": 325025.5407004422
+    },
+    {
+      "program_id": "multi_turn_base_165",
+      "inter_arrival_ms": 20267.544138960042,
+      "arrival_time_ms": 345293.08483940223
+    },
+    {
+      "program_id": "multi_turn_base_43",
+      "inter_arrival_ms": 43468.179579506694,
+      "arrival_time_ms": 388761.2644189089
+    },
+    {
+      "program_id": "multi_turn_base_13",
+      "inter_arrival_ms": 2966.614004971068,
+      "arrival_time_ms": 391727.87842387997
+    },
+    {
+      "program_id": "multi_turn_base_37",
+      "inter_arrival_ms": 12765.505052295492,
+      "arrival_time_ms": 404493.3834761755
+    },
+    {
+      "program_id": "multi_turn_base_53",
+      "inter_arrival_ms": 16521.22903888841,
+      "arrival_time_ms": 421014.6125150639
+    },
+    {
+      "program_id": "multi_turn_base_168",
+      "inter_arrival_ms": 5925.121371450981,
+      "arrival_time_ms": 426939.7338865149
+    },
+    {
+      "program_id": "multi_turn_base_196",
+      "inter_arrival_ms": 15719.936201303814,
+      "arrival_time_ms": 442659.6700878187
+    },
+    {
+      "program_id": "multi_turn_base_115",
+      "inter_arrival_ms": 16625.026900036886,
+      "arrival_time_ms": 459284.6969878556
+    },
+    {
+      "program_id": "multi_turn_base_27",
+      "inter_arrival_ms": 48776.96833040649,
+      "arrival_time_ms": 508061.66531826206
+    },
+    {
+      "program_id": "multi_turn_base_64",
+      "inter_arrival_ms": 12160.651998517174,
+      "arrival_time_ms": 520222.3173167792
+    },
+    {
+      "program_id": "multi_turn_base_7",
+      "inter_arrival_ms": 60335.22673638737,
+      "arrival_time_ms": 580557.5440531666
+    },
+    {
+      "program_id": "multi_turn_base_8",
+      "inter_arrival_ms": 1646.9989134109073,
+      "arrival_time_ms": 582204.5429665776
+    },
+    {
+      "program_id": "multi_turn_base_139",
+      "inter_arrival_ms": 8910.070286393344,
+      "arrival_time_ms": 591114.613252971
+    },
+    {
+      "program_id": "multi_turn_base_118",
+      "inter_arrival_ms": 6424.363309851915,
+      "arrival_time_ms": 597538.9765628229
+    },
+    {
+      "program_id": "multi_turn_base_187",
+      "inter_arrival_ms": 64548.925302083546,
+      "arrival_time_ms": 662087.9018649065
+    },
+    {
+      "program_id": "multi_turn_base_155",
+      "inter_arrival_ms": 27733.0614841556,
+      "arrival_time_ms": 689820.9633490621
+    },
+    {
+      "program_id": "multi_turn_base_11",
+      "inter_arrival_ms": 2603.8379561930446,
+      "arrival_time_ms": 692424.8013052552
+    },
+    {
+      "program_id": "multi_turn_base_21",
+      "inter_arrival_ms": 22822.704970172093,
+      "arrival_time_ms": 715247.5062754273
+    },
+    {
+      "program_id": "multi_turn_base_121",
+      "inter_arrival_ms": 11591.009375401873,
+      "arrival_time_ms": 726838.5156508292
+    },
+    {
+      "program_id": "multi_turn_base_65",
+      "inter_arrival_ms": 17784.14694850289,
+      "arrival_time_ms": 744622.662599332
+    },
+    {
+      "program_id": "multi_turn_base_188",
+      "inter_arrival_ms": 80235.69908239854,
+      "arrival_time_ms": 824858.3616817306
+    },
+    {
+      "program_id": "multi_turn_base_59",
+      "inter_arrival_ms": 3854.00173260458,
+      "arrival_time_ms": 828712.3634143352
+    },
+    {
+      "program_id": "multi_turn_base_71",
+      "inter_arrival_ms": 37809.288096836244,
+      "arrival_time_ms": 866521.6515111714
+    },
+    {
+      "program_id": "multi_turn_base_109",
+      "inter_arrival_ms": 38576.27397908742,
+      "arrival_time_ms": 905097.9254902587
+    },
+    {
+      "program_id": "multi_turn_base_48",
+      "inter_arrival_ms": 41708.109501613915,
+      "arrival_time_ms": 946806.0349918726
+    },
+    {
+      "program_id": "multi_turn_base_56",
+      "inter_arrival_ms": 409.74925421103893,
+      "arrival_time_ms": 947215.7842460837
+    },
+    {
+      "program_id": "multi_turn_base_136",
+      "inter_arrival_ms": 114134.06729801951,
+      "arrival_time_ms": 1061349.8515441031
+    },
+    {
+      "program_id": "multi_turn_base_92",
+      "inter_arrival_ms": 49595.103376613304,
+      "arrival_time_ms": 1110944.9549207164
+    },
+    {
+      "program_id": "multi_turn_base_193",
+      "inter_arrival_ms": 50565.710933364724,
+      "arrival_time_ms": 1161510.665854081
+    },
+    {
+      "program_id": "multi_turn_base_197",
+      "inter_arrival_ms": 7740.386992520769,
+      "arrival_time_ms": 1169251.0528466017
+    },
+    {
+      "program_id": "multi_turn_base_72",
+      "inter_arrival_ms": 47022.222319166256,
+      "arrival_time_ms": 1216273.2751657679
+    },
+    {
+      "program_id": "multi_turn_base_105",
+      "inter_arrival_ms": 41384.81300333449,
+      "arrival_time_ms": 1257658.0881691023
+    },
+    {
+      "program_id": "multi_turn_base_89",
+      "inter_arrival_ms": 55161.069941940055,
+      "arrival_time_ms": 1312819.1581110423
+    },
+    {
+      "program_id": "multi_turn_base_24",
+      "inter_arrival_ms": 10676.89855159345,
+      "arrival_time_ms": 1323496.0566626359
+    },
+    {
+      "program_id": "multi_turn_base_3",
+      "inter_arrival_ms": 8674.51967943524,
+      "arrival_time_ms": 1332170.5763420712
+    },
+    {
+      "program_id": "multi_turn_base_33",
+      "inter_arrival_ms": 13862.498509822122,
+      "arrival_time_ms": 1346033.0748518934
+    },
+    {
+      "program_id": "multi_turn_base_60",
+      "inter_arrival_ms": 574.6114190453712,
+      "arrival_time_ms": 1346607.6862709387
+    },
+    {
+      "program_id": "multi_turn_base_74",
+      "inter_arrival_ms": 2637.2405828543606,
+      "arrival_time_ms": 1349244.926853793
+    },
+    {
+      "program_id": "multi_turn_base_85",
+      "inter_arrival_ms": 7284.136065076727,
+      "arrival_time_ms": 1356529.0629188698
+    },
+    {
+      "program_id": "multi_turn_base_158",
+      "inter_arrival_ms": 2796.418457376093,
+      "arrival_time_ms": 1359325.4813762459
+    },
+    {
+      "program_id": "multi_turn_base_152",
+      "inter_arrival_ms": 43088.782919629164,
+      "arrival_time_ms": 1402414.264295875
+    },
+    {
+      "program_id": "multi_turn_base_194",
+      "inter_arrival_ms": 34355.63112666064,
+      "arrival_time_ms": 1436769.8954225357
+    },
+    {
+      "program_id": "multi_turn_base_75",
+      "inter_arrival_ms": 1638.9505997379686,
+      "arrival_time_ms": 1438408.8460222736
+    },
+    {
+      "program_id": "multi_turn_base_23",
+      "inter_arrival_ms": 25066.95833837666,
+      "arrival_time_ms": 1463475.8043606502
+    },
+    {
+      "program_id": "multi_turn_base_83",
+      "inter_arrival_ms": 12710.129761413917,
+      "arrival_time_ms": 1476185.9341220642
+    },
+    {
+      "program_id": "multi_turn_base_42",
+      "inter_arrival_ms": 16880.39901892821,
+      "arrival_time_ms": 1493066.3331409923
+    },
+    {
+      "program_id": "multi_turn_base_147",
+      "inter_arrival_ms": 10489.517623109912,
+      "arrival_time_ms": 1503555.8507641023
+    },
+    {
+      "program_id": "multi_turn_base_110",
+      "inter_arrival_ms": 19802.460193775107,
+      "arrival_time_ms": 1523358.3109578774
+    },
+    {
+      "program_id": "multi_turn_base_91",
+      "inter_arrival_ms": 31626.883964290548,
+      "arrival_time_ms": 1554985.194922168
+    }
+  ]
+}
