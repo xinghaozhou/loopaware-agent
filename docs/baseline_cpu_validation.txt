@@ -1,0 +1,99 @@
+CPU baseline validation: 2026-10-29
+Python 3.12.16, torch 2.9.0+cpu, transformers 4.57.6
+CUDA/checkpoint evaluation not run; NVIDIA driver unavailable.
+
+$ PYTHONPATH=src uv run --no-project --python /tmp/loopaware-baseline-venv/bin/python python -m unittest discover -s tests -v
+test_final_exit_shared_policy_oracle (test_adaptive_kv.AdaptiveCachePolicyTest.test_final_exit_shared_policy_oracle) ... ok
+test_last_available_policy_oracle (test_adaptive_kv.AdaptiveCachePolicyTest.test_last_available_policy_oracle) ... ok
+test_last_available_supports_dynamic_microbatch_regrouping (test_adaptive_kv.AdaptiveCachePolicyTest.test_last_available_supports_dynamic_microbatch_regrouping) ... ok
+test_merge_adaptive_prefill_caches (test_adaptive_kv.AdaptiveCachePolicyTest.test_merge_adaptive_prefill_caches) ... ok
+test_policies_support_different_exit_depths_in_one_batch (test_adaptive_kv.AdaptiveCachePolicyTest.test_policies_support_different_exit_depths_in_one_batch) ... ok
+test_batched_threshold_exit_matches_run_all_reference (test_adaptive_kv.AdaptiveModelParityTest.test_batched_threshold_exit_matches_run_all_reference) ... ok
+test_full_per_depth_baseline_still_generates (test_adaptive_kv.AdaptiveModelParityTest.test_full_per_depth_baseline_still_generates) ... ok
+test_generate_uses_adaptive_cache (test_adaptive_kv.AdaptiveModelParityTest.test_generate_uses_adaptive_cache) ... ok
+test_physical_exit_matches_run_all_policy_reference (test_adaptive_kv.AdaptiveModelParityTest.test_physical_exit_matches_run_all_policy_reference) ... ok
+test_threshold_exit_matches_run_all_policy_reference (test_adaptive_kv.AdaptiveModelParityTest.test_threshold_exit_matches_run_all_policy_reference) ... ok
+test_threshold_one_last_available_matches_full_per_depth (test_adaptive_kv.AdaptiveModelParityTest.test_threshold_one_last_available_matches_full_per_depth) ... ok
+test_beam_expansion_updates_request_count (test_baseline_contract.BaselineContractTest.test_beam_expansion_updates_request_count) ... ok
+test_duplicate_frontier_request_is_rejected_without_losing_first_row (test_baseline_contract.BaselineContractTest.test_duplicate_frontier_request_is_rejected_without_losing_first_row) ... ok
+test_heterogeneous_padded_batch_matches_run_all_across_tokens (test_baseline_contract.BaselineContractTest.test_heterogeneous_padded_batch_matches_run_all_across_tokens) ... ok
+test_invalid_committed_depth_can_be_retried (test_baseline_contract.BaselineContractTest.test_invalid_committed_depth_can_be_retried) ... ok
+test_invalid_exit_does_not_leave_active_transaction (test_baseline_contract.BaselineContractTest.test_invalid_exit_does_not_leave_active_transaction) ... ok
+test_partial_frontier_cannot_be_reordered_or_decoded_as_full_batch (test_baseline_contract.BaselineContractTest.test_partial_frontier_cannot_be_reordered_or_decoded_as_full_batch) ... ok
+test_regrouped_model_matches_fixed_batch_over_multiple_frontiers (test_baseline_contract.BaselineContractTest.test_regrouped_model_matches_fixed_batch_over_multiple_frontiers) ... ok
+test_cost_uses_true_ut_not_prediction (test_ut_scheduling.UTSchedulingTest.test_cost_uses_true_ut_not_prediction) ... ok
+test_homogeneous_batching_uses_predicted_ut (test_ut_scheduling.UTSchedulingTest.test_homogeneous_batching_uses_predicted_ut) ... ok
+test_homogeneous_oracle_reduces_lockstep_waste (test_ut_scheduling.UTSchedulingTest.test_homogeneous_oracle_reduces_lockstep_waste) ... ok
+test_rejects_partial_batch (test_ut_scheduling.UTSchedulingTest.test_rejects_partial_batch) ... ok
+test_shortest_ut_first_orders_by_predicted_batch_depth (test_ut_scheduling.UTSchedulingTest.test_shortest_ut_first_orders_by_predicted_batch_depth) ... ok
+test_rejects_token_and_forward_count_mismatch (test_ut_trace.OuroUTTracerTest.test_rejects_token_and_forward_count_mismatch) ... ok
+test_run_all_trace_uses_authoritative_forced_exit (test_ut_trace.OuroUTTracerTest.test_run_all_trace_uses_authoritative_forced_exit) ... ok
+test_traces_and_attaches_one_token_per_forward (test_ut_trace.OuroUTTracerTest.test_traces_and_attaches_one_token_per_forward) ... ok
+test_uses_authoritative_physical_exit_metadata (test_ut_trace.OuroUTTracerTest.test_uses_authoritative_physical_exit_metadata) ... ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 1.364s
+
+OK
+
+exit_code=0
+
+$ PYTHONPATH=src uv run --no-project --python /tmp/loopaware-baseline-venv/bin/python python experiments/adaptive_kv_smoke.py
+PASS last_available
+PASS final_exit_shared
+
+exit_code=0
+
+$ PYTHONPATH=src uv run --no-project --python /tmp/loopaware-baseline-venv/bin/python python experiments/validate_adaptive_kv_checkpoint.py --help
+usage: validate_adaptive_kv_checkpoint.py [-h] [--model MODEL]
+                                          [--model-path MODEL_PATH]
+                                          [--tokenizer-path TOKENIZER_PATH]
+                                          [--revision REVISION]
+                                          [--total-ut-steps TOTAL_UT_STEPS]
+                                          [--threshold THRESHOLD]
+                                          [--max-new-tokens MAX_NEW_TOKENS]
+                                          [--output OUTPUT]
+
+Small real-checkpoint validation of Ouro adaptive decode semantics.
+
+options:
+  -h, --help            show this help message and exit
+  --model MODEL
+  --model-path MODEL_PATH
+  --tokenizer-path TOKENIZER_PATH
+  --revision REVISION
+  --total-ut-steps TOTAL_UT_STEPS
+  --threshold THRESHOLD
+  --max-new-tokens MAX_NEW_TOKENS
+  --output OUTPUT
+
+exit_code=0
+
+$ PYTHONPATH=src uv run --no-project --python /tmp/loopaware-baseline-venv/bin/python python experiments/sanity_threshold_one_equivalence.py --help
+usage: sanity_threshold_one_equivalence.py [-h] [--model MODEL]
+                                           [--revision REVISION]
+                                           [--model-path MODEL_PATH]
+                                           [--tokenizer-path TOKENIZER_PATH]
+                                           [--total-ut-steps TOTAL_UT_STEPS]
+                                           [--max-new-tokens MAX_NEW_TOKENS]
+                                           --output OUTPUT
+
+Check that last-available physical decode at threshold 1 matches Ouro.
+
+options:
+  -h, --help            show this help message and exit
+  --model MODEL
+  --revision REVISION
+  --model-path MODEL_PATH
+  --tokenizer-path TOKENIZER_PATH
+  --total-ut-steps TOTAL_UT_STEPS
+  --max-new-tokens MAX_NEW_TOKENS
+  --output OUTPUT
+
+exit_code=0
+
+$ PYTHONPATH=src uv lock --check
+Using CPython 3.12.16
+Resolved 72 packages in 1ms
+
+exit_code=0

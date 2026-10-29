@@ -1,104 +1,54 @@
-# Setup
+# Loopaware Agent baseline
 
+分支 `baseline/last-available-batching` 收敛 Ouro HF 推理运行时、last-available
+KV policy 和 batching 正确性验证。模块准入、分支清单、修复记录与验证边界见
+[baseline 审查报告](docs/baseline_audit.md)。
 
-0. git repo
-git clone 
-cd loopaware-agent
+核心文件：
 
+- `vendor/ouro_hf/configuration_ouro.py`：模型配置。
+- `vendor/ouro_hf/modeling_ouro.py`：全深度 prefill、单 token decode、物理 early exit。
+- `vendor/ouro_hf/cache_ouro.py`：full-per-depth 参考和 last-available KV。
+- `src/loopaware_agent/ut_trace.py`：逐 token UT 追踪。
+- `src/loopaware_agent/ut_scheduling.py`：离线组批和代价分析。
 
-1. If you have not download uv: 
-curl -LsSf https://astral.sh/uv/install.sh | sh
+使用项目锁定环境：
 
-2. update uv env based on pyproject.toml & uv.lock
-uv sync
+```bash
+uv sync --frozen
+uv run --frozen python -m unittest discover -s tests -v
+uv run --frozen python experiments/adaptive_kv_smoke.py
+```
 
-3. how to run script (test if model works)
-uv run python try.py
+无 GPU 时，可单独建立轻量 CPU 验证环境：
 
-4. how to run vllm + ouro (tes if compatible)
-vllm serve ByteDance/Ouro-2.6B-Thinking   --dtype bfloat16   --max-model-len 8192   --trust-remote-code
+```bash
+uv venv /tmp/loopaware-baseline-venv --python 3.12
+uv pip install --python /tmp/loopaware-baseline-venv/bin/python \
+  torch==2.9.0 --index-url https://download.pytorch.org/whl/cpu
+uv pip install --python /tmp/loopaware-baseline-venv/bin/python transformers==4.57.6
+PYTHONPATH=src uv run --no-project --python /tmp/loopaware-baseline-venv/bin/python \
+  python -m unittest discover -s tests -v
+uv run --no-project --python /tmp/loopaware-baseline-venv/bin/python \
+  python experiments/adaptive_kv_smoke.py
+```
 
-use following to test:
+启用 last-available：设置 `config.kv_cache_policy = "last_available"`、
+`config.physical_early_exit = True` 和 `early_exit_threshold`。
+prefill 执行全部 UT，之后每次 forward 输入一个新 token。
+阈值 1.0 用于与 full-per-depth 参考作全深度回归。
 
-curl http://localhost:8000/v1/completions   -H "Content-Type: application/json"   -d '{
-    "model": "ByteDance/Ouro-2.6B-Thinking",
-    "prompt": "Explain what a recurrent transformer is in one sentence.",
-    "max_tokens": 32,
-    "temperature": 0
-  }'
+动态重组要求相同 padded prompt 长度，每个 token frontier 中所有请求各执行
+一次；全部提交后才能推进。暂不支持异步推进、在线增删或 EOS 后直接移除行。
 
-5. Any modification to vllm 
-cd vendor/vllm
-git add vllm/model_executor/models/ouro.py
-git commit -m <message>
-cd /root/loopaware-agent
-git status
-git add vendor/vllm
+真实 checkpoint 验证需要可用 GPU 和权重，默认固定模型 revision：
 
-6. Any modification to ouro_hf
-cd vendor/ouro_hf
-git add modeling_ouro.py
-git commit -m <message>
-cd /root/loopaware-agent
-git status
-git add vendor/ouro_hf
+```bash
+uv run --frozen python experiments/validate_adaptive_kv_checkpoint.py \
+  --output results/adaptive_kv_checkpoint_validation.json
+uv run --frozen python experiments/sanity_threshold_one_equivalence.py \
+  --output results/threshold_one_equivalence.json
+```
 
-# Bugs
-
-1. When doing try.py
-For missing key_cahche, value_cache using following command:
-sed -i \
-'s/self\.key_cache/self.k_cache/g; s/self\.value_cache/self.v_cache/g' \
-/workspace/.cache/huggingface/modules/transformers_modules/Bytedance/Ouro-2.6B-Thinking/f1edd81e7ac41355db670500ceaf204e0f73af68/modeling_ouro.py
-
-2. When doing vllm+ouro, vllm=0.11.2 works, if the version goes up, it does not support ouro
-
-
-# working notes
-1. To see the output structure: 
-print(out.outputs[0].__dict__.keys())
-
-It looks like: 
-dict_keys(['index', 'text', 'token_ids', 'cumulative_logprob', 'logprobs', 'finish_reason', 'stop_reason', 'lora_request'])
-
-'test': the genereated text
-
-2. git clone branch v0.11.2 and git switch to this branch for our implementation (scratch)
-git clone --branch v0.11.2   https://github.com/vllm-project/vllm.git   vendor/vllm
-git switch -c loopaware-vllm
-
-Sanity check: /root/loopaware-agent/vendor/vllm/vllm/model_executor/models/ouro.py
-
-uv run python - <<'PY'
-import inspect
-from vllm.model_executor.models.ouro import OuroModel
-
-print(inspect.getfile(OuroModel))
-PY
-
-3. vllm 0.11.2 in vendor, and ouro's exeuction code, now add the recurrence tracer
-vendor/vllm/vllm/model_executor/models/ouro.py
-
-4. ouro structure:
-  - OuroMLP: MLP after attention
-  - OuroAttention: Attention block reside in recurrent block
-  - OuroDecoderLayer: Recurrent Block (important)
-  - OuroModel: Ouro Structure
-  - OuroForCausalLM: quick start use abtract wrapper
-
-5. There is no early stop applied in vllm 0.11.2!!!
-
-6. But there is one in ouro-2.6B-reasoning, called early_exit_threshold
-
-7. Do a trajectory characterization:
-  - Count the actual recurrence (expect it to hit the same recurrence config)
-  - Count the predicted recurrence (If we apply a threshold to it, does it hit the same recurrence?)
-  - vendor/vllm/vllm/model_executor/models/ouro.py
-
-  - 7.1
-    - Add trace collector in model_init
-    - Shown that it hits the same recurrences
-
-  - 7.2
-    - Adding early exit gate to in model forward()
-    - Identify the gap between actual & expected recurrence
+本轮完成 CPU 回归和 smoke；当前机器无法使用 NVIDIA 驱动，尚未重跑 GPU/BF16。
+历史 GPU 报告与本轮结果在审查报告中分别标明。
