@@ -36,7 +36,6 @@ from .cache_ouro import (
     FullPerDepthCache,
     UniversalTransformerCache,
     make_ut_cache,
-    profile_range,
 )
 from .configuration_ouro import OuroConfig
 
@@ -534,6 +533,8 @@ class OuroModel(OuroPreTrainedModel):
         kv_policy = getattr(self.config, "kv_cache_policy", FULL_PER_DEPTH)
         if kv_policy not in KV_POLICIES:
             raise ValueError(f"Unsupported kv_cache_policy={kv_policy!r}")
+        if kv_policy != FULL_PER_DEPTH and not use_cache:
+            raise ValueError("last_available requires use_cache=True")
         physical_early_exit = (
             getattr(self.config, "physical_early_exit", False)
             if physical_early_exit is None
@@ -541,7 +542,7 @@ class OuroModel(OuroPreTrainedModel):
         )
         if physical_early_exit and kv_policy == FULL_PER_DEPTH:
             raise ValueError(
-                "physical_early_exit requires last_available or final_exit_shared"
+                "physical_early_exit requires last_available"
             )
 
         max_cache_size: Optional[int] = None
@@ -603,9 +604,6 @@ class OuroModel(OuroPreTrainedModel):
                     "Adaptive KV policies support full-depth prefill followed by "
                     "one-token autoregressive decode only"
                 )
-            if adaptive_decode:
-                past_key_values.begin_decode(inputs_embeds.shape[0])
-
         # create position embeddings to be shared across the decoder layers
         position_embeddings = self.rotary_emb(hidden_states, position_ids)
         hidden_states_list = []
@@ -634,6 +632,8 @@ class OuroModel(OuroPreTrainedModel):
             return value.index_select(0, active_indices)
 
         try:
+            if adaptive_decode:
+                past_key_values.begin_decode(batch_size)
             for current_ut in range(self.total_ut_steps):
                 for decoder_layer in self.layers[: self.config.num_hidden_layers]:
                     layer_mask = causal_mask_mapping[decoder_layer.attention_type]
@@ -705,7 +705,9 @@ class OuroModel(OuroPreTrainedModel):
                             dtype=torch.bool,
                             device=active_indices.device,
                         )
-                    elif exit_threshold is None:
+                    elif exit_threshold is None or float(exit_threshold) == 1.0:
+                        # Threshold one is the explicit full-depth reference,
+                        # including when finite-precision sigmoid/CDF saturates.
                         should_exit = torch.zeros(
                             active_indices.numel(),
                             dtype=torch.bool,
@@ -714,30 +716,31 @@ class OuroModel(OuroPreTrainedModel):
                     else:
                         should_exit = active_cumulative[:, -1] >= float(exit_threshold)
 
-                    with profile_range("physical_compaction"):
-                        unresolved = selected_depth.index_select(0, active_indices) == 0
-                        newly_exited = should_exit & unresolved
-                        exited_indices = active_indices[newly_exited]
-                        if exited_indices.numel():
-                            selected_hidden.index_copy_(
-                                0, exited_indices, hidden_states[newly_exited]
-                            )
-                            selected_depth.index_fill_(
-                                0, exited_indices, current_ut + 1
-                            )
+                    unresolved = selected_depth.index_select(0, active_indices) == 0
+                    newly_exited = should_exit & unresolved
+                    exited_indices = active_indices[newly_exited]
+                    if exited_indices.numel():
+                        selected_hidden.index_copy_(
+                            0, exited_indices, hidden_states[newly_exited]
+                        )
+                        selected_depth.index_fill_(
+                            0, exited_indices, current_ut + 1
+                        )
 
-                        if physical_early_exit:
-                            executed_depth.index_fill_(0, active_indices, current_ut + 1)
-                            keep = ~should_exit
-                            active_indices = active_indices[keep]
-                            hidden_states = hidden_states[keep]
-                            if active_indices.numel() == 0:
-                                break
+                    if physical_early_exit:
+                        executed_depth.index_fill_(0, active_indices, current_ut + 1)
+                        keep = ~should_exit
+                        active_indices = active_indices[keep]
+                        hidden_states = hidden_states[keep]
+                        if active_indices.numel() == 0:
+                            break
                 else:
                     hidden_states_list.append(hidden_states)
                     gate_list.append(gate)
 
             if adaptive_decode:
+                if bool((selected_depth == 0).any()):
+                    raise RuntimeError("Adaptive decode ended without selecting every row")
                 if not physical_early_exit:
                     executed_depth.fill_(self.total_ut_steps)
                 past_key_values.commit(selected_depth)
@@ -933,6 +936,8 @@ class OuroForCausalLM(OuroPreTrainedModel, GenerationMixin):
                 ):
                     selected_hidden = hidden_states_list[exit_at_step]
                     logits = self.lm_head(_select_token_positions(selected_hidden))
+                elif exit_threshold is not None and float(exit_threshold) == 1.0:
+                    logits = self.lm_head(_select_token_positions(hidden_states_list[-1]))
                 elif exit_threshold is not None:
                     cumulative_probs = torch.cumsum(stacked_exit_pdf, dim=2)
                     threshold_value = exit_threshold

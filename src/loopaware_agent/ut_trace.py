@@ -128,6 +128,8 @@ class OuroUTTracer(AbstractContextManager["OuroUTTracer"]):
                 selected,
                 torch.full_like(selected, exit_probabilities.shape[-1] - 1),
             )
+            if self.exit_threshold == 1.0:
+                selected.fill_(exit_probabilities.shape[-1] - 1)
             executed = torch.full_like(selected, exit_probabilities.shape[-1])
             step_numbers = torch.arange(
                 1,

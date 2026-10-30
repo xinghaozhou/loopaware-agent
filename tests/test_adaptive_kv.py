@@ -5,9 +5,7 @@ import unittest
 import torch
 
 from vendor.ouro_hf.cache_ouro import (
-    FinalExitSharedCache,
     LastAvailableCache,
-    merge_adaptive_prefill_caches,
 )
 from vendor.ouro_hf.configuration_ouro import OuroConfig
 from vendor.ouro_hf.modeling_ouro import OuroForCausalLM
@@ -43,30 +41,9 @@ class AdaptiveCachePolicyTest(unittest.TestCase):
             self.assertEqual(value.flatten().tolist()[:-1], [-x for x in history])
         cache.abort_decode()
 
-    def test_final_exit_shared_policy_oracle(self) -> None:
-        cache = self._prefilled_cache(FinalExitSharedCache)
-        self._commit_depth_two(cache)
-        cache.begin_decode(batch_size=1)
-        for depth in range(3):
-            key, value = cache.update(
-                scalar_kv([900.0 + depth]), scalar_kv([-900.0 - depth]), depth
-            )
-            self.assertEqual(key.flatten().tolist()[:-1], [30.0, 102.0])
-            self.assertEqual(value.flatten().tolist()[:-1], [-30.0, -102.0])
-        cache.abort_decode()
-
-        committed = cache._committed[0]
-        self.assertEqual(
-            [
-                index
-                for index, slot in enumerate(committed.slots)
-                if slot is not None and slot.batch_indices.numel()
-            ],
-            [1],
-        )
 
     def test_policies_support_different_exit_depths_in_one_batch(self) -> None:
-        for cache_type in (LastAvailableCache, FinalExitSharedCache):
+        for cache_type in (LastAvailableCache,):
             with self.subTest(policy=cache_type.policy):
                 cache = cache_type(num_hidden_layers=1, total_ut_steps=3)
                 for depth, values in enumerate(
@@ -95,81 +72,10 @@ class AdaptiveCachePolicyTest(unittest.TestCase):
                     0,
                     {"batch_indices": torch.tensor([0, 1])},
                 )
-                if cache_type is LastAvailableCache:
-                    self.assertEqual(key[:, 0, :-1, 0].tolist(), [[10.0, 100.0], [11.0, 101.0]])
-                else:
-                    self.assertEqual(key[:, 0, :-1, 0].tolist(), [[30.0, 100.0], [31.0, 202.0]])
+                self.assertEqual(key[:, 0, :-1, 0].tolist(), [[10.0, 100.0], [11.0, 101.0]])
                 cache.abort_decode()
 
-    def test_last_available_supports_dynamic_microbatch_regrouping(self) -> None:
-        cache = LastAvailableCache(num_hidden_layers=1, total_ut_steps=3)
-        for depth, values in enumerate(
-            ([10.0, 11.0, 12.0, 13.0], [20.0, 21.0, 22.0, 23.0], [30.0, 31.0, 32.0, 33.0])
-        ):
-            cache.update(scalar_kv(values), scalar_kv(values), depth)
 
-        cache.set_decode_batch_indices(torch.tensor([0, 2]))
-        cache.begin_decode(batch_size=2)
-        cache.update(scalar_kv([100.0, 102.0]), scalar_kv([100.0, 102.0]), 0)
-        cache.update(
-            scalar_kv([202.0]),
-            scalar_kv([202.0]),
-            1,
-            {"batch_indices": torch.tensor([1])},
-        )
-        cache.commit(torch.tensor([1, 2]))
-        self.assertEqual(cache.get_seq_length(), 1)
-
-        cache.set_decode_batch_indices(torch.tensor([3, 1]))
-        cache.begin_decode(batch_size=2)
-        cache.update(scalar_kv([103.0, 101.0]), scalar_kv([103.0, 101.0]), 0)
-        cache.update(
-            scalar_kv([203.0]),
-            scalar_kv([203.0]),
-            1,
-            {"batch_indices": torch.tensor([0])},
-        )
-        cache.commit(torch.tensor([2, 1]))
-        self.assertEqual(cache.get_seq_length(), 2)
-
-        cache.set_decode_batch_indices(torch.tensor([1, 2]))
-        cache.begin_decode(batch_size=2)
-        depth_zero, _ = cache.update(
-            scalar_kv([900.0, 901.0]), scalar_kv([900.0, 901.0]), 0
-        )
-        depth_one, _ = cache.update(
-            scalar_kv([910.0, 911.0]), scalar_kv([910.0, 911.0]), 1
-        )
-        self.assertEqual(
-            depth_zero[:, 0, :-1, 0].tolist(), [[11.0, 101.0], [12.0, 102.0]]
-        )
-        self.assertEqual(
-            depth_one[:, 0, :-1, 0].tolist(), [[21.0, 101.0], [22.0, 202.0]]
-        )
-        cache.abort_decode()
-
-    def test_merge_adaptive_prefill_caches(self) -> None:
-        caches = []
-        for offset in (0.0, 2.0):
-            cache = LastAvailableCache(num_hidden_layers=1, total_ut_steps=2)
-            cache.update(
-                scalar_kv([10.0 + offset, 11.0 + offset]),
-                scalar_kv([10.0 + offset, 11.0 + offset]),
-                0,
-            )
-            cache.update(
-                scalar_kv([20.0 + offset, 21.0 + offset]),
-                scalar_kv([20.0 + offset, 21.0 + offset]),
-                1,
-            )
-            caches.append(cache)
-        merged = merge_adaptive_prefill_caches(caches)
-        self.assertEqual(merged.get_seq_length(), 1)
-        self.assertEqual(merged._prompt_batch_size, 4)
-        self.assertEqual(
-            merged.prompt_key_cache[0].flatten().tolist(),
-            [10.0, 11.0, 12.0, 13.0],
-        )
 
 
 def tiny_model(policy: str, physical: bool, state_dict=None) -> OuroForCausalLM:
@@ -257,7 +163,7 @@ class AdaptiveModelParityTest(unittest.TestCase):
 
     def test_physical_exit_matches_run_all_policy_reference(self) -> None:
         torch.manual_seed(11)
-        for policy in ("last_available", "final_exit_shared"):
+        for policy in ("last_available",):
             with self.subTest(policy=policy), torch.inference_mode():
                 reference = tiny_model(policy, physical=False)
                 physical = tiny_model(policy, physical=True, state_dict=reference.state_dict())
@@ -312,7 +218,7 @@ class AdaptiveModelParityTest(unittest.TestCase):
 
     def test_threshold_exit_matches_run_all_policy_reference(self) -> None:
         torch.manual_seed(13)
-        for policy in ("last_available", "final_exit_shared"):
+        for policy in ("last_available",):
             with self.subTest(policy=policy), torch.inference_mode():
                 reference = tiny_model(policy, physical=False)
                 physical = tiny_model(policy, physical=True, state_dict=reference.state_dict())
@@ -340,7 +246,7 @@ class AdaptiveModelParityTest(unittest.TestCase):
 
     def test_generate_uses_adaptive_cache(self) -> None:
         torch.manual_seed(17)
-        for policy in ("last_available", "final_exit_shared"):
+        for policy in ("last_available",):
             with self.subTest(policy=policy), torch.inference_mode():
                 model = tiny_model(policy, physical=True)
                 model.model.early_exit_gate.weight.zero_()
@@ -356,7 +262,7 @@ class AdaptiveModelParityTest(unittest.TestCase):
 
     def test_batched_threshold_exit_matches_run_all_reference(self) -> None:
         torch.manual_seed(19)
-        for policy in ("last_available", "final_exit_shared"):
+        for policy in ("last_available",):
             with self.subTest(policy=policy), torch.inference_mode():
                 reference = tiny_model(policy, physical=False)
                 physical = tiny_model(policy, physical=True, state_dict=reference.state_dict())

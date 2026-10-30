@@ -67,7 +67,7 @@ def main() -> None:
     ).to("cuda")
     results = []
 
-    for policy in ("last_available", "final_exit_shared"):
+    for policy in ("last_available",):
         config = OuroConfig.from_pretrained(model_source, revision=source_revision)
         config.total_ut_steps = args.total_ut_steps
         config.early_exit_threshold = args.threshold

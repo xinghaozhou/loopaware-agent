@@ -62,6 +62,13 @@ class FakeRunAllOuroBase(FakeOuroBase):
 
 
 class OuroUTTracerTest(unittest.TestCase):
+    def test_threshold_one_always_reports_full_depth(self) -> None:
+        model = FakeOuroForCausalLM()
+        with OuroUTTracer(model, exit_threshold=1.0) as tracer:
+            model.model(torch.zeros(1, 1))
+        event = tracer.attach_output_tokens([[11]])[0]
+        self.assertEqual(event.selected_ut_step, 3)
+
     def test_run_all_trace_uses_authoritative_forced_exit(self) -> None:
         model = FakeOuroForCausalLM()
         model.model = FakeRunAllOuroBase()

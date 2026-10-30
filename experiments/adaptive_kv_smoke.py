@@ -66,7 +66,7 @@ def smoke_policy(policy: str) -> None:
 
 
 def main() -> None:
-    for policy in ("last_available", "final_exit_shared"):
+    for policy in ("last_available",):
         smoke_policy(policy)
         print(f"PASS {policy}")
 

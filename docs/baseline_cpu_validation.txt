@@ -1,12 +1,11 @@
-CPU baseline validation: 2026-10-29
+Adaptive-exit / last-available core validation: 2026-10-29
+Branch: baseline/adaptive-exit-last-available
 Python 3.12.16, torch 2.9.0+cpu, transformers 4.57.6
+No UT-aware batching/scheduler/regrouping modules included.
 CUDA/checkpoint evaluation not run; NVIDIA driver unavailable.
 
 $ PYTHONPATH=src uv run --no-project --python /tmp/loopaware-baseline-venv/bin/python python -m unittest discover -s tests -v
-test_final_exit_shared_policy_oracle (test_adaptive_kv.AdaptiveCachePolicyTest.test_final_exit_shared_policy_oracle) ... ok
 test_last_available_policy_oracle (test_adaptive_kv.AdaptiveCachePolicyTest.test_last_available_policy_oracle) ... ok
-test_last_available_supports_dynamic_microbatch_regrouping (test_adaptive_kv.AdaptiveCachePolicyTest.test_last_available_supports_dynamic_microbatch_regrouping) ... ok
-test_merge_adaptive_prefill_caches (test_adaptive_kv.AdaptiveCachePolicyTest.test_merge_adaptive_prefill_caches) ... ok
 test_policies_support_different_exit_depths_in_one_batch (test_adaptive_kv.AdaptiveCachePolicyTest.test_policies_support_different_exit_depths_in_one_batch) ... ok
 test_batched_threshold_exit_matches_run_all_reference (test_adaptive_kv.AdaptiveModelParityTest.test_batched_threshold_exit_matches_run_all_reference) ... ok
 test_full_per_depth_baseline_still_generates (test_adaptive_kv.AdaptiveModelParityTest.test_full_per_depth_baseline_still_generates) ... ok
@@ -14,25 +13,31 @@ test_generate_uses_adaptive_cache (test_adaptive_kv.AdaptiveModelParityTest.test
 test_physical_exit_matches_run_all_policy_reference (test_adaptive_kv.AdaptiveModelParityTest.test_physical_exit_matches_run_all_policy_reference) ... ok
 test_threshold_exit_matches_run_all_policy_reference (test_adaptive_kv.AdaptiveModelParityTest.test_threshold_exit_matches_run_all_policy_reference) ... ok
 test_threshold_one_last_available_matches_full_per_depth (test_adaptive_kv.AdaptiveModelParityTest.test_threshold_one_last_available_matches_full_per_depth) ... ok
-test_beam_expansion_updates_request_count (test_baseline_contract.BaselineContractTest.test_beam_expansion_updates_request_count) ... ok
-test_duplicate_frontier_request_is_rejected_without_losing_first_row (test_baseline_contract.BaselineContractTest.test_duplicate_frontier_request_is_rejected_without_losing_first_row) ... ok
-test_heterogeneous_padded_batch_matches_run_all_across_tokens (test_baseline_contract.BaselineContractTest.test_heterogeneous_padded_batch_matches_run_all_across_tokens) ... ok
-test_invalid_committed_depth_can_be_retried (test_baseline_contract.BaselineContractTest.test_invalid_committed_depth_can_be_retried) ... ok
-test_invalid_exit_does_not_leave_active_transaction (test_baseline_contract.BaselineContractTest.test_invalid_exit_does_not_leave_active_transaction) ... ok
-test_partial_frontier_cannot_be_reordered_or_decoded_as_full_batch (test_baseline_contract.BaselineContractTest.test_partial_frontier_cannot_be_reordered_or_decoded_as_full_batch) ... ok
-test_regrouped_model_matches_fixed_batch_over_multiple_frontiers (test_baseline_contract.BaselineContractTest.test_regrouped_model_matches_fixed_batch_over_multiple_frontiers) ... ok
-test_cost_uses_true_ut_not_prediction (test_ut_scheduling.UTSchedulingTest.test_cost_uses_true_ut_not_prediction) ... ok
-test_homogeneous_batching_uses_predicted_ut (test_ut_scheduling.UTSchedulingTest.test_homogeneous_batching_uses_predicted_ut) ... ok
-test_homogeneous_oracle_reduces_lockstep_waste (test_ut_scheduling.UTSchedulingTest.test_homogeneous_oracle_reduces_lockstep_waste) ... ok
-test_rejects_partial_batch (test_ut_scheduling.UTSchedulingTest.test_rejects_partial_batch) ... ok
-test_shortest_ut_first_orders_by_predicted_batch_depth (test_ut_scheduling.UTSchedulingTest.test_shortest_ut_first_orders_by_predicted_batch_depth) ... ok
+test_clear_and_reuse_has_no_historical_state (test_core_contract.CoreCacheContractTest.test_clear_and_reuse_has_no_historical_state) ... ok
+test_commit_owns_exit_depth_metadata (test_core_contract.CoreCacheContractTest.test_commit_owns_exit_depth_metadata) ... ok
+test_incomplete_prefill_is_rejected_before_transaction (test_core_contract.CoreCacheContractTest.test_incomplete_prefill_is_rejected_before_transaction) ... ok
+test_invalid_committed_depth_can_be_retried (test_core_contract.CoreCacheContractTest.test_invalid_committed_depth_can_be_retried) ... ok
+test_last_available_multilayer_multitoken_oracle (test_core_contract.CoreCacheContractTest.test_last_available_multilayer_multitoken_oracle)
+Expected KV is built from the policy equation, independently of cache code. ... ok
+test_missing_selected_depth_cannot_be_committed (test_core_contract.CoreCacheContractTest.test_missing_selected_depth_cannot_be_committed) ... ok
+test_request_count_cannot_change_without_reorder (test_core_contract.CoreCacheContractTest.test_request_count_cannot_change_without_reorder) ... ok
+test_staged_current_kv_attends_but_is_not_committed_history (test_core_contract.CoreCacheContractTest.test_staged_current_kv_attends_but_is_not_committed_history) ... ok
+test_adaptive_policy_requires_cache (test_core_contract.CoreModelContractTest.test_adaptive_policy_requires_cache) ... ok
+test_cached_threshold_one_matches_full_prefix_recomputation (test_core_contract.CoreModelContractTest.test_cached_threshold_one_matches_full_prefix_recomputation) ... ok
+test_closed_loop_greedy_matches_run_all (test_core_contract.CoreModelContractTest.test_closed_loop_greedy_matches_run_all) ... ok
+test_exception_aborts_current_token_and_allows_exact_retry (test_core_contract.CoreModelContractTest.test_exception_aborts_current_token_and_allows_exact_retry) ... ok
+test_fixed_rows_with_different_exits_match_run_all (test_core_contract.CoreModelContractTest.test_fixed_rows_with_different_exits_match_run_all) ... ok
+test_invalid_exit_does_not_leave_active_transaction (test_core_contract.CoreModelContractTest.test_invalid_exit_does_not_leave_active_transaction) ... ok
+test_threshold_boundaries_and_actual_decoder_work (test_core_contract.CoreModelContractTest.test_threshold_boundaries_and_actual_decoder_work) ... ok
+test_threshold_one_executes_final_depth_even_if_gate_saturates (test_core_contract.CoreModelContractTest.test_threshold_one_executes_final_depth_even_if_gate_saturates) ... ok
 test_rejects_token_and_forward_count_mismatch (test_ut_trace.OuroUTTracerTest.test_rejects_token_and_forward_count_mismatch) ... ok
 test_run_all_trace_uses_authoritative_forced_exit (test_ut_trace.OuroUTTracerTest.test_run_all_trace_uses_authoritative_forced_exit) ... ok
+test_threshold_one_always_reports_full_depth (test_ut_trace.OuroUTTracerTest.test_threshold_one_always_reports_full_depth) ... ok
 test_traces_and_attaches_one_token_per_forward (test_ut_trace.OuroUTTracerTest.test_traces_and_attaches_one_token_per_forward) ... ok
 test_uses_authoritative_physical_exit_metadata (test_ut_trace.OuroUTTracerTest.test_uses_authoritative_physical_exit_metadata) ... ok
 
 ----------------------------------------------------------------------
-Ran 27 tests in 1.364s
+Ran 29 tests in 2.253s
 
 OK
 
@@ -40,7 +45,6 @@ exit_code=0
 
 $ PYTHONPATH=src uv run --no-project --python /tmp/loopaware-baseline-venv/bin/python python experiments/adaptive_kv_smoke.py
 PASS last_available
-PASS final_exit_shared
 
 exit_code=0
 
@@ -95,5 +99,9 @@ exit_code=0
 $ PYTHONPATH=src uv lock --check
 Using CPython 3.12.16
 Resolved 72 packages in 1ms
+
+exit_code=0
+
+$ PYTHONPATH=src git diff --check
 
 exit_code=0

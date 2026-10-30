@@ -1,18 +1,18 @@
-# Loopaware Agent baseline
+# Ouro adaptive-exit / last-available baseline
 
-分支 `baseline/last-available-batching` 收敛 Ouro HF 推理运行时、last-available
-KV policy 和 batching 正确性验证。模块准入、分支清单、修复记录与验证边界见
-[baseline 审查报告](docs/baseline_audit.md)。
+当前基线：`baseline/adaptive-exit-last-available`。
 
-核心文件：
+只确认 adaptive exit 与 last-available KV 的核心推理语义，核心实现位于：
 
-- `vendor/ouro_hf/configuration_ouro.py`：模型配置。
-- `vendor/ouro_hf/modeling_ouro.py`：全深度 prefill、单 token decode、物理 early exit。
-- `vendor/ouro_hf/cache_ouro.py`：full-per-depth 参考和 last-available KV。
-- `src/loopaware_agent/ut_trace.py`：逐 token UT 追踪。
-- `src/loopaware_agent/ut_scheduling.py`：离线组批和代价分析。
+- `vendor/ouro_hf/modeling_ouro.py`：full-depth prefill、退出判断、物理停止、选中深度 logits。
+- `vendor/ouro_hf/cache_ouro.py`：当前 token 暂存/提交、历史 KV 按 min(u, U_j) 查询。
+- `vendor/ouro_hf/configuration_ouro.py`：上述功能的配置。
+- `src/loopaware_agent/ut_trace.py`：验证脚本使用的诊断工具，不参与模型计算。
 
-使用项目锁定环境：
+UT-aware batching、SUF、动态请求重组、prefill cache 合并与 profiling 优化均未纳入。
+保留 tensor 的固定 batch 维度及 early exit 必需的行索引；不包含请求调度或组批策略。
+
+项目环境运行：
 
 ```bash
 uv sync --frozen
@@ -20,7 +20,7 @@ uv run --frozen python -m unittest discover -s tests -v
 uv run --frozen python experiments/adaptive_kv_smoke.py
 ```
 
-无 GPU 时，可单独建立轻量 CPU 验证环境：
+无 GPU 时的轻量 CPU 验证：
 
 ```bash
 uv venv /tmp/loopaware-baseline-venv --python 3.12
@@ -33,15 +33,20 @@ uv run --no-project --python /tmp/loopaware-baseline-venv/bin/python \
   python experiments/adaptive_kv_smoke.py
 ```
 
-启用 last-available：设置 `config.kv_cache_policy = "last_available"`、
-`config.physical_early_exit = True` 和 `early_exit_threshold`。
-prefill 执行全部 UT，之后每次 forward 输入一个新 token。
-阈值 1.0 用于与 full-per-depth 参考作全深度回归。
+运行模式：
 
-动态重组要求相同 padded prompt 长度，每个 token frontier 中所有请求各执行
-一次；全部提交后才能推进。暂不支持异步推进、在线增删或 EOS 后直接移除行。
+```python
+config.kv_cache_policy = "last_available"
+config.physical_early_exit = True
+config.early_exit_threshold = 0.7
+# 模型 .eval()，在 torch.inference_mode() 中以 use_cache=True 运行。
+```
 
-真实 checkpoint 验证需要可用 GPU 和权重，默认固定模型 revision：
+prefill 执行全部 UT；decode 每次输入一个 token。阈值 1.0 明确定义为全深度，
+显式 exit_at_step 优先。原始参考模式为 full_per_depth + physical_early_exit=False。
+last_available + physical_early_exit=False 是同 policy 的 run-all 对照。
+
+真实 checkpoint 复核入口（需要模型权重和可用 GPU）：
 
 ```bash
 uv run --frozen python experiments/validate_adaptive_kv_checkpoint.py \
@@ -50,5 +55,5 @@ uv run --frozen python experiments/sanity_threshold_one_equivalence.py \
   --output results/threshold_one_equivalence.json
 ```
 
-本轮完成 CPU 回归和 smoke；当前机器无法使用 NVIDIA 驱动，尚未重跑 GPU/BF16。
-历史 GPU 报告与本轮结果在审查报告中分别标明。
+本轮通过 29 项 CPU 回归和 smoke；GPU/BF16 未复跑。
+[实现说明](docs/adaptive_exit_kv_implementation.md) · [审查报告](docs/baseline_audit.md)

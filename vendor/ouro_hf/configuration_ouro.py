@@ -203,12 +203,11 @@ class OuroConfig(PretrainedConfig):
         if kv_cache_policy not in {
             "full_per_depth",
             "last_available",
-            "final_exit_shared",
         }:
             raise ValueError(f"Unsupported kv_cache_policy={kv_cache_policy!r}")
         if physical_early_exit and kv_cache_policy == "full_per_depth":
             raise ValueError(
-                "physical_early_exit requires last_available or final_exit_shared"
+                "physical_early_exit requires last_available"
             )
         self.kv_cache_policy = kv_cache_policy
         self.physical_early_exit = physical_early_exit

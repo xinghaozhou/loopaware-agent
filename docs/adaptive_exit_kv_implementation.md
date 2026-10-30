@@ -1,120 +1,67 @@
-# Adaptive-Exit KV Semantics for Ouro
+# Adaptive exit 与 last-available 核心语义
 
-## Scope
+本文件描述当前 baseline；其他 policy 与 batching 调度不在此分支。
 
-This implementation adds correctness-first physical early exit during
-one-token autoregressive decode. Prompt prefill always executes all configured
-UT steps. No threshold sweep was run as part of this work.
+## 模型执行
 
-The runtime reads `num_hidden_layers` and `total_ut_steps` from the loaded
-configuration. The real-checkpoint validation reported 48 decoder layers for
-`ByteDance/Ouro-2.6B-Thinking` at revision
-`f1edd81e7ac41355db670500ceaf204e0f73af68`.
+prompt prefill 始终执行 config.total_ut_steps 个 UT；每个 UT 执行
+config.num_hidden_layers 个 decoder layer。prefill 的输出仍按指定退出规则选择，
+“全部计算”不自动表示“使用最后深度输出”。阈值 1 或显式指定最后深度可确保后者。
 
-## Separated policies
+decode 每次输入一个 token。gate 的 sigmoid 给出条件退出概率 p_u，
+剩余概率 r_u 与 p_u 相乘得到当前退出质量，并累计形成 CDF。首次达到阈值即选择退出；
+最后深度强制退出。阈值 1 是显式 full-depth 模式，避免 sigmoid/CDF 数值饱和提前退出。
+exit_at_step 是零基的强制深度参数，优先于阈值；返回的 UT 深度为一基。
 
-The implementations live in `vendor/ouro_hf/cache_ouro.py` behind a small
-shared cache interface:
+physical_early_exit=True：已选中退出的行不再执行后续 decoder。
+physical_early_exit=False：全部 UT 仍执行，但输出和提交的 KV 只采用所选退出语义。
+两条路径采用相同 last-available 历史，作为物理停止是否正确的对照。
 
-- `FullPerDepthCache`: original Ouro behavior, with one dense history for each
-  `(UT depth, decoder layer)` pair. It remains the default and always executes
-  all UT steps.
-- `LastAvailableCache`: for historical token `j`, recurrence `u` reads the KV
-  from `min(u, U_j)`. Prompt tokens have `U_j = U_max` and retain depth-aligned
-  KV.
-- `FinalExitSharedCache`: every future recurrence reads historical token `j`
-  from its exit-depth KV, `KV_j^(U_j)`. Prompt tokens have `U_j = U_max`, so
-  all decode recurrences read their final-depth prompt KV.
+## 当前 token 与历史 KV
 
-The current token is transactional. Its KV from the current recurrent step is
-used for its own attention, but it is not made historical until its exit depth
-is known. Commit then retains every available depth needed by
-`last_available`, or only the exit depth for `final_exit_shared`.
+同一 decoder layer/UT 内先从层输入产生 Q、K、V，再执行 attention：
 
-## Execution behavior
-
-Configuration fields:
-
-```python
-config.kv_cache_policy = "full_per_depth"  # or last_available/final_exit_shared
-config.physical_early_exit = False
-config.early_exit_threshold = 0.7
+```text
+begin_decode
+    → 当前 K/V 暂存至 staged
+    → attention(Q_current, concat(committed_history, current_KV))
+    → 确定退出深度
+    → commit
 ```
 
-For an adaptive policy, `physical_early_exit=False` is its run-all semantic
-reference: all recurrences execute, logits come from the threshold-selected
-state, and only policy-observable KV is committed. With
-`physical_early_exit=True`, rows that reach their exit are removed from the
-active batch before the next recurrence. Both modes therefore share identical
-historical KV semantics.
+current_KV 会参与自身 attention；staged 不作为历史查询源。
+跨 UT 不会把当前 token 的多个深度当成多个序列位置。
 
-The first generated token is predicted by full-depth prompt prefill. Physical
-exit begins with subsequent one-token decode calls.
+历史 token j 在当前深度 u 读取 KV_j[min(u, U_j)]。
+prompt 的 U_j 为最大深度，因此按当前深度读取 prompt KV。
+commit 验证每行从第一深度到选中深度的所有层 KV 齐全，再保留这些真实生成的 KV。
+未执行的深度不会伪造或复制存储。后续查询时逐 token 解析 source depth 并组装 attention 张量。
 
-Model outputs and the tracer report authoritative `selected_ut_steps` and
-`executed_ut_steps`. A physically exited event cannot report a full-distribution
-expected UT because gates after its exit were deliberately not evaluated, so
-`expected_ut_steps` is `null` for those events.
+这是调度引入前的稀疏语义参考结构，替代了上一版按目标深度预展开的 dense-history
+和 partial-frontier 机制。没有 global request remapping、cache 合并或持久 dense-history 优化。
+为清晰验证语义，查询与提交使用 Python 循环；不据此作 serving 性能或显存收益承诺。
 
-## Validation
+## 生命周期与检查
 
-Validation order followed the requested smoke-first sequence:
+- begin_decode 前要求每个深度/层的 prefill KV 齐全且长度、请求数匹配。
+- commit 前检查退出深度范围与每行必需的 staged KV；历史只在成功 commit 后推进。
+- abort_decode 清除当前 token 的 staged KV，不修改已经提交的历史。
+- 模型在开启 transaction 前检查退出参数；decoder 发生异常会 abort，之后可重试。
+- last_available 必须 use_cache=True；多 token continuation 与 policy 中途切换明确拒绝。
+- 固定行身份及行内不同退出深度是张量正确性范围，没有动态组批接口。
 
-1. Tiny CPU smoke test: full prefill, depth-2 physical exit, then a depth-3
-   token that must resolve missing history. Passed for both adaptive policies.
-2. Hand-built KV policy oracles. Passed for prompt and decoded-token lookup.
-3. Heterogeneous two-row batch cache test. Passed with selected depths 1 and 2.
-4. Tiny-model run-all versus physical parity across forced depths and learned
-   threshold decisions. Logits and selected depths matched.
-5. Hugging Face `generate` integration and the `full_per_depth` regression.
-6. Complete project suite: 15 tests passed.
-7. Real Ouro-2.6B checkpoint validation at UT=6 and threshold 0.7.
+## 已验证的边界
 
-Real-checkpoint results:
+tests/test_adaptive_kv.py 与 tests/test_core_contract.py 验证：
 
-| Policy | Selected UT | Run-all executed UT | Physical executed UT | Token parity |
-|---|---|---|---|---|
-| `last_available` | `[4, 4, 4, 4]` | `[6, 6, 6, 6]` | `[6, 4, 4, 4]` | exact |
-| `final_exit_shared` | `[4, 3, 4, 2]` | `[6, 6, 6, 6]` | `[6, 3, 4, 2]` | exact |
+- 多层、多个历史 token 的独立 KV oracle，同时检查 K 与 V。
+- 当前 KV 自注意力、staged 不提前进入历史、abort、缺失深度拒绝提交、clear/reuse。
+- forced/threshold 的 physical 与 run-all 逐步 logits、selected/executed UT 等价。
+- padding、固定行不同退出深度；不涉及请求组批或调度。
+- 阈值 0、0.5、0.75、1 的边界与实际 decoder 调用次数。
+- gate 饱和时阈值 1 仍执行最后深度。
+- 阈值 1 与 full-per-depth 完全等价，并与无缓存的完整前缀重新计算对照。
+- 闭环 greedy token 一致性、异常后精确重试。
 
-The leading physical value of 6 is expected because it corresponds to the
-prefill-produced first output token. The two policies need not generate the
-same continuation because their historical-KV semantics intentionally differ.
-Each physical run matched its own run-all reference exactly.
-
-### Threshold-one equivalence sanity check
-
-At threshold `1.0`, every tested token selected and physically executed
-`U_max = 6`. Therefore `last_available` resolves every historical decoded
-token at recurrence `u` from `min(u, U_j) = u`, which reduces to the original
-per-depth Ouro cache semantics.
-
-A two-request, eight-token BF16 check on the pinned Ouro-2.6B checkpoint
-compared original `full_per_depth` run-all execution against physical
-`last_available` execution. Generated token IDs and selected depths matched,
-and the maximum absolute logit difference was exactly `0.0` on every forward
-pass. The fast tiny-model equivalent is retained as a regression test in
-`tests/test_adaptive_kv.py`.
-
-The machine-readable real-checkpoint result is stored locally at
-`results/threshold_one_equivalence.json`.
-
-The machine-readable result is in
-`results/adaptive_kv_checkpoint_validation.json`.
-
-## Current limitations
-
-- Adaptive per-token prefill is intentionally not implemented.
-- Adaptive continuation accepts exactly one new token per forward call.
-- The policy cache favors transparent semantics over optimized kernel-level KV
-  gathering. It physically avoids exited decoder work and unnecessary
-  committed KV states, but its Python history assembly is not a production
-  serving optimization.
-- Greedy generation and heterogeneous batched forward execution are tested.
-  Beam cache reordering is implemented, but real-checkpoint beam generation has
-  not been validated.
-- Adaptive policies are not silently applied to an already-populated generic
-  Hugging Face cache; that situation raises an error.
-
-These constraints isolate decode-time cache correctness so adaptive prefill and
-serving-oriented storage can be evaluated separately later.
+当前仅确认 CPU tiny-model 推理。未确认真实 checkpoint GPU/BF16、beam generation、
+训练/weighted loss、compile/CUDA graphs、在线请求增删、分页 attention 或性能。
